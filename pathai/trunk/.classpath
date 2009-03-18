@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src-tests"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pathboardgame"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pathboardgamelogic"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
