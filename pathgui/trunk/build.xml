@@ -5,8 +5,12 @@
 	<property name="tempDir.src" value="${tempDir}/src" />
 	<property name="tempDir.bin" value="${tempDir}/bin" />
 
-	<property name="engineDir" value="../GameEngine" />
+	<property name="engineDir" value="../pathengine" />
 	<property name="engineDir.src" value="${engineDir}/src" />
+	<property name="logicDir" value="../pathboardgamelogic" />
+	<property name="logicDir.src" value="${logicDir}/src" />
+	<property name="aiDir" value="../pathai" />
+	<property name="aiDir.src" value="${aiDir}/src" />
 
 	<property name="gameDir" value="." />
 	<property name="gameDir.src" value="${gameDir}/src" />
@@ -37,6 +41,22 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="copyLogicSourceToTemp">
+			<copy todir="${tempDir.src}" overwrite="false" failonerror="true">
+				<fileset dir="${logicDir.src}">
+					<include name="**/*.java" />
+				</fileset>
+			</copy>
+		</target>
+	
+	<target name="copyAiSourceToTemp">
+				<copy todir="${tempDir.src}" overwrite="false" failonerror="true">
+					<fileset dir="${aiDir.src}">
+						<include name="**/*.java" />
+					</fileset>
+				</copy>
+			</target>
 
 	<target name="copyGameSourceToTemp">
 		<copy todir="${tempDir.src}" overwrite="false" failonerror="true">
@@ -52,12 +72,7 @@
 		</copy>
 	</target>
 
-	<target name="copyGameLibsToTemp">
-		<unzip src="${gameDir.lib}/log4j-1.2.15.jar" dest="${tempDir.bin}">
-		</unzip>
-	</target>
-
-	<target name="copyProjectAndDependenciesAndCompile" depends="copyEngineSourceToTemp, copyGameSourceToTemp, copyGameLibsToTemp">
+	<target name="copyProjectAndDependenciesAndCompile" depends="copyEngineSourceToTemp, copyGameSourceToTemp, copyLogicSourceToTemp, copyAiSourceToTemp">
 		<javac srcdir="${tempDir.src}" destdir="${tempDir.bin}" debug="true" verbose="true" failonerror="true" />
 	</target>
 
