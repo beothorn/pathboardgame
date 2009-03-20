@@ -19,7 +19,7 @@ public class MainGameApplet extends JApplet {
 	public void init() {
 		setLayout(new BorderLayout());
 		final BoardGamePanel mainGamePanel = new BoardGamePanel();
-		mainGamePanel.setTopPlayerType(PlayerTypes.AI_MEDIUM);
+		mainGamePanel.setTopPlayerType(PlayerTypes.AI);
 		add(mainGamePanel,BorderLayout.CENTER);
 	}
 }

@@ -17,7 +17,7 @@ public class Avatar implements GameElement {
 	private final boolean isTopPlayer;
 	private final Entity thought;
 	private long timeWaitingForPlay;
-	private int playerType;
+	private int playerType = PlayerTypes.HUMAN;
 
 	public Avatar(final Point position, final Point thoughtPosition, final boolean isTopPlayer) {
 		this.isTopPlayer = isTopPlayer;

@@ -12,5 +12,5 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="main.Main"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-localGame"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="PathGui"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="pathgui"/>
 </launchConfiguration>

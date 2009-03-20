@@ -12,20 +12,17 @@ public class Main{
 	//TODO: clicando bastante dá pra atrapalhar ai
 	//TODO: escrever help e colocar botão no jogo :)
 	//TODO: bug Too much strong pieces in the game. What are you doing? qnd clica um monte na hora de colocar as fortes
-	//TODO: deixar Maingamepanel e game entities decente, usar um layout e eliminar posiçoes absolutas do layout definitions
+	//TODO: deixar Maingamepanel e game entities decente
+	//TODO: listar ias para escolher
 
-	private static String argAiTimeBetweenPlays = "-aiInterval";
-	private static String argBottomIsAI = "-aiBottom";
-	private static final String argTopIsAI = "-aiTop";
-	private static final String argTwoPlayerLocalGame = "-localGame";
 	private static MainGameFrame frame;
 
 	private static final Logger logger = Logger.getLogger(Main.class);
 
 
 	private static void defaultOptions() {
-		frame.setTopPlayerType(PlayerTypes.AI_MEDIUM);
-		start();
+		frame.setTopPlayerType(PlayerTypes.AI);
+		frame.setBottomPlayerType(PlayerTypes.HUMAN);
 	}
 
 	/**
@@ -40,71 +37,39 @@ public class Main{
 		for (final String string : args) {
 			commandLine += string;
 		}
-
 		logger.debug("Arguments: " + commandLine);
+
 		frame = new MainGameFrame();
+		final CommandLineParser commandLineParser = new CommandLineParser();
+		commandLineParser.parse(args);
 
 		if(args.length == 0) {
 			defaultOptions();
 		}else{
-			int currentArg = 0;
-
-			while(currentArg< args.length){
-				final String arg = args[currentArg];
-				if(arg.equals(argTwoPlayerLocalGame)){
-					frame.setBottomPlayerType(PlayerTypes.HUMAN);
-					frame.setTopPlayerType(PlayerTypes.HUMAN);
-				}
-				if(arg.equals(argTopIsAI)){
-					currentArg++;
-					try{
-						final int topLevelAI = Integer.parseInt(args[currentArg]);
-						if(PlayerTypes.isAiType(topLevelAI)) {
-							frame.setTopPlayerType(topLevelAI);
-						} else {
-							throw new RuntimeException("Invalid Top AI Value");
-						}
-					}catch(final NumberFormatException nF){
-						printCommandLineManAndExit();
-					}
-				}
-				if(arg.equals(argBottomIsAI)){
-					currentArg++;
-					try{
-						final int bottomLevelAI = Integer.parseInt(args[currentArg]);
-						if(PlayerTypes.isAiType(bottomLevelAI)) {
-							frame.setBottomPlayerType(bottomLevelAI);
-						} else {
-							throw new RuntimeException("Invalid Bottom AI Value");
-						}
-					}catch(final NumberFormatException nF){
-						printCommandLineManAndExit();
-					}
-				}
-				if(arg.equals(argAiTimeBetweenPlays)){
-					currentArg++;
-					try{
-						//						final int interval = Integer.parseInt(args[currentArg]);
-					}catch(final NumberFormatException nF){
-						printCommandLineManAndExit();
-					}
-				}
-				currentArg++;
+			if(commandLineParser.isSetted(CommandLineParser.HELP)){
+				commandLineParser.showHelp();
+			}else{
+				processArguments(commandLineParser);
 			}
-			start();
 		}
-	}
-
-	private static void printCommandLineMan(){
-		System.out.println("["+argTopIsAI+" 0-5]"+" ["+argBottomIsAI+"]"+" 0-5]"+" ["+argAiTimeBetweenPlays+" miliseconds]");
-	}
-
-	private static void printCommandLineManAndExit(){
-		printCommandLineMan();
-		System.exit(0);
-	}
-
-	private static void start() {
 		frame.setVisible(true);
+	}
+
+
+	private static void processArguments(final CommandLineParser commandLineParser) {
+		if(commandLineParser.isSetted(CommandLineParser.TOPAI)){
+			frame.setTopPlayerType(PlayerTypes.AI);
+		}else{
+			frame.setTopPlayerType(PlayerTypes.HUMAN);
+		}
+		if(commandLineParser.isSetted(CommandLineParser.BOTTOMAI)){
+			frame.setBottomPlayerType(PlayerTypes.AI);
+		}else{
+			frame.setBottomPlayerType(PlayerTypes.HUMAN);
+		}
+		if(commandLineParser.isSetted(CommandLineParser.LOCALGAME)){
+			frame.setBottomPlayerType(PlayerTypes.HUMAN);
+			frame.setTopPlayerType(PlayerTypes.HUMAN);
+		}
 	}
 }
