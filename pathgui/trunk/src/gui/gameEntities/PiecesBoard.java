@@ -25,6 +25,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	final static private double gridWidth = GameLayoutDefinitions.gridSize;
 	private final List<EntityPiece> pieces;
 	private Point position = new Point();
+	private boolean pressedOnStrong;
 
 
 	public PiecesBoard(final BoardGamePanel game) {
@@ -142,6 +143,21 @@ public class PiecesBoard implements GameElement,MouseListener{
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+		//		System.out.println(e);
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent e) {
+		//		System.out.println(e);
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent e) {
 		final int mouseX = e.getX();
 		final int mouseY = e.getY();
 		final double boardX1 = getX();
@@ -163,27 +179,42 @@ public class PiecesBoard implements GameElement,MouseListener{
 		final int pieceColumn = (int) ((mouseX - boardX1)/ gridWidth);
 		final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
 
+		if(getCurrentGame().getBoard().getPieceAt(pieceLine, pieceColumn).isStrong()){
+			pressedOnStrong = true;
+		}else{
+			pressedOnStrong = false;
+		}
+
 		play(pieceColumn, pieceLine);
 	}
 
 	@Override
-	public void mouseEntered(final MouseEvent e) {
-		//		System.out.println(e);
-	}
-
-	@Override
-	public void mouseExited(final MouseEvent e) {
-		//		System.out.println(e);
-	}
-
-	@Override
-	public void mousePressed(final MouseEvent e) {
-		//		System.out.println(e);
-	}
-
-	@Override
 	public void mouseReleased(final MouseEvent e) {
-		//		System.out.println(e);
+		if(pressedOnStrong){
+			final int mouseX = e.getX();
+			final int mouseY = e.getY();
+			final double boardX1 = getX();
+			final double boardX2 = boardX1+getBoardWidth();
+			final double boardY1 = getY();
+			final double boardY2 = boardY1+getBoardHeight();
+			if(mouseX<boardX1) {
+				return;
+			}
+			if(mouseX>boardX2) {
+				return;
+			}
+			if(mouseY<boardY1) {
+				return;
+			}
+			if(mouseY>boardY2) {
+				return;
+			}
+			final int pieceColumn = (int) ((mouseX - boardX1)/ gridWidth);
+			final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
+
+			play(pieceColumn, pieceLine);
+		}
+		pressedOnStrong = false;
 	}
 
 	public void movedStrong(final Piece movedPiece) {
