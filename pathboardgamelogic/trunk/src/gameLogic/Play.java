@@ -22,7 +22,7 @@ public class Play implements Serializable{
 	private int line;
 	private boolean moveDirection = false;
 	private boolean nextState = false;
-	private int pieceSequenceNumber;
+	private int pieceId;
 
 	public Play(final int line, final int column) {
 		setCoords(line, column);
@@ -73,8 +73,8 @@ public class Play implements Serializable{
 		return line;
 	}
 
-	public int getPieceSequenceNumber() {
-		return pieceSequenceNumber;
+	public int getPieceId() {
+		return pieceId;
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Play implements Serializable{
 		if(strongId > 9){
 			throw new IllegalArgumentException("Strong id invalid: "+strongId);
 		}
-		pieceSequenceNumber = strongId;
+		pieceId = strongId;
 		this.direction = direction;
 		moveDirection = true;
 		nextState = false;
@@ -140,7 +140,7 @@ public class Play implements Serializable{
 			return NEXT_STATE;
 		}
 		if(isMoveDirection()){
-			final String playDesc = "mov"+getPieceSequenceNumber()+getDirection();
+			final String playDesc = "mov"+getPieceId()+getDirection();
 			return playDesc;
 		}
 		return "("+line+","+column+")";

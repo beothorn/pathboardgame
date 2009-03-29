@@ -1,7 +1,6 @@
 package gameLogic.gameFlow;
 
 import gameLogic.Board;
-import gameLogic.Piece;
 import gameLogic.Play;
 import gameLogic.gameFlow.gameStates.GameFlowDefinitionsStateFactory;
 
@@ -60,19 +59,12 @@ public class GameFlow {
 		}
 		final PlayResult playResult = currentState.play(play, board);
 		listeners.callBoardChangedListeners();
-		final Piece changedPiece = playResult.getChangedPiece();
-		if(changedPiece != null){
-			if(playResult.isSelected()) {
-				listeners.callSelectedStrongListeners(changedPiece);
-			} else {
-				if(playResult.isMovedStrongPiece()) {
-					listeners.callBoardMovedStrongListeners(changedPiece);
-				} else {
-					listeners.callUnselectedStrongListeners(changedPiece);
-				}
-			}
+		if(playResult.getSelectedPiece() != null) {
+			listeners.callSelectedStrongListeners(playResult.getSelectedPiece());
+		} 
+		if(playResult.getMovedStrongPiece() != null) {
+			listeners.callBoardMovedStrongListeners(playResult.getMovedStrongPiece());
 		}
-
 		changeStateIfNeeded();
 		return playResult;
 	}
@@ -101,14 +93,10 @@ public class GameFlow {
 	public PlayResult skipTurn(){
 		final GameState nextState = currentState.nextState(board, listeners);
 		if(nextState == null) {
-			final boolean successful = false;
-			final PlayResult playResult = new PlayResult(successful);
-			playResult.setErrorMessage(PlayResult.MESSAGE_FINISH_YOUR_PLAY);
-			return playResult;
+			return PlayResult.errorMustFinishPlay();
 		}
 		setCurrentState(nextState);
-		final boolean successful = true;
-		return new PlayResult(successful);
+		return PlayResult.successfullPlay();
 	}
 
 	public boolean isGameEnded() {

@@ -298,8 +298,7 @@ public class FunctionalLogicTests{
 		if(!playTo.isSuccessful()){
 			return playTo;
 		}
-		final boolean successful = true;
-		return new PlayResult(successful);
+		return PlayResult.successfullPlay();
 	}
 
 	private void moveStrongPieceByIdWithoutProblems(final int id,final char direction){
@@ -398,7 +397,7 @@ public class FunctionalLogicTests{
 		addPiece(2);
 		addPiece(3);
 
-		final Point strongBottom = currentGame.getBoard().getStrongBottomByPositionInSequence(3);
+		final Point strongBottom = currentGame.getBoard().getStrongBottomId(3);
 		strongBottom.toString();
 
 	}
@@ -408,8 +407,7 @@ public class FunctionalLogicTests{
 		currentGame = new Game();
 		final String topPlayerPuttingStrongDescription = "Black player: add 3 strong pieces to the first line.";
 		final String bottomPlayerPuttingWeaksDescription = "White player: Put three weak pieces in first line or pass to moving strongs.";
-		final String bottomPlayerMovingStrongsDesription = "White player: Move your strong pieces one time each or pass our turn.";
-		final String messageYouCantDoThis = "You can't do this.";
+		final String messageYouCantAdd = "You can't add a piece right now.";
 		final String messageYouCantMoveThisPiece = "You can't move this piece";
 
 		addPieceWithoutProblems(1);
@@ -430,7 +428,7 @@ public class FunctionalLogicTests{
 		addPieceWithoutProblems(0);
 		final PlayResult addPiece1PlayResult = addPiece(1);
 		Assert.assertTrue("Add Piece should fail", !addPiece1PlayResult.isSuccessful());
-		Assert.assertEquals(messageYouCantDoThis+"\n"+bottomPlayerPuttingWeaksDescription,addPiece1PlayResult.getErrorMessage());
+		Assert.assertEquals(messageYouCantAdd,addPiece1PlayResult.getErrorMessage());
 
 		addPieceWithoutProblems(3);
 		Assert.assertEquals(bottomPlayerPutWeaks_B, printBoard());
@@ -440,14 +438,14 @@ public class FunctionalLogicTests{
 		Assert.assertEquals(bottomPlayerMoveStrong_B1, printBoard());
 		final PlayResult moveStrongPiece7475PlayResult = moveStrongPiece(7, 4, 7, 5);
 		Assert.assertTrue("Play result should be failure", !moveStrongPiece7475PlayResult.isSuccessful());
-		Assert.assertEquals(messageYouCantMoveThisPiece+"\n"+bottomPlayerMovingStrongsDesription,moveStrongPiece7475PlayResult.getErrorMessage());
+		Assert.assertEquals(messageYouCantMoveThisPiece,moveStrongPiece7475PlayResult.getErrorMessage());
 
 		moveStrongPieceWithoutProblems(7, 5, 7, 4);
 		Assert.assertEquals(bottomPlayerMoveStrong_B2, printBoard());
 
 		final PlayResult moveStrongPiece7172PlayResult = moveStrongPiece(7, 1, 7, 2);
 		Assert.assertTrue("Play result should be failure", !moveStrongPiece7172PlayResult.isSuccessful());
-		Assert.assertEquals(messageYouCantMoveThisPiece+"\n"+bottomPlayerMovingStrongsDesription,moveStrongPiece7172PlayResult.getErrorMessage());
+		Assert.assertEquals(messageYouCantMoveThisPiece,moveStrongPiece7172PlayResult.getErrorMessage());
 
 		currentGame.play(new Play(7,1));
 
@@ -482,7 +480,7 @@ public class FunctionalLogicTests{
 
 		final PlayResult addPiece7 = addPiece(7);
 		Assert.assertTrue("Play result should be failure", !addPiece7.isSuccessful());
-		Assert.assertEquals(messageYouCantDoThis+"\n"+bottomPlayerPuttingWeaksDescription, addPiece7.getErrorMessage());
+		Assert.assertEquals(messageYouCantAdd, addPiece7.getErrorMessage());
 
 		addPieceWithoutProblems(1);
 		addPieceWithoutProblems(5);
@@ -490,7 +488,7 @@ public class FunctionalLogicTests{
 
 		final PlayResult moveStrongPiece7273PlayResult = moveStrongPiece(7,2,7,3);
 		Assert.assertTrue("Play result should be failure", !moveStrongPiece7273PlayResult.isSuccessful());
-		Assert.assertEquals(messageYouCantMoveThisPiece+"\n"+bottomPlayerMovingStrongsDesription, moveStrongPiece7273PlayResult.getErrorMessage());
+		Assert.assertEquals(messageYouCantMoveThisPiece, moveStrongPiece7273PlayResult.getErrorMessage());
 
 		nextState();
 		Assert.assertEquals(bottomPlayerPutWeaksAndPass_D, printBoard());

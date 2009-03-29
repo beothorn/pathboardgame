@@ -70,10 +70,7 @@ public class GameStateGameEnded implements GameState {
 
 	@Override
 	public PlayResult play(final Play play, final Board board){
-		final boolean successful = false;
-		final PlayResult playResult = new PlayResult(successful);
-		playResult.setErrorMessage(getStateDescription());
-		return playResult;
+		return PlayResult.errorGameEnded(getStateDescription());
 	}
 
 	@Override

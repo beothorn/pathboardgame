@@ -9,6 +9,10 @@ import javax.swing.JButton;
 
 public class RestartButton extends JButton{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Game currentGame;
 
 	public RestartButton(final Game game) {

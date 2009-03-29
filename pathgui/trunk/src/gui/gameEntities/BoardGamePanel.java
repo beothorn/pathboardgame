@@ -10,6 +10,10 @@ import gui.externalPlayer.ExternalPlayerController;
 
 public class BoardGamePanel extends JGamePanel implements BoardListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Avatar avatarBottom;
 	private final Avatar avatarTop;
 

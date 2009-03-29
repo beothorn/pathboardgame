@@ -31,8 +31,7 @@ public class GameStatePuttingStrongs implements GameState {
 		if(numberOfStrongsLeft == 0){
 			changeState();
 		}
-		final boolean successful = true;
-		return new PlayResult(successful);
+		return PlayResult.successfullPlay();
 	}
 
 	@Override
@@ -64,11 +63,7 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	private PlayResult invalidMoveYouCantDoThisPlayResult(){
-		final boolean successful = false;
-		final PlayResult playResult = new PlayResult(successful);
-		final String errorMessage = PlayResult.MESSAGE_YOU_CANT_DO_THIS+"\n"+getStateDescription();
-		playResult.setErrorMessage(errorMessage);
-		return playResult;
+		return PlayResult.errorYouAddAPiece();
 	}
 
 	@Override

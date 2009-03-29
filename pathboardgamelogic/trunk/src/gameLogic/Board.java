@@ -3,7 +3,6 @@ package gameLogic;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -17,10 +16,8 @@ public class Board {
 	private static int DRAW = 3;
 
 	Piece[][] board = new Piece[BOARD_SIZE][BOARD_SIZE];
-
-	private ArrayList<Integer> sortedStrongBottomIds;
-
-	private ArrayList<Integer> sortedStrongTopIds;
+	private int topNextId = 1;
+	private int bottomNextId = 1;
 
 	public Board() {
 		reset();
@@ -50,6 +47,10 @@ public class Board {
 
 	private boolean addBottomPlayerPieceAfterVerifyIfCan(final Piece piece,final int columnIndex) {
 		movePiecesUp(board.length-1, columnIndex);
+		if(piece.id == -1){
+			piece.id = bottomNextId;
+			bottomNextId++;
+		}
 		board[board.length-1][columnIndex] = piece;
 		return true;
 	}
@@ -87,6 +88,10 @@ public class Board {
 
 	private boolean addTopPlayerPieceAfterVerifyIfCan(final Piece piece,final int columnIndex) {
 		movePiecesDown(0, columnIndex);
+		if(piece.id == -1){
+			piece.id = topNextId;
+			topNextId++;
+		}
 		board[0][columnIndex] = piece;
 		return true;
 	}
@@ -144,14 +149,10 @@ public class Board {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Board copy() {
 		final Board boardCopy = new Board();
 		for (int i = 0; i < board.length; i++) {
 			System.arraycopy(board[i], 0, boardCopy.board[i] , 0, BOARD_SIZE);
-			fillSortedStrongIdsIfNeeded();
-			boardCopy.sortedStrongBottomIds = (ArrayList<Integer>) sortedStrongBottomIds.clone();
-			boardCopy.sortedStrongTopIds = (ArrayList<Integer>) sortedStrongTopIds.clone();
 		}
 		return boardCopy;
 	}
@@ -221,10 +222,7 @@ public class Board {
 		return -1;
 	}
 
-	public Point getStrongBottomByPositionInSequence(final int strongPositionInSequence){
-		fillSortedStrongIdsIfNeeded();
-
-		final int id = sortedStrongBottomIds.get(strongPositionInSequence-1);
+	public Point getStrongBottomId(final int id){
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if(board[i][j].isBottomPlayerStrongPiece()){
@@ -238,10 +236,7 @@ public class Board {
 		return null;
 	}
 	
-	public Point getStrongTopByPositionInSequence(final int strongPositionInSequence){
-		fillSortedStrongIdsIfNeeded();
-		
-		final int id = sortedStrongTopIds.get(strongPositionInSequence-1);
+	public Point getStrongTopById(final int id){
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if(board[i][j].isTopPlayerStrongPiece()){
@@ -253,32 +248,6 @@ public class Board {
 			}
 		}
 		return null;
-	}
-
-	private void fillSortedStrongIdsIfNeeded() {
-		if(sortedStrongBottomIds==null){
-			sortedStrongBottomIds = new ArrayList<Integer>();
-			for (final Piece[] boardLines : board) {
-				for (final Piece piece : boardLines) {
-					if(piece.isBottomPlayerStrongPiece()){
-						sortedStrongBottomIds.add(piece.getId());
-					}
-				}
-			}
-			Collections.sort(sortedStrongBottomIds);
-		}
-		
-		if(sortedStrongTopIds==null){
-			sortedStrongTopIds = new ArrayList<Integer>();
-			for (final Piece[] boardLine : board) {
-				for (final Piece piece : boardLine) {
-					if(piece.isTopPlayerStrongPiece()){
-						sortedStrongTopIds.add(piece.getId());
-					}
-				}
-			}
-			Collections.sort(sortedStrongTopIds);
-		}
 	}
 
 	
@@ -620,12 +589,19 @@ public class Board {
 				board[i][j] = Piece.getEmptyPiece();
 			}
 		}
-		sortedStrongBottomIds = null;
-		sortedStrongTopIds = null;
-		Piece.reset();
+		topNextId = 1;
+		bottomNextId = 1;
 	}
 
 	public void setPieceAt(final int line, final int column, final Piece p){
+		if(p.isBottomPlayerStrongPiece()){
+			p.id = bottomNextId;
+			bottomNextId++;
+		}
+		if(p.isTopPlayerStrongPiece()){
+			p.id = topNextId;
+			topNextId++;
+		}
 		board[line][column] = p;
 	}
 
@@ -649,9 +625,9 @@ public class Board {
 		
 		final Point position;
 		if(isTopPlay){
-			position = getStrongTopByPositionInSequence(moveByNumberPlay.getPieceSequenceNumber());
+			position = getStrongTopById(moveByNumberPlay.getPieceId());
 		}else{
-			position = getStrongBottomByPositionInSequence(moveByNumberPlay.getPieceSequenceNumber());
+			position = getStrongBottomId(moveByNumberPlay.getPieceId());
 		}
 		
 		//(line,column) <- seems switched from the position notation doesn't it?
@@ -675,25 +651,6 @@ public class Board {
 		}
 		
 		return new PlaySequence(new Play(from),new Play(to));
-	}
-
-	public int getPiecePositionInSequence(final int id) {
-		fillSortedStrongIdsIfNeeded();
-		
-		for (int i = 0; i < sortedStrongBottomIds.size(); i++) {
-			final Integer strongId = sortedStrongBottomIds.get(i);
-			if(strongId == id){
-				return i+1;
-			}
-		}
-		
-		for (int i = 0; i < sortedStrongTopIds.size(); i++) {
-			final Integer strongId = sortedStrongTopIds.get(i);
-			if(strongId == id){
-				return i+1;
-			}
-		}
-		throw new IllegalArgumentException("ID: "+id+" not found");
 	}
 
 	public int countStrongBottoms() {
@@ -747,5 +704,9 @@ public class Board {
 
 	public boolean isGameEnded() {
 		return isGameDraw() || isTopTheWinner() || isBottomTheWinner();
+	}
+
+	public Piece getPieceAt(Point p) {
+		return getPieceAt(p.y, p.x);
 	}
 }

@@ -11,6 +11,10 @@ import javax.swing.JButton;
 
 public class NextStageButton extends JButton{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Game currentGame;
 
 	public NextStageButton(final Game game) {

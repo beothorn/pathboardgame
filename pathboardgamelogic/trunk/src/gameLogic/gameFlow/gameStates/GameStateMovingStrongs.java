@@ -24,11 +24,7 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	private PlayResult alreadyMovedPlayResult(){
-		final boolean successful = false;
-		final PlayResult playResult = new PlayResult(successful);
-		final String errorMessage = PlayResult.MESSAGE_YOU_ALREADY_MOVED+"\n"+getStateDescription();
-		playResult.setErrorMessage(errorMessage);
-		return playResult;
+		return PlayResult.errorPieceAlreadyMoved();
 	}
 
 	@Override
@@ -40,11 +36,7 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	private PlayResult cantMovePlayResult(){
-		final boolean successful = false;
-		final PlayResult playResult = new PlayResult(successful);
-		final String errorMessage = PlayResult.MESSAGE_YOU_CANT_MOVE+"\n"+getStateDescription();
-		playResult.setErrorMessage(errorMessage);
-		return playResult;
+		return PlayResult.errorCantMovePiece();
 	}
 
 	private void changeState() {
@@ -94,11 +86,7 @@ public class GameStateMovingStrongs implements GameState {
 		final Piece piece = board.getPieceAt(lineFrom, columnFrom);
 
 		if(lineFrom == lineTo && columnFrom == columnTo ) {
-			final boolean successful = true;
-			final PlayResult playResult = new PlayResult(successful);
-			playResult.setMovedStrongPiece(false);
-			playResult.setChangedPiece(piece);
-			return playResult;
+			return PlayResult.selectedPiece(piece);
 		}
 
 		if(!isMovablePiece(piece)) {
@@ -115,12 +103,7 @@ public class GameStateMovingStrongs implements GameState {
 		if(alreadyMoved.size() == GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE) {
 			changeState();
 		}
-		final boolean successful = true;
-		final PlayResult playResult = new PlayResult(successful);
-		playResult.setChangedPiece(piece);
-		playResult.setMovedStrongPiece(true);
-		playResult.setSelected(false);
-		return playResult;
+		return PlayResult.movedPiece(piece);
 	}
 
 	@Override
@@ -157,19 +140,13 @@ public class GameStateMovingStrongs implements GameState {
 				}
 			}
 			selected = piece;
-			final boolean successful = true;
-			final PlayResult playResult = new PlayResult(successful);
-			playResult.setSelected(true);
-			playResult.setChangedPiece(selected);
-			return playResult;
+			return PlayResult.selectedPiece(selected);
 		}
 
 		final int line = board.getPieceLine(selected);
 		final int column = board.getPieceColumn(selected);
 		final PlayResult playResult = moveStrongPiece(line, column, pieceLine, pieceColumn, board);
 		if(playResult.isSuccessful()) {
-			playResult.setChangedPiece(selected);
-			playResult.setSelected(false);
 			selected= null;
 		}
 		return playResult;
@@ -187,9 +164,9 @@ public class GameStateMovingStrongs implements GameState {
 	private PlayResult playTwoTimes(final Play play, final Board board){
 		Point strongCoords;
 		if(isTopPlayerTurn()) {
-			strongCoords = board.getStrongTopByPositionInSequence(play.getPieceSequenceNumber());
+			strongCoords = board.getStrongTopById(play.getPieceId());
 		}else{
-			strongCoords = board.getStrongBottomByPositionInSequence(play.getPieceSequenceNumber());
+			strongCoords = board.getStrongBottomId(play.getPieceId());
 		}
 		Play playSelectStrong = null;
 		Play playMoveStrongTo = null;
@@ -222,8 +199,7 @@ public class GameStateMovingStrongs implements GameState {
 		if(!playTo.isSuccessful()){
 			return playTo;
 		}
-		final boolean successful = true;
-		return new PlayResult(successful);
+		return PlayResult.successfullPlay();
 	}
 
 	@Override

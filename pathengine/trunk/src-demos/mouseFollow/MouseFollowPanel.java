@@ -59,6 +59,11 @@ class MouseFollower extends Entity implements MouseMotionListener{
 }
 
 public class MouseFollowPanel extends JGamePanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public MouseFollowPanel() {
 		super(Color.BLACK);
 		setLayout(new BorderLayout());

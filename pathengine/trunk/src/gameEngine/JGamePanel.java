@@ -15,6 +15,10 @@ import javax.swing.JPanel;
 
 public class JGamePanel extends JPanel implements ImageObserver{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int SINGLE_UPPER_LEFT = 1;
 	private int backgroundLayout;
 	private Sprite backgroundSprite;

@@ -14,7 +14,7 @@ public class GameLayoutDefinitions {
 	public static final Dimension screenSize = new Dimension(WIDTH,HEIGHT);
 
 
-	private static final int BUTTON_SIZE = 30;
+	//	private static final int BUTTON_SIZE = 30;
 	private static final int BUTTON_RESTART_SIZE = 46;
 	private static final int PIECE_SIZE = 46;
 	private static final int TRANSPARENT_PIECE_SIZE = PIECE_SIZE/2;

@@ -96,9 +96,9 @@ public class DefaultCalculator implements BoardScoreCalculator {
 	}
 	
 	private int distanceFromColumnToStrong(final boolean isDistancefromBottomStrong ,final Board board, final int col){
-		final Point strong1 = isDistancefromBottomStrong?board.getStrongBottomByPositionInSequence(1):board.getStrongTopByPositionInSequence(1);
-		final Point strong2 = isDistancefromBottomStrong?board.getStrongBottomByPositionInSequence(2):board.getStrongTopByPositionInSequence(2);
-		final Point strong3 = isDistancefromBottomStrong?board.getStrongBottomByPositionInSequence(3):board.getStrongTopByPositionInSequence(3);
+		final Point strong1 = isDistancefromBottomStrong?board.getStrongBottomId(1):board.getStrongTopById(1);
+		final Point strong2 = isDistancefromBottomStrong?board.getStrongBottomId(2):board.getStrongTopById(2);
+		final Point strong3 = isDistancefromBottomStrong?board.getStrongBottomId(3):board.getStrongTopById(3);
 		int d1 = Math.abs(col-strong1.x);
 		int d2 = Math.abs(col-strong2.x);
 		int d3 = Math.abs(col-strong3.x);

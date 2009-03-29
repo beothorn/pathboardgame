@@ -115,8 +115,8 @@ public class BoardTests {
 	public void testGetPlaySequenceFromMoveId(){
 		final Board board = new Board(boardString);
 		final Piece pieceAt71 = board.getPieceAt(7, 1);
-		final int sequenceNumber = board.getPiecePositionInSequence(pieceAt71.getId());
-		final String move = Play.MOVE+sequenceNumber+Play.UP;
+		final int idNumber = pieceAt71.getId();
+		final String move = Play.MOVE+idNumber+Play.UP;
 		final Play moveByIdPlay = new Play(move);
 		final PlaySequence expected = new PlaySequence(new Play(7,1),new Play(6,1));
 		final boolean isTopPlay = false;

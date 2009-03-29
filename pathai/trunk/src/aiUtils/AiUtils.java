@@ -12,9 +12,9 @@ public class AiUtils {
 		if(play.isMoveDirection()){
 			Point strong;
 			if(isTopPlayer) {
-				strong = b.getStrongTopByPositionInSequence(play.getPieceSequenceNumber());
+				strong = b.getStrongTopById(play.getPieceId());
 			} else {
-				strong = b.getStrongBottomByPositionInSequence(play.getPieceSequenceNumber());
+				strong = b.getStrongBottomId(play.getPieceId());
 			}
 			final Point strongTo = (Point) strong.clone();
 			switch (play.getDirection()) {

@@ -121,16 +121,14 @@ public class Game {
 	public PlayResult play(final Play play){
 
 		if(isLocked()){
-			final boolean successful = false;
-			final PlayResult playResult = new PlayResult(successful);
-			playResult.setErrorMessage(PlayResult.MESSAGE_WAIT_YOUR_TURN);
-			showErrorMessage(PlayResult.MESSAGE_WAIT_YOUR_TURN);
-			return playResult;
+			PlayResult errorMustWaitForYourTurn = PlayResult.errorMustWaitForYourTurn();
+			showErrorMessage(errorMustWaitForYourTurn);
+			return errorMustWaitForYourTurn;
 		}
 		
 		final PlayResult playResult = forcePlay(play);
 		if(!playResult.isSuccessful()){
-			showErrorMessage(playResult.getErrorMessage());
+			showErrorMessage(playResult);
 		}
 		
 		return playResult;
@@ -163,9 +161,9 @@ public class Game {
 		this.locked = locked;
 	}
 
-	private void showErrorMessage(final String msg) {
+	private void showErrorMessage(final PlayResult msg) {
 		if(error != null) {
-			error.showMessage(msg);
+			error.showMessage(msg.getErrorMessage());
 		}
 	}
 
