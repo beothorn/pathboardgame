@@ -49,7 +49,7 @@ public interface GameState {
 
 	public GameState nextStateIfChanged(final Board board, final BoardListeners listeners);
 
-	public PlayResult play(Play play, Board board);
+	public void play(Play play, Board board);
 
 	public boolean stateEnded();
 }

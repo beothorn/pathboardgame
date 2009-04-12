@@ -10,12 +10,12 @@ public class Play implements Serializable{
 	public static final char DOWN = 'd';
 	public static final char UP = 'u';
 
-	public static final String NEXT_STATE = "PASS_PLAY";
-	private static final String NORMAL_PLAY_NOTATION = "\\([0-"+(Board.BOARD_SIZE-1)+"],[0-"+(Board.BOARD_SIZE-1)+"]\\)";
-	private static final String MOVE_BY_ID_NOTATION = "mov[0-9]["+RIGHT+LEFT+DOWN+UP+"]";
+	public static final String NEXT_STATE = "P";
+	private static final String NORMAL_PLAY_NOTATION = "[0-8]";
+	private static final String MOVE_BY_ID_NOTATION = "m[0-9]["+RIGHT+LEFT+DOWN+UP+"]";
 
 	private static final long serialVersionUID = 1L;
-	public static final String MOVE = "mov";
+	public static final String MOVE = "m";
 
 	private int column;
 	private char direction;
