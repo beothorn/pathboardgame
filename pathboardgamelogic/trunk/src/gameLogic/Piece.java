@@ -1,6 +1,6 @@
 package gameLogic;
 
-class Piece {
+public class Piece {
 	private static final int PIECE_EMPTY = 0;
 	private static final int PIECE_TOP_WEAK = 1;
 	private static final int PIECE_BOTTOM_WEAK = 2;

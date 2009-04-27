@@ -1,7 +1,9 @@
 package gameLogic.gameFlow;
 
-import gameLogic.Board;
-import gameLogic.Play;
+import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
+import gameLogic.board.ValidPlay;
 
 public interface GameState {
 
@@ -35,21 +37,17 @@ public interface GameState {
 	public static final String TOP_PLAYER_PUTTING_STRONGS = "TOP_PLAYER_PUTTING_STRONGS";
 	public static final String TOP_PLAYER_PUTTING_WEAKS = "TOP_PLAYER_PUTTING_WEAKS";
 
-	public String asStateUniqueName();
-
 	public String getStateDescription();
 
 	public boolean isBottomPlayerTurn();
 
-	public boolean isPuttingStrongsTurn();
-
 	public boolean isTopPlayerTurn();
 
-	public GameState nextState(final Board board, final BoardListeners listeners);
+	public boolean isPuttingStrongsTurn();
 
-	public GameState nextStateIfChanged(final Board board, final BoardListeners listeners);
+	public ValidPlay validatePlay(Play play, Board board) throws InvalidPlayException;
+	
+	public GameState play(ValidPlay validPlay, Board board);
 
-	public void play(Play play, Board board);
-
-	public boolean stateEnded();
+	public boolean isGameEnded();
 }

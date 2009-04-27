@@ -1,6 +1,5 @@
 package gameLogic;
 
-
 public class PieceFactory {
 	
 	private int topStrongIdGen = 0;
@@ -28,8 +27,12 @@ public class PieceFactory {
 		return bottomWeakIdGen;
 	}
 	
-	public Piece getTopStrongPiece(final int id){
+	public Piece getTopStrongPiece(){
 		return Piece.getTopStrongPiece(genTopStrongId());
+	}
+	
+	public Piece getTopStrongPiece(final int forceId){
+		return Piece.getTopStrongPiece(forceId);
 	}
 	
 	public Piece getTopWeakPiece(){
@@ -38,6 +41,10 @@ public class PieceFactory {
 	
 	public Piece getBottomStrongPiece(){
 		return Piece.getBottomStrongPiece(genBottomStrongId());
+	}
+	
+	public Piece getBottomStrongPiece(final int forceId){
+		return Piece.getBottomStrongPiece(forceId);
 	}
 	
 	public Piece getBottomWeakPiece(){

@@ -1,10 +1,10 @@
 package gameLogic.gameFlow.gameStates;
 
-import gameLogic.Board;
-import gameLogic.Play;
-import gameLogic.gameFlow.BoardListeners;
+import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
+import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.GameState;
-import gameLogic.gameFlow.PlayResult;
 
 public class GameStateGameEnded implements GameState {
 
@@ -16,16 +16,6 @@ public class GameStateGameEnded implements GameState {
 
 	public GameStateGameEnded(final int result) {
 		this.result = result;
-	}
-
-	@Override
-	public String asStateUniqueName() {
-		if(result == TOP_WON) {
-			return GameState.GAME_ENDED_TOP_WINS;
-		}
-		if(result == BOTTOM_WON)
-			return GameState.GAME_ENDED_BOTTOM_WINS;
-		return GameState.GAME_ENDED_DRAW;
 	}
 
 	@Override
@@ -55,27 +45,18 @@ public class GameStateGameEnded implements GameState {
 	}
 
 	@Override
-	public GameState nextState(final Board board, final BoardListeners listeners) {
-		board.reset();
-		if(listeners != null) {
-			listeners.callBoardChangedListeners();
-		}
-		return GameFlowDefinitionsStateFactory.getFirstState();
-	}
-
-	@Override
-	public GameState nextStateIfChanged(final Board board, final BoardListeners listeners) {
+	public GameState play(final ValidPlay play, final Board board){
 		return this;
 	}
 
 	@Override
-	public PlayResult play(final Play play, final Board board){
-		return PlayResult.errorGameEnded(getStateDescription());
+	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
+		throw new InvalidPlayException(getStateDescription());
 	}
 
 	@Override
-	public boolean stateEnded() {
-		return false;
+	public boolean isGameEnded() {
+		return true;
 	}
 
 }

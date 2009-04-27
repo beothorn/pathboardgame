@@ -1,10 +1,12 @@
 package externalPlayer;
 
-import gameLogic.Board;
 import gameLogic.Game;
-import gameLogic.Play;
 import gameLogic.PlaySequence;
-import gameLogic.gameFlow.PlayResult;
+import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
+import gameLogic.board.ValidPlay;
+import utils.BoardUtils;
 import utils.Logger;
 
 public class ExternalPlayerRunnable implements Runnable {
@@ -43,17 +45,16 @@ public class ExternalPlayerRunnable implements Runnable {
 			}
 			if(isBrainTurn()){
 				game.setLocked(true);
-				final String board = game.getBoard().toString();
-				final Board boardCopy = new Board(board);
+				Board boardCopy = game.getBoard().copy();
 				final boolean isTopPlayerTurn = game.isTopPlayerTurn();
 				if(isTopPlayerTurn){
-					boardCopy.switchSides();
+					boardCopy = BoardUtils.switchSides(boardCopy);
 				}
 				logger.debug("Quering External player play.");
 				logger.debug("\n" + boardCopy);
 				final String aiPlay = player.play(boardCopy.toString());
 				final PlaySequence playSequence = new PlaySequence(aiPlay);
-				final PlaySequence aiPlayFixed = isTopPlayerTurn ? Board.invertPlay(playSequence) : playSequence;
+				final PlaySequence aiPlayFixed = isTopPlayerTurn ? BoardUtils.invertPlay(playSequence) : playSequence;
 				logger.debug("External player played");
 				logger.debug(aiPlayFixed);
 				play(aiPlayFixed);
@@ -76,29 +77,15 @@ public class ExternalPlayerRunnable implements Runnable {
 	private void play(final PlaySequence playSequence) {
 		for (final Play play : playSequence.getPlays()) {
 			if (!isBrainTurn()) {
-				aiErrorPlayingWhenIsNotAITurn(play);
+//				aiErrorPlayingWhenIsNotAITurn(play);
 			}
-			final PlayResult forcePlayResult = game.forcePlay(play);
-			if (!forcePlayResult.isSuccessful()) {
-				externalPlayerErrorInvalidPlay(play,forcePlayResult);
+			ValidPlay validPlay;
+			try {
+				validPlay = game.validatePlay(play);
+				game.play(validPlay);
+			} catch (InvalidPlayException e) {
+				new RuntimeException("Oh noes!!!");
 			}
 		}
-	}
-
-	private void externalPlayerErrorInvalidPlay(final Play play,
-			final PlayResult forcePlayResult) {
-		logger.error("External player played WRONG,if external is ai, something must be wrong with ai engine"
-						+ "\nwrong play: "
-						+ play
-						+ " message: "
-						+ forcePlayResult.getErrorMessage()
-						+ " state: "
-						+ game.getCurrentState().asStateUniqueName());
-	}
-
-	private void aiErrorPlayingWhenIsNotAITurn(final Play play) {
-		logger.error("External player tried to in other player turn"
-				+ "\nwrong play: " + play + " state: "
-				+ game.getCurrentState().asStateUniqueName());
 	}
 }

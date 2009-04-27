@@ -1,6 +1,5 @@
-package gameLogic;
+package gameLogic.board;
 
-import java.awt.Point;
 import java.io.Serializable;
 
 public class Play implements Serializable{
@@ -12,45 +11,53 @@ public class Play implements Serializable{
 
 	public static final String NEXT_STATE = "P";
 	private static final String NORMAL_PLAY_NOTATION = "[0-8]";
-	private static final String MOVE_BY_ID_NOTATION = "m[0-9]["+RIGHT+LEFT+DOWN+UP+"]";
+	private static final String MOVE_BY_ID_NOTATION = "m[0-3]["+RIGHT+LEFT+DOWN+UP+"]";
 
 	private static final long serialVersionUID = 1L;
 	public static final String MOVE = "m";
 
 	private int column;
 	private char direction;
-	private int line;
-	private boolean moveDirection = false;
-	private boolean nextState = false;
 	private int pieceId;
+	private final boolean moveDirection;
+	private final boolean nextState;
+	private final boolean addPiece;
 
-	public Play(final int line, final int column) {
-		setCoords(line, column);
+	public Play(final int column) {
+		setColumn(column);
+		addPiece = true;
+		nextState = false;
+		moveDirection = false;
 	}
 
-	public Play(final int strongSequenceNumber, final char direction){
-		moveStrongInDirection(strongSequenceNumber, direction);
+	public Play(final int strongId, final char direction){
+		moveStrongInDirection(strongId, direction);
+		moveDirection = true;
+		nextState = false;
+		addPiece = false;
 	}
 	
 	public Play(final String play) {
 		if(play.matches(NEXT_STATE)){
-			setNextStatePlay();
+			nextState = true;
+			moveDirection = false;
+			addPiece = false;
 		}else if(play.matches(NORMAL_PLAY_NOTATION)){
-			final int comaPosition = play.indexOf(',');
-			final int x = Integer.parseInt(play.substring(1, comaPosition));
-			final int y = Integer.parseInt(play.substring(comaPosition+1,play.length()-1));
-			setCoords(x,y);
+			final int c = Integer.parseInt(play);
+			setColumn(c);
+			addPiece = true;
+			nextState = false;
+			moveDirection = false;
 		}else if(play.matches(MOVE_BY_ID_NOTATION)){
-			final int strongId = Integer.parseInt(play.substring(3, 4));
+			final int strongId = Integer.parseInt(play.substring(1, 2));
 			final char direction = play.charAt(play.length()-1);
 			moveStrongInDirection(strongId, direction);
+			moveDirection = true;
+			nextState = false;
+			addPiece = false;
 		}else{
 			throw new IllegalArgumentException("Play string invalid: "+play);
 		}
-	}
-
-	public Play(final Point positionOnBoard) {
-		this(positionOnBoard.x,positionOnBoard.y);
 	}
 
 	@Override
@@ -67,10 +74,6 @@ public class Play implements Serializable{
 
 	public char getDirection() {
 		return direction;
-	}
-
-	public int getLine() {
-		return line;
 	}
 
 	public int getPieceId() {
@@ -90,17 +93,19 @@ public class Play implements Serializable{
 		return nextState;
 	}
 
+	public boolean isAddPiece() {
+		return addPiece;
+	}
+	
 	private void moveStrongInDirection(final int strongId, final char direction){
 		if(direction != UP && direction != DOWN && direction != LEFT && direction != RIGHT){
 			throw new IllegalArgumentException("Direction not valid: "+direction);
 		}
-		if(strongId > 9){
+		if(strongId > 3){
 			throw new IllegalArgumentException("Strong id invalid: "+strongId);
 		}
 		pieceId = strongId;
 		this.direction = direction;
-		moveDirection = true;
-		nextState = false;
 	}
 
 	private void setColumn(final int column) {
@@ -108,30 +113,6 @@ public class Play implements Serializable{
 			throw new IllegalArgumentException("column value is greater than board size");
 		}
 		this.column = column;
-		setIsPlayWithCoords();
-	}
-
-	private void setCoords(final int line, final int column) {
-		setLine(line);
-		setColumn(column);
-	}
-
-	private void setIsPlayWithCoords() {
-		nextState = false;
-		moveDirection = false;
-	}
-
-	private void setLine(final int line) {
-		if(line > Board.BOARD_SIZE) {
-			throw new IllegalArgumentException("line value is greater than board size");
-		}
-		this.line = line;
-		setIsPlayWithCoords();
-	}
-
-	private void setNextStatePlay() {
-		nextState = true;
-		moveDirection = false;
 	}
 
 	@Override
@@ -140,9 +121,9 @@ public class Play implements Serializable{
 			return NEXT_STATE;
 		}
 		if(isMoveDirection()){
-			final String playDesc = "mov"+getPieceId()+getDirection();
+			final String playDesc = MOVE+getPieceId()+getDirection();
 			return playDesc;
 		}
-		return "("+line+","+column+")";
+		return String.valueOf(column);
 	}
 }

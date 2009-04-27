@@ -1,46 +1,19 @@
 package gameLogic.gameFlow.gameStates;
 
-import gameLogic.Board;
-import gameLogic.Piece;
-import gameLogic.Play;
-import gameLogic.gameFlow.BoardListeners;
+import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
+import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.GameState;
-import gameLogic.gameFlow.PlayResult;
 
 public class GameStatePuttingWeaks implements GameState {
 
 	private int numberOfWeaksLeft;
-	private boolean shouldChangeState;
 	private final boolean isTopPlayerTurn;
 
 	public GameStatePuttingWeaks(final boolean isTopPlayerTurn) {
 		this.isTopPlayerTurn = isTopPlayerTurn;
 		numberOfWeaksLeft = GameState.NUMBER_OF_WEAK_PIECES_TO_PUT;
-	}
-
-	private PlayResult addPiece(final int pieceColumn, final Board board) {
-		final boolean addPieceResult = board.addPiece(getWeakPiece(), pieceColumn);
-		if(addPieceResult){
-			numberOfWeaksLeft--;
-		} else {
-			return invalidMoveYouCantDoThisPlayResult();
-		}
-		if(numberOfWeaksLeft == 0){
-			changeState();
-		}
-		return PlayResult.successfullPlay();
-	}
-
-	@Override
-	public String asStateUniqueName() {
-		if(isTopPlayerTurn){
-			return GameState.TOP_PLAYER_PUTTING_WEAKS;
-		}
-		return GameState.BOTTOM_PLAYER_PUTTING_WEAKS;
-	}
-
-	private void changeState() {
-		shouldChangeState = true;
 	}
 
 	@Override
@@ -49,17 +22,6 @@ public class GameStatePuttingWeaks implements GameState {
 			return GameState.TOP_PLAYER_PUTTING_WEAKS_DESCRIPTION;
 		}
 		return GameState.BOTTOM_PLAYER_PUTTING_WEAKS_DESCRIPTION;
-	}
-
-	private Piece getWeakPiece() {
-		if(isTopPlayerTurn) {
-			return Piece.getTopWeakPiece();
-		}
-		return Piece.getBottomWeakPiece();
-	}
-
-	private PlayResult invalidMoveYouCantDoThisPlayResult(){
-		return PlayResult.errorYouAddAPiece();
 	}
 
 	@Override
@@ -78,12 +40,20 @@ public class GameStatePuttingWeaks implements GameState {
 	}
 
 	@Override
-	public GameState nextState(final Board board, final BoardListeners listeners) {
-		return new GameStateMovingStrongs(isTopPlayerTurn());
+	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
+		if(play.isMoveDirection()){
+			throw new InvalidPlayException("You can't move a strong piece. You must add "+GameState.NUMBER_OF_WEAK_PIECES_TO_PUT+" weak pieces or pass the turn.");
+		}
+		return board.validatePlay(play, isTopPlayerTurn);
 	}
-
+	
 	@Override
-	public GameState nextStateIfChanged(final Board board, final BoardListeners listeners) {
+	public GameState play(ValidPlay validPlay, Board board){
+		if(validPlay.unbox().isNextState()){
+			return new GameStateMovingStrongs(isTopPlayerTurn());
+		}
+		board.play(validPlay, isTopPlayerTurn);
+		numberOfWeaksLeft--;
 		if(board.isGameDraw()){
 			return new GameStateGameEnded(GameStateGameEnded.DRAW);
 		}
@@ -93,19 +63,14 @@ public class GameStatePuttingWeaks implements GameState {
 		if(board.isBottomTheWinner()){
 			return new GameStateGameEnded(GameStateGameEnded.BOTTOM_WON);
 		}
-		if(stateEnded()) {
-			return nextState(board, listeners);
+		if(numberOfWeaksLeft == 0){
+			return new GameStateMovingStrongs(isTopPlayerTurn());
 		}
 		return this;
 	}
-
+	
 	@Override
-	public PlayResult play(final Play play, final Board board){
-		return addPiece(play.getColumn(), board);
-	}
-
-	@Override
-	public boolean stateEnded() {
-		return shouldChangeState;
+	public boolean isGameEnded() {
+		return false;
 	}
 }
