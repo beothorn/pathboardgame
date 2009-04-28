@@ -2,9 +2,11 @@ package gameLogic;
 
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
+import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.gameStates.GameState;
+import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -33,8 +35,38 @@ public class GameTests {
 		"--- --- --- --- --- --- --- ---\n" +
 		"BS1 BS2 --- --- --- --- --- ---";
 	
+	private final String testGravity = 
+		"TS1 TS2 TS3 --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"BS1 BS2 BS3 BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---";
+	
+	private final String testGravityNoGravity = 
+		"TS1 TS2 TS3 --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"BS1 BS2 --- BS3 BWK --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---";
+	
+	private final String testGravityApplyGravity = 
+		"TS1 TS2 TS3 --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"BS1 BS2 --- BS3 --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK --- --- --- ---\n" +
+		"--- --- --- BWK BWK --- --- ---";
+	
 	@Test
-	public void testASimpleGame() throws InvalidPlayException{
+	public void testASimpleGame() throws InvalidPlayException, InvalidPlayStringException{
 		final Game game = new Game();
 		putStrongs(game);//bottom
 		putStrongs(game);//top
@@ -61,7 +93,7 @@ public class GameTests {
 		}
 	}
 
-	private void passTurn(final Game game) throws InvalidPlayException {
+	private void passTurn(final Game game) throws InvalidPlayException, InvalidPlayStringException {
 		Play play = new Play(Play.NEXT_STATE);
 		final ValidPlay validPlay = game.validatePlay(play);
 		printGame(game,validPlay);
@@ -112,5 +144,20 @@ public class GameTests {
 		ValidPlay validPlay2 = game.validatePlay(play2);
 		game.play(validPlay2);
 		Assert.assertEquals(testLock2, BoardUtils.printBoard(game.getBoard()));
+	}
+	
+	@Test
+	public void testGravityOff() throws InvalidPlayException{
+		final Board board = BoardUtils.newBoardFromString(testGravity);
+		final boolean isTopPlayerTurn = false;
+		final GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
+		final Game game = new Game(board,gameState);
+		game.setGravityAfterPlay(false);
+		Play play = new Play(3,'r');
+		final ValidPlay validPlay = game.validatePlay(play);
+		game.play(validPlay);
+		Assert.assertEquals(testGravityNoGravity, BoardUtils.printBoard(game.getBoard()));
+		game.applyGravity();
+		Assert.assertEquals(testGravityApplyGravity, BoardUtils.printBoard(game.getBoard()));
 	}
 }

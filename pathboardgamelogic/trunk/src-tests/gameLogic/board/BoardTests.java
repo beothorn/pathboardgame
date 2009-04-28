@@ -475,7 +475,7 @@ public class BoardTests {
 	}
 	
 	@Test
-	public void testNextStateIsValid() throws InvalidPlayException{
+	public void testNextStateIsValid() throws InvalidPlayException, InvalidPlayStringException{
 		final Board board = new Board();
 		final Play play = new Play(Play.NEXT_STATE);
 		board.validatePlay(play, true);

@@ -2,12 +2,14 @@ package main;
 
 import gameLogic.Game;
 import gameLogic.board.InvalidPlayException;
+import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Set;
 
 import utils.BoardUtils;
 
@@ -18,11 +20,17 @@ public class Main {
 		
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		while (!game.isGameEnded()){
-			System.out.println(BoardUtils.printBoardWithCoordinates(game.getBoard()));
-			String line;
+		String line = "";
+		while (!game.isGameEnded() && !line.equals("q")){
+			printBoard(game);
 			line = reader.readLine();
-			Play play = new Play(line);
+			Play play;
+			try {
+				play = new Play(line);
+			} catch (InvalidPlayStringException i) {
+				System.out.println(i.getMessage());
+				continue;
+			}
 			boolean isValidPlay;
 			ValidPlay validPlay = null;
 			isValidPlay = true;
@@ -32,10 +40,12 @@ public class Main {
 				isValidPlay = false;
 				System.out.println(i.getMessage());
 			}
-			if(isValidPlay)
+			if(isValidPlay){
 				game.play(validPlay);
-			if(game.stateChanged())
+			}
+			if(game.stateChanged()){
 				System.out.println(game.getStateDescription());
+			}
 		}
 		
 		if(game.isBottomTheWinner()){
@@ -47,6 +57,16 @@ public class Main {
 		if(game.isGameDraw()){
 			System.out.println("Game Draw");
 		}
-		System.out.println(BoardUtils.printBoardWithCoordinates(game.getBoard()));
+		printBoard(game);
+	}
+
+	private static void printBoard(final Game game) {
+		String printBoardWithCoordinates = BoardUtils.printBoardWithCoordinates(game.getBoard());
+		Set<Integer> alreadyMovedPieces = game.getAlreadyMovedPieces();
+		for (Integer id : alreadyMovedPieces) {
+			String player = (game.isTopPlayerTurn())?"T":"B";
+			printBoardWithCoordinates = printBoardWithCoordinates.replace(player+"S"+id, player+"XX");
+		}
+		System.out.println(printBoardWithCoordinates);
 	}
 }

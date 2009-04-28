@@ -2,6 +2,7 @@ package gameLogic.gameFlow.gameStates;
 
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
+import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 import junit.framework.Assert;
@@ -23,7 +24,7 @@ public class GameStatePuttingStrongsTests {
 		"--- --- --- --- --- --- --- ---";
 	
 	@Test(expected = InvalidPlayException.class)
-	public void testPutingStrongsNextStatePlay() throws InvalidPlayException{
+	public void testPutingStrongsNextStatePlay() throws InvalidPlayException, InvalidPlayStringException{
 		boolean isFirstState = true;
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingStrongs gameStatePuttingStrongs = new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);

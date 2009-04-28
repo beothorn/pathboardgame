@@ -37,7 +37,7 @@ public class Play implements Serializable{
 		addPiece = false;
 	}
 	
-	public Play(final String play){
+	public Play(final String play) throws InvalidPlayStringException{
 		String playLower = play.toLowerCase();
 		if(playLower.matches(NEXT_STATE)){
 			nextState = true;
@@ -57,7 +57,7 @@ public class Play implements Serializable{
 			nextState = false;
 			addPiece = false;
 		}else{
-			throw new IllegalArgumentException("Play string invalid: "+playLower);
+			throw new InvalidPlayStringException("Play string invalid: "+playLower);
 		}
 	}
 

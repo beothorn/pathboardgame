@@ -140,9 +140,8 @@ public class BoardUtils {
 	//		return inverted;
 	//	}
 	
-	public static Board switchSides(Board boardCopy) {
+	public static void switchSides(Board board) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public static PlaySequence invertPlay(PlaySequence playSequence) {

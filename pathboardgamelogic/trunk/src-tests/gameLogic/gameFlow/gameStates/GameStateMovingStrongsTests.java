@@ -2,6 +2,7 @@ package gameLogic.gameFlow.gameStates;
 
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
+import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 import junit.framework.Assert;
@@ -42,7 +43,7 @@ public class GameStateMovingStrongsTests {
 	}
 	
 	@Test
-	public void testMovingStrongsNextStatePlay() throws InvalidPlayException{
+	public void testMovingStrongsNextStatePlay() throws InvalidPlayException, InvalidPlayStringException{
 		boolean isTopPlayerTurn = true;
 		GameStateMovingStrongs gameStateMovingStrongs = new GameStateMovingStrongs(isTopPlayerTurn);
 		Play play = new Play(Play.NEXT_STATE);

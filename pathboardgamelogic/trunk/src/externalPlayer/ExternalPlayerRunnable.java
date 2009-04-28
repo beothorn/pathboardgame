@@ -48,7 +48,7 @@ public class ExternalPlayerRunnable implements Runnable {
 				Board boardCopy = game.getBoard().copy();
 				final boolean isTopPlayerTurn = game.isTopPlayerTurn();
 				if(isTopPlayerTurn){
-					boardCopy = BoardUtils.switchSides(boardCopy);
+					BoardUtils.switchSides(boardCopy);
 				}
 				logger.debug("Quering External player play.");
 				logger.debug("\n" + boardCopy);

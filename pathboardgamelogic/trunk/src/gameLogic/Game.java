@@ -7,24 +7,31 @@ import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.gameStates.GameState;
 import gameLogic.gameFlow.gameStates.GameStateFactory;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class Game {
 
 	private GameState gameState;
 	private final Board board;
+	private final Set<Integer> alreadyMoved;
 	private boolean locked = false;
 	private boolean stateChanged = false;
 	private CountDownLatch endedCountDownLatch;
 	private CountDownLatch topCountDownLatch;
 	private CountDownLatch bottomCountDownLatch;
-	private final boolean topStarts = false;
 	private boolean gravityAfterPlay = true;
 
 	public Game() {
+		this(new Board(), GameStateFactory.getFirstState(false));
+	}
+	
+	public Game(final Board board,final GameState gameState){
 		createCountDownLatches();
-		board = new Board();
-		gameState = GameStateFactory.getFirstState(topStarts);
+		this.board = board.copy();
+		this.gameState = gameState;
+		alreadyMoved = new LinkedHashSet<Integer>();		
 	}
 
 	public void play(final ValidPlay validPlay){
@@ -52,12 +59,17 @@ public class Game {
 			board.applyGravity();
 	}
 
-	private void playAndGetNewState(final ValidPlay play) {
-		GameState newGameState = gameState.play(play,board);
+	private void playAndGetNewState(final ValidPlay validPlay) {
+		GameState newGameState = gameState.play(validPlay,board);
 		if(newGameState == gameState){
 			this.stateChanged = false;
+			Play play = validPlay.unbox();
+			if(play.isMoveDirection()){
+				getAlreadyMovedPieces().add(play.getPieceId());
+			}
 		}else{
 			this.stateChanged = true;
+			getAlreadyMovedPieces().clear();
 		}
 		gameState = newGameState;
 	}
@@ -164,5 +176,13 @@ public class Game {
 
 	public void setGravityAfterPlay(boolean gravityAfterPlay) {
 		this.gravityAfterPlay = gravityAfterPlay;
+	}
+
+	public Set<Integer> getAlreadyMovedPieces() {
+		return alreadyMoved;
+	}
+
+	public void applyGravity() {
+		board.applyGravity();
 	}
 }
