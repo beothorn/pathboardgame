@@ -69,6 +69,18 @@ public class GameStateMovingStrongsTests {
 		Assert.assertTrue(gameState instanceof GameStatePuttingWeaks);
 	}
 	
+	@Test(expected = InvalidPlayException.class)
+	public void testTryToMoveStrongTwice() throws InvalidPlayException{
+		boolean isTopPlayerTurn = true;
+		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
+		Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Play play = new Play(1,'u');
+		final ValidPlay validPlay = gameState.validatePlay(play, board);
+		gameState.play(validPlay, board);
+		final Play playAgain = new Play(1,'u');
+		gameState.validatePlay(playAgain, board);
+	}
+	
 	@Test
 	public void testEndGame() throws InvalidPlayException{
 		boolean isTopPlayerTurn = true;

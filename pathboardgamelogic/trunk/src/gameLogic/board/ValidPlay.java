@@ -10,4 +10,9 @@ public class ValidPlay {
 	public Play unbox(){
 		return validPlay;
 	}
+	
+	@Override
+	public String toString() {
+		return validPlay.toString();
+	}
 }

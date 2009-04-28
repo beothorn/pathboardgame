@@ -19,6 +19,7 @@ public class Game {
 	private CountDownLatch topCountDownLatch;
 	private CountDownLatch bottomCountDownLatch;
 	private final boolean topStarts = false;
+	private boolean gravityAfterPlay = true;
 
 	public Game() {
 		createCountDownLatches();
@@ -26,9 +27,8 @@ public class Game {
 		gameState = GameStateFactory.getFirstState(topStarts);
 	}
 
-	public void play(final ValidPlay play){
-		playAndGetNewState(play);
-		
+	public void play(final ValidPlay validPlay){
+		playAndGetNewState(validPlay);
 		if (gameState.isTopPlayerTurn()){
 			topCountDownLatch.countDown();
 		}else{
@@ -48,6 +48,8 @@ public class Game {
 			topCountDownLatch.countDown();
 			bottomCountDownLatch.countDown();
 		}
+		if(isGravityAfterPlay())
+			board.applyGravity();
 	}
 
 	private void playAndGetNewState(final ValidPlay play) {
@@ -61,7 +63,7 @@ public class Game {
 	}
 
 	public Board getBoard() {
-		return board;
+		return board.copy();
 	}
 
 	public String getStateDescription() {
@@ -91,6 +93,10 @@ public class Game {
 		return gameState.validatePlay(play,board);
 	}
 
+	public ValidPlay forceValidatePlay(final Play play) throws InvalidPlayException{
+		return gameState.validatePlay(play,board);
+	}
+	
 	private void createCountDownLatches() {
 		endedCountDownLatch = new CountDownLatch(1);
 		topCountDownLatch = new CountDownLatch(1);
@@ -135,8 +141,28 @@ public class Game {
 	public boolean isGameEnded() {
 		return gameState.isGameEnded();
 	}
+	
+	public boolean isTopTheWinner() {
+		return board.isTopTheWinner();
+	}
+	
+	public boolean isBottomTheWinner() {
+		return board.isBottomTheWinner();
+	}
 
-	public boolean isStateChanged() {
+	public boolean isGameDraw() {
+		return board.isGameDraw();
+	}
+	
+	public boolean stateChanged() {
 		return stateChanged;
+	}
+
+	public boolean isGravityAfterPlay() {
+		return gravityAfterPlay;
+	}
+
+	public void setGravityAfterPlay(boolean gravityAfterPlay) {
+		this.gravityAfterPlay = gravityAfterPlay;
 	}
 }

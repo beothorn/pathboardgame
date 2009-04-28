@@ -1,9 +1,9 @@
 package utils;
 
-import gameLogic.Piece;
-import gameLogic.PieceFactory;
 import gameLogic.PlaySequence;
 import gameLogic.board.Board;
+import gameLogic.board.piece.Piece;
+import gameLogic.board.piece.PieceFactory;
 
 public class BoardUtils {
 
@@ -56,6 +56,14 @@ public class BoardUtils {
 		throw new RuntimeException("Invalid piece string: "+pieceString);
 	}
 
+	public static String printBoardWithCoordinates(Board b) {
+		String coords = "";
+		for(int i=0; i< Board.BOARD_SIZE;i++){
+			coords += "00"+i+" ";
+		}
+		return coords+"\n"+printBoard(b);
+	}
+	
 	public static String printBoard(Board b) {
 		String boardString = "";
 		boolean firstLine = true;

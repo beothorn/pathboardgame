@@ -1,8 +1,8 @@
 package gameLogic.board;
 
 
-import gameLogic.Piece;
-import gameLogic.PieceFactory;
+import gameLogic.board.piece.Piece;
+import gameLogic.board.piece.PieceFactory;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -37,10 +37,10 @@ public class Board {
 	public ValidPlay validatePlay(final Play play, final boolean forTopPlayer) throws InvalidPlayException {
 		if(play.isAddPiece()){
 			if(forTopPlayer && !canAddTopPieceIn(play.getColumn())){
-				throw new InvalidPlayException("You can' add a strong piece in the column "+play.getColumn());
+				throw new InvalidPlayException("You can' add a piece in the column "+play.getColumn());
 			}
 			if(!forTopPlayer && !canAddBottomPieceIn(play.getColumn())){
-				throw new InvalidPlayException("You can' add a strong piece in the column "+play.getColumn());
+				throw new InvalidPlayException("You can' add a piece in the column "+play.getColumn());
 			}
 		}
 		if(play.isMoveDirection()){
@@ -85,7 +85,7 @@ public class Board {
 				return true;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private boolean canAddBottomPieceIn(int column) {
@@ -101,7 +101,7 @@ public class Board {
 				return true;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private Point getStrongPiecePosition(int pieceId, boolean topStrong) {
@@ -334,9 +334,13 @@ public class Board {
 
 	public Board copy() {
 		final Board boardCopy = new Board();
-		for (int i = 0; i < board.length; i++) {
-			System.arraycopy(board[i], 0, boardCopy.board[i] , 0, BOARD_SIZE);
+		Piece[][] copyPiecesArray = new Piece[BOARD_SIZE][BOARD_SIZE];
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			for (int j = 0; j < BOARD_SIZE; j++) {
+				copyPiecesArray[i][j] = board[i][j].copy();
+			}
 		}
+		boardCopy.board = copyPiecesArray;
 		return boardCopy;
 	}
 

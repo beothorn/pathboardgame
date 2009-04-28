@@ -1,4 +1,4 @@
-package gameLogic;
+package gameLogic.board.piece;
 
 public class PieceFactory {
 	

@@ -1,10 +1,10 @@
 package gameLogic.gameFlow.gameStates;
 
-import gameLogic.Piece;
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
+import gameLogic.board.piece.Piece;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

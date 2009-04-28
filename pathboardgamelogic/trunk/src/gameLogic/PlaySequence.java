@@ -8,8 +8,8 @@ import java.util.List;
 public class PlaySequence {
 
 	private List<Play> plays;
-	public static final char PLAYS_SEPARATOR = '|';
-	public static final int MAX_PLAYS = 9;
+	public static final String PLAYS_SEPARATOR = "\\s";
+	public static final int MAX_PLAYS = 6;
 
 	public PlaySequence() {
 		plays = new ArrayList<Play>();
@@ -37,15 +37,15 @@ public class PlaySequence {
 	}
 	
 	public void addPlays(final String plays){
-		final String[] playsArray = plays.split("\\"+PLAYS_SEPARATOR);
+		final String[] playsArray = plays.split(PLAYS_SEPARATOR);
 		for (final String play : playsArray) {
-			addPlay(new Play(play));
+//			addPlay(new Play(play));
 		}
 	}
 
 	private void explodeIfThereIsTooMuchPlays() {
 		if(plays.size()>MAX_PLAYS)
-			throw new RuntimeException("Just "+MAX_PLAYS+" in this game pal. Tryed to play:\n"+toString());
+			throw new RuntimeException("Just "+MAX_PLAYS+" allowed. Tried to play:\n"+toString());
 		
 	}
 
@@ -94,15 +94,5 @@ public class PlaySequence {
 
 	public int size() {
 		return plays.size();
-	}
-
-	public boolean thereIsStillPlaysLeft() {
-		return size() < PlaySequence.MAX_PLAYS;//TODO: mov vale por dois :(
-	}
-
-	public void closeSequence() {
-		if(thereIsStillPlaysLeft()){
-			addPlay(new Play(Play.NEXT_STATE));
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package gameLogic;
+package gameLogic.board.piece;
 
 public class Piece {
 	private static final int PIECE_EMPTY = 0;
@@ -73,6 +73,10 @@ public class Piece {
 	
 	public boolean isBottomPlayerStrongPiece(){
 		return pieceType == PIECE_BOTTOM_STRONG;
+	}
+	
+	public Piece copy(){
+		return new Piece(this.pieceType,this.id);
 	}
 	
 	@Override

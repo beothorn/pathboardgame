@@ -9,7 +9,7 @@ public class Play implements Serializable{
 	public static final char DOWN = 'd';
 	public static final char UP = 'u';
 
-	public static final String NEXT_STATE = "P";
+	public static final String NEXT_STATE = "p";
 	private static final String NORMAL_PLAY_NOTATION = "[0-8]";
 	private static final String MOVE_BY_ID_NOTATION = "m[0-3]["+RIGHT+LEFT+DOWN+UP+"]";
 
@@ -37,26 +37,27 @@ public class Play implements Serializable{
 		addPiece = false;
 	}
 	
-	public Play(final String play) {
-		if(play.matches(NEXT_STATE)){
+	public Play(final String play){
+		String playLower = play.toLowerCase();
+		if(playLower.matches(NEXT_STATE)){
 			nextState = true;
 			moveDirection = false;
 			addPiece = false;
-		}else if(play.matches(NORMAL_PLAY_NOTATION)){
-			final int c = Integer.parseInt(play);
+		}else if(playLower.matches(NORMAL_PLAY_NOTATION)){
+			final int c = Integer.parseInt(playLower);
 			setColumn(c);
 			addPiece = true;
 			nextState = false;
 			moveDirection = false;
-		}else if(play.matches(MOVE_BY_ID_NOTATION)){
-			final int strongId = Integer.parseInt(play.substring(1, 2));
-			final char direction = play.charAt(play.length()-1);
+		}else if(playLower.matches(MOVE_BY_ID_NOTATION)){
+			final int strongId = Integer.parseInt(playLower.substring(1, 2));
+			final char direction = playLower.charAt(playLower.length()-1);
 			moveStrongInDirection(strongId, direction);
 			moveDirection = true;
 			nextState = false;
 			addPiece = false;
 		}else{
-			throw new IllegalArgumentException("Play string invalid: "+play);
+			throw new IllegalArgumentException("Play string invalid: "+playLower);
 		}
 	}
 
