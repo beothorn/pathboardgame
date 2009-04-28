@@ -1,4 +1,4 @@
-package gameLogic.gameFlow;
+package gameLogic.gameFlow.gameStates;
 
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;

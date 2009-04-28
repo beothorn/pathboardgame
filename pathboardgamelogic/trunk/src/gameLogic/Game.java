@@ -4,7 +4,7 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
-import gameLogic.gameFlow.GameState;
+import gameLogic.gameFlow.gameStates.GameState;
 import gameLogic.gameFlow.gameStates.GameStateFactory;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,19 +12,22 @@ import java.util.concurrent.CountDownLatch;
 public class Game {
 
 	private GameState gameState;
-	private Board board;
+	private final Board board;
 	private boolean locked = false;
+	private boolean stateChanged = false;
 	private CountDownLatch endedCountDownLatch;
 	private CountDownLatch topCountDownLatch;
 	private CountDownLatch bottomCountDownLatch;
 	private final boolean topStarts = false;
 
 	public Game() {
-		restartGame();
+		createCountDownLatches();
+		board = new Board();
+		gameState = GameStateFactory.getFirstState(topStarts);
 	}
 
 	public void play(final ValidPlay play){
-		gameState = gameState.play(play,board);
+		playAndGetNewState(play);
 		
 		if (gameState.isTopPlayerTurn()){
 			topCountDownLatch.countDown();
@@ -45,6 +48,16 @@ public class Game {
 			topCountDownLatch.countDown();
 			bottomCountDownLatch.countDown();
 		}
+	}
+
+	private void playAndGetNewState(final ValidPlay play) {
+		GameState newGameState = gameState.play(play,board);
+		if(newGameState == gameState){
+			this.stateChanged = false;
+		}else{
+			this.stateChanged = true;
+		}
+		gameState = newGameState;
 	}
 
 	public Board getBoard() {
@@ -76,12 +89,6 @@ public class Game {
 			throw new InvalidPlayException(InvalidPlayException.MESSAGE_GAME_IS_LOCKED);
 		}
 		return gameState.validatePlay(play,board);
-	}
-
-	public void restartGame() {
-		createCountDownLatches();
-		board = new Board();
-		gameState = GameStateFactory.getFirstState(topStarts);
 	}
 
 	private void createCountDownLatches() {
@@ -127,5 +134,9 @@ public class Game {
 
 	public boolean isGameEnded() {
 		return gameState.isGameEnded();
+	}
+
+	public boolean isStateChanged() {
+		return stateChanged;
 	}
 }

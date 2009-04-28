@@ -1,6 +1,5 @@
 package gameLogic.gameFlow.gameStates;
 
-import gameLogic.gameFlow.GameState;
 
 
 public class GameStateFactory {

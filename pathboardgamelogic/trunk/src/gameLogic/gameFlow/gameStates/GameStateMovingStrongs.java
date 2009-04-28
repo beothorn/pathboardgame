@@ -5,7 +5,6 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
-import gameLogic.gameFlow.GameState;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -57,7 +56,7 @@ public class GameStateMovingStrongs implements GameState {
 		if(alreadyMoved.contains(play.getPieceId())) {
 			throw new InvalidPlayException("The strong piece "+play.getPieceId()+" was already moved this turn");
 		}
-		return null;
+		return board.validatePlay(play, isTopPlayerTurn);
 	}
 	
 	@Override

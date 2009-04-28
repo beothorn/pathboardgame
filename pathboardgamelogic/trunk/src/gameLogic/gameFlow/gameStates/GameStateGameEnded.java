@@ -4,7 +4,6 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
-import gameLogic.gameFlow.GameState;
 
 public class GameStateGameEnded implements GameState {
 
