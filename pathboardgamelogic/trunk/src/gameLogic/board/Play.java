@@ -11,10 +11,9 @@ public class Play implements Serializable{
 
 	public static final String NEXT_STATE = "p";
 	private static final String NORMAL_PLAY_NOTATION = "[0-8]";
-	private static final String MOVE_BY_ID_NOTATION = "m[0-3]["+RIGHT+LEFT+DOWN+UP+"]";
+	private static final String MOVE_BY_ID_NOTATION = "[0-3]["+RIGHT+LEFT+DOWN+UP+"]";
 
 	private static final long serialVersionUID = 1L;
-	public static final String MOVE = "m";
 
 	private int column;
 	private char direction;
@@ -50,7 +49,7 @@ public class Play implements Serializable{
 			nextState = false;
 			moveDirection = false;
 		}else if(playLower.matches(MOVE_BY_ID_NOTATION)){
-			final int strongId = Integer.parseInt(playLower.substring(1, 2));
+			final int strongId = Integer.parseInt(playLower.substring(0, 1));
 			final char direction = playLower.charAt(playLower.length()-1);
 			moveStrongInDirection(strongId, direction);
 			moveDirection = true;
@@ -122,7 +121,7 @@ public class Play implements Serializable{
 			return NEXT_STATE;
 		}
 		if(isMoveDirection()){
-			final String playDesc = MOVE+getPieceId()+getDirection();
+			final String playDesc = ""+getPieceId()+getDirection();
 			return playDesc;
 		}
 		return String.valueOf(column);

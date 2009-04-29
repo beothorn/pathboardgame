@@ -83,4 +83,20 @@ public class Piece {
 	public String toString() {
 		return String.valueOf(pieceType);
 	}
+
+	public static Piece switchPieceSide(Piece piece) {
+		if(piece.pieceType == PIECE_TOP_WEAK){
+			return new Piece(PIECE_BOTTOM_WEAK,piece.id);
+		}
+		if(piece.pieceType == PIECE_BOTTOM_WEAK){
+			return new Piece(PIECE_TOP_WEAK,piece.id);
+		}
+		if(piece.pieceType == PIECE_TOP_STRONG){
+			return new Piece(PIECE_BOTTOM_STRONG,piece.id);
+		}
+		if(piece.pieceType == PIECE_BOTTOM_STRONG){
+			return new Piece(PIECE_TOP_STRONG,piece.id);
+		}
+		return piece.copy();
+	}
 }

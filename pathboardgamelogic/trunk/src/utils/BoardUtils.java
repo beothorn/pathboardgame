@@ -141,7 +141,18 @@ public class BoardUtils {
 	//	}
 	
 	public static void switchSides(Board board) {
-		// TODO Auto-generated method stub
+		int boardSize = Board.BOARD_SIZE;
+		final int totalSize = boardSize*boardSize;
+		Board boardCopy = board.copy();
+		for(int i=0;i<totalSize;i++){
+			int srcLine = i / boardSize;
+			int srcColumn = i % boardSize;
+			int destLine = (totalSize-1-i) / boardSize;
+			int destColumn = (totalSize-1-i) % boardSize;
+			final Piece piece = boardCopy.getPieceAt(srcLine, srcColumn);
+			final Piece switchedPiece =Piece.switchPieceSide(piece);
+			board.setPieceAt(destLine, destColumn, switchedPiece);
+		}
 	}
 
 	public static PlaySequence invertPlay(PlaySequence playSequence) {
