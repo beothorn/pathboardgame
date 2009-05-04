@@ -1,5 +1,8 @@
 package gameLogic.board;
 
+
+
+
 public class InvalidPlayException extends Exception {
 
 	/**
@@ -7,22 +10,67 @@ public class InvalidPlayException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final String MESSAGE_FINISH_YOUR_PLAY = "You must finish your play first.";
-	public static final String MESSAGE_YOU_ALREADY_MOVED = "You already moved this piece";
-	public static final String MESSAGE_YOU_CANT_ADD = "You can't add a piece right now.";
-
-	public static final String MESSAGE_YOU_CANT_MOVE = "You can't move this piece";
-	public static final String MESSAGE_GAME_IS_LOCKED = "Wait your turn.";
+	private InvalidPlayException(final String message) {
+		super(message);
+	}
 	
-	private final String message;
-	
-	
-	
-	public InvalidPlayException(final String message) {
-		this.message = message;
+	public static InvalidPlayException cantAddPieceWhenMovingStrongs(final int numberOfStrongsToMove){
+		return new InvalidPlayException("You can't add a piece. You need to move "+numberOfStrongsToMove+" or pass the turn to putting weaks.");
 	}
 
-	public String getMessage() {
-		return message;
+	public static InvalidPlayException cantMoveStrongWhenPuttingStrongs(final int numberOfStrongsToPut) {
+		return new InvalidPlayException("You can't move a strong piece. You need to put "+numberOfStrongsToPut+" strong pieces");
+	}
+
+	public static InvalidPlayException cantMoveStrongWhenAddingWeaks(final int numberOfWeaksToPut) {
+		return new InvalidPlayException("You can't move a strong piece. You must add "+numberOfWeaksToPut+" weak pieces or pass the turn.");
+	}
+
+	public static InvalidPlayException cantAddAPiece(final int column) {
+		 return new InvalidPlayException("You can' add a piece in the column "+column);
+	}
+
+	public static InvalidPlayException cantMoveAPieceUp(final int pieceId) {
+		return new InvalidPlayException("You can' move "+pieceId+" up.");
+	}
+	
+	public static InvalidPlayException cantMoveAPieceDown(final int pieceId) {
+		return new InvalidPlayException("You can' move "+pieceId+" down.");
+	}
+	
+	public static InvalidPlayException cantMoveAPieceLeft(final int pieceId) {
+		return new InvalidPlayException("You can' move "+pieceId+" left.");
+	}
+	
+	public static InvalidPlayException cantMoveAPieceRight(final int pieceId) {
+		return new InvalidPlayException("You can' move "+pieceId+" right.");
+	}
+
+	public static InvalidPlayException invalidDierction(final char direction) {
+		return new InvalidPlayException("Invalid direction "+direction);
+	}
+
+	public static InvalidPlayException cantMovePieceAlreadyMoved(final int pieceId) {
+		return new InvalidPlayException("The strong piece "+pieceId+" was already moved this turn");
+	}
+
+	public static InvalidPlayException cantSkipPuttingStrongs(final int numberOfStrongPiecesToPut) {
+		return new InvalidPlayException("Can't skip the putting strongs turn. You need to put mmore "+numberOfStrongPiecesToPut+" strong pieces.");
+	}
+
+	public static InvalidPlayException gameIsLocked() {
+		return new InvalidPlayException("Wait your turn.");
+	}
+
+	public static InvalidPlayException gameAlreadyEnded(final String winner) {
+		return new InvalidPlayException("Game ended. "+winner);
+	}
+
+	public static InvalidPlayException itsNotYourTurn(boolean isTopPlayerTurn) {
+		if(isTopPlayerTurn){
+			return new InvalidPlayException("It is top players turn.");
+		}else{
+			return new InvalidPlayException("It is bottom players turn.");
+		}
 	}
 }

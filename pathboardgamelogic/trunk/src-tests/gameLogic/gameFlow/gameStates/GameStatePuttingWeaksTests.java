@@ -39,7 +39,7 @@ public class GameStatePuttingWeaksTests {
 		GameStatePuttingWeaks gameStatePuttingWeaks = new GameStatePuttingWeaks(isTopPlayerTurn);
 		final Play play = new Play(2,'u');
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
-		gameStatePuttingWeaks.validatePlay(play, board);
+		gameStatePuttingWeaks.validatePlay(play, board,isTopPlayerTurn);
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class GameStatePuttingWeaksTests {
 		GameStatePuttingWeaks gameStatePuttingWeaks = new GameStatePuttingWeaks(isTopPlayerTurn);
 		Play play = new Play(Play.NEXT_STATE);
 		Board board = new Board();
-		ValidPlay validPlay = gameStatePuttingWeaks.validatePlay(play, board);
+		ValidPlay validPlay = gameStatePuttingWeaks.validatePlay(play, board,isTopPlayerTurn);
 		GameState newGameState = gameStatePuttingWeaks.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStateMovingStrongs);
 		Assert.assertTrue(newGameState.isTopPlayerTurn());
@@ -62,7 +62,7 @@ public class GameStatePuttingWeaksTests {
 		
 		for(int i=0; i < GameState.NUMBER_OF_WEAK_PIECES_TO_PUT;i++){
 			final Play play = new Play(i);
-			final ValidPlay validPlay = gameState.validatePlay(play, board);
+			final ValidPlay validPlay = gameState.validatePlay(play, board,gameState.isTopPlayerTurn());
 			Assert.assertTrue(gameState.isTopPlayerTurn());
 			gameState = gameState.play(validPlay, board);
 		}
@@ -76,7 +76,7 @@ public class GameStatePuttingWeaksTests {
 		GameStatePuttingWeaks gameState = new GameStatePuttingWeaks(isTopPlayerTurn);
 		Play play = new Play(0);
 		Board board = BoardUtils.newBoardFromString(testEndGame);
-		ValidPlay validPlay = gameState.validatePlay(play, board);
+		ValidPlay validPlay = gameState.validatePlay(play, board, isTopPlayerTurn);
 		GameState newGameState = gameState.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStateGameEnded);
 		Assert.assertTrue(newGameState.isGameEnded());

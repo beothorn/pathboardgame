@@ -10,7 +10,6 @@ public class GameStateGameEnded implements GameState {
 	public static final int DRAW = 0;
 	public static final int TOP_WON = 1;
 	public static final int BOTTOM_WON = 2;
-	
 	private final int result;
 
 	public GameStateGameEnded(final int result) {
@@ -44,18 +43,28 @@ public class GameStateGameEnded implements GameState {
 	}
 
 	@Override
-	public GameState play(final ValidPlay play, final Board board){
+	public GameState play(final ValidPlay validPlay, final Board board){
+		if(validPlay.unbox().isNextState()){
+			return GameStateFactory.getFirstState();
+		}
 		return this;
 	}
 
 	@Override
-	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
-		throw new InvalidPlayException(getStateDescription());
+	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
+		if(play.isNextState())
+			return board.validatePlay(play, isTopPlayerPlay);
+		throw InvalidPlayException.gameAlreadyEnded(getStateDescription());
 	}
 
 	@Override
 	public boolean isGameEnded() {
 		return true;
+	}
+
+	@Override
+	public GameState copy() {
+		return new GameStateGameEnded(result);
 	}
 
 }

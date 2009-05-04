@@ -14,7 +14,7 @@ import org.junit.Test;
 import utils.BoardUtils;
 
 public class GameTests {
-
+	
 	private final String testLock = 
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
@@ -23,17 +23,7 @@ public class GameTests {
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 --- --- --- --- --- --- ---";
-	
-	private final String testLock2 = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 BS2 --- --- --- --- --- ---";
+		"--- BS1 --- --- --- --- --- ---";
 	
 	private final String testGravity = 
 		"TS1 TS2 TS3 --- --- --- --- ---\n" +
@@ -87,7 +77,7 @@ public class GameTests {
 	private void putStrongs(final Game game) throws InvalidPlayException {
 		for(int i = 0; i < GameState.NUMBER_OF_STRONG_PIECES_TO_PUT;i++){
 			Play play = new Play(i);
-			final ValidPlay validPlay = game.validatePlay(play);
+			final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 			printGame(game,validPlay);
 			game.play(validPlay);
 		}
@@ -95,7 +85,7 @@ public class GameTests {
 
 	private void passTurn(final Game game) throws InvalidPlayException, InvalidPlayStringException {
 		Play play = new Play(Play.NEXT_STATE);
-		final ValidPlay validPlay = game.validatePlay(play);
+		final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 		printGame(game,validPlay);
 		game.play(validPlay);
 	}
@@ -103,7 +93,7 @@ public class GameTests {
 	private void simpleMovePlay(final Game game) throws InvalidPlayException {
 		for(int i = 1; i < GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE+1;i++){
 			Play play = new Play(i,'u');
-			final ValidPlay validPlay = game.validatePlay(play);
+			final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 			printGame(game,validPlay);
 			game.play(validPlay);
 		}
@@ -112,14 +102,14 @@ public class GameTests {
 	private void simpleAddPlay(final Game game) throws InvalidPlayException {
 		for(int i = 0; i < GameState.NUMBER_OF_WEAK_PIECES_TO_PUT;i++){
 			Play play = new Play(Board.BOARD_SIZE-1);
-			final ValidPlay validPlay = game.validatePlay(play);
+			final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 			printGame(game,validPlay);
 			game.play(validPlay);
 		}
 	}
 
 	private void printGame(final Game game, ValidPlay validPlay) {
-		System.out.println(BoardUtils.printBoardWithCoordinates(game.getBoard()));
+		System.out.println(BoardUtils.printBoardWithCoordinates(game));
 		System.out.println("Play: "+validPlay);
 		System.out.println(game.getStateDescription());
 	}
@@ -127,23 +117,20 @@ public class GameTests {
 	@Test
 	public void testLockGame() throws InvalidPlayException{
 		final Game game = new Game();
-		game.setLocked(true);
+		game.setBottomLocked(true);
 		Play play = new Play(0);
 		boolean exceptionCatch = false;
 		try{
-			game.validatePlay(play);
+			game.validatePlay(play, game.isTopPlayerTurn());
 		}catch(InvalidPlayException i){
 			exceptionCatch = true;
 		}
 		Assert.assertTrue(exceptionCatch);
-		ValidPlay forcedValidPlay = game.forceValidatePlay(play);
-		game.play(forcedValidPlay);
-		Assert.assertEquals(testLock, BoardUtils.printBoard(game.getBoard()));
 		Play play2 = new Play(1);
-		game.setLocked(false);
-		ValidPlay validPlay2 = game.validatePlay(play2);
+		game.setBottomLocked(false);
+		ValidPlay validPlay2 = game.validatePlay(play2, game.isTopPlayerTurn());
 		game.play(validPlay2);
-		Assert.assertEquals(testLock2, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(testLock, BoardUtils.printBoard(game.getBoard()));
 	}
 	
 	@Test
@@ -154,9 +141,9 @@ public class GameTests {
 		final Game game = new Game(board,gameState);
 		game.setGravityAfterPlay(false);
 		Play play = new Play(3,'r');
-		final ValidPlay validPlay = game.validatePlay(play);
+		final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 		game.play(validPlay);
-		Assert.assertEquals(testGravityNoGravity, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(testGravityNoGravity, BoardUtils.printBoard(game));
 		game.applyGravity();
 		Assert.assertEquals(testGravityApplyGravity, BoardUtils.printBoard(game.getBoard()));
 	}

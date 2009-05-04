@@ -39,7 +39,7 @@ public class GameStateMovingStrongsTests {
 		GameStateMovingStrongs gameStateMovingStrongs = new GameStateMovingStrongs(isTopPlayerTurn);
 		final Play play = new Play(2);
 		final Board board = new Board();
-		gameStateMovingStrongs.validatePlay(play, board);
+		gameStateMovingStrongs.validatePlay(play, board, gameStateMovingStrongs.isTopPlayerTurn());
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class GameStateMovingStrongsTests {
 		GameStateMovingStrongs gameStateMovingStrongs = new GameStateMovingStrongs(isTopPlayerTurn);
 		Play play = new Play(Play.NEXT_STATE);
 		Board board = new Board();
-		ValidPlay validPlay = gameStateMovingStrongs.validatePlay(play, board);
+		ValidPlay validPlay = gameStateMovingStrongs.validatePlay(play, board,gameStateMovingStrongs.isTopPlayerTurn());
 		GameState newGameState = gameStateMovingStrongs.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStatePuttingWeaks);
 		Assert.assertFalse(newGameState.isTopPlayerTurn());
@@ -62,7 +62,7 @@ public class GameStateMovingStrongsTests {
 		
 		for(int i=1; i < GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE+1;i++){
 			final Play play = new Play(i,'u');
-			final ValidPlay validPlay = gameState.validatePlay(play, board);
+			final ValidPlay validPlay = gameState.validatePlay(play, board, gameState.isTopPlayerTurn());
 			Assert.assertTrue(gameState.isTopPlayerTurn());
 			gameState = gameState.play(validPlay, board);
 		}
@@ -76,10 +76,10 @@ public class GameStateMovingStrongsTests {
 		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(1,'u');
-		final ValidPlay validPlay = gameState.validatePlay(play, board);
+		final ValidPlay validPlay = gameState.validatePlay(play, board,gameState.isTopPlayerTurn());
 		gameState.play(validPlay, board);
 		final Play playAgain = new Play(1,'u');
-		gameState.validatePlay(playAgain, board);
+		gameState.validatePlay(playAgain, board,gameState.isTopPlayerTurn());
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class GameStateMovingStrongsTests {
 		GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Play play = new Play(1,'r');
 		Board board = BoardUtils.newBoardFromString(testEndGame);
-		ValidPlay validPlay = gameState.validatePlay(play, board);
+		ValidPlay validPlay = gameState.validatePlay(play, board, gameState.isTopPlayerTurn());
 		GameState newGameState = gameState.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStateGameEnded);
 		Assert.assertTrue(newGameState.isGameEnded());

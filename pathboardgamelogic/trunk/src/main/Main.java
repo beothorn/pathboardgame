@@ -3,8 +3,9 @@ package main;
 import gameLogic.Game;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.InvalidPlayStringException;
-import gameLogic.board.Play;
-import gameLogic.board.ValidPlay;
+import gameLogic.board.PlaySequence;
+import gameLogic.board.PlaySequenceValidator;
+import gameLogic.board.ValidPlaySequence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,53 +16,63 @@ import utils.BoardUtils;
 
 public class Main {
 	
-	public static void main(String[] args) throws IOException {
-		final Game game = new Game();
-		
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		
-		String line = "";
-		while (!game.isGameEnded() && !line.equals("q")){
-			printBoard(game);
-			line = reader.readLine();
-			Play play;
-			try {
-				play = new Play(line);
-			} catch (InvalidPlayStringException i) {
-				System.out.println(i.getMessage());
-				continue;
-			}
-			boolean isValidPlay;
-			ValidPlay validPlay = null;
-			isValidPlay = true;
-			try{
-				validPlay = game.validatePlay(play);
-			}catch(InvalidPlayException i){
-				isValidPlay = false;
-				System.out.println(i.getMessage());
-			}
-			if(isValidPlay){
-				game.play(validPlay);
-			}
-			if(game.stateChanged()){
-				System.out.println(game.getStateDescription());
-			}
-		}
-		
-		if(game.isBottomTheWinner()){
-			System.out.println("Bottom player wins");
-		}
-		if(game.isTopTheWinner()){
-			System.out.println("Top player wins");
-		}
-		if(game.isGameDraw()){
-			System.out.println("Game Draw");
-		}
-		printBoard(game);
+	private final Game game;
+	private final PlaySequenceValidator playSequenceValidator;
+
+	public Main() {
+		game = new Game();
+		playSequenceValidator = new PlaySequenceValidator(game);
+		printGameState();
 	}
 
-	private static void printBoard(final Game game) {
-		String printBoardWithCoordinates = BoardUtils.printBoardWithCoordinates(game.getBoard());
+	public boolean isGameEnded(){
+		return game.isGameEnded();
+	}
+	
+	public void play(final String line){
+		final PlaySequence playSequence;
+		try {
+			playSequence = new PlaySequence(line);
+		} catch (InvalidPlayStringException i) {
+			System.out.println(i.getMessage());
+			return;
+		}
+		final ValidPlaySequence validPlay;
+		try{
+			validPlay = playSequenceValidator.validatePlays(playSequence,game.isTopPlayerTurn());
+		}catch(InvalidPlayException i){
+			System.out.println(i.getMessage());
+			return;
+		}
+		playSequenceValidator.play(validPlay);
+		if(game.stateChanged()){
+			printGameState();
+		}
+		
+	}
+
+	private void printGameState() {
+		System.out.println(game.getStateDescription());
+	}
+	
+	public static void main(String[] args) throws IOException {
+		
+		final Main main = new Main();
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String line = "";
+		while (!main.isGameEnded() && line != null && !line.equals("q")){
+			main.printBoard();
+			line = reader.readLine();
+			if(line != null)
+				main.play(line);
+		}
+		main.printBoard();
+		if(line == null || line.equals("q"))
+			System.out.println("Quitted game");
+	}
+
+	public void printBoard() {
+		String printBoardWithCoordinates = BoardUtils.printBoardWithCoordinates(game);
 		Set<Integer> alreadyMovedPieces = game.getAlreadyMovedPieces();
 		for (Integer id : alreadyMovedPieces) {
 			String player = (game.isTopPlayerTurn())?"T":"B";

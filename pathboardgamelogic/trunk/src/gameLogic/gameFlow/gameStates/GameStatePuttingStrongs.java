@@ -16,12 +16,15 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	@Override
-	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
+	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
+		if(isTopPlayerPlay != isTopPlayerTurn ){
+			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+		}
 		if(play.isMoveDirection()){
-			throw new InvalidPlayException("You can't move a strong piece. You need to put "+GameState.NUMBER_OF_STRONG_PIECES_TO_PUT+" strong pieces");
+			throw InvalidPlayException.cantMoveStrongWhenPuttingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_PUT);
 		}
 		if(play.isNextState()){
-			throw new InvalidPlayException("Can't skip the putting strongs turn. You need to put "+GameState.NUMBER_OF_STRONG_PIECES_TO_PUT+" strong pieces");
+			throw InvalidPlayException.cantSkipPuttingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_PUT - board.countStrongsFor(isTopPlayerTurn));
 		}
 		return board.validatePlay(play, isTopPlayerTurn);
 	}
@@ -68,5 +71,10 @@ public class GameStatePuttingStrongs implements GameState {
 	@Override
 	public boolean isGameEnded() {
 		return false;
+	}
+
+	@Override
+	public GameState copy() {
+		return new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);
 	}
 }

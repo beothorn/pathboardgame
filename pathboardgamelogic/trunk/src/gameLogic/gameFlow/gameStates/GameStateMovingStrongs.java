@@ -4,7 +4,6 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
-import gameLogic.board.piece.Piece;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,7 +11,6 @@ import java.util.Set;
 public class GameStateMovingStrongs implements GameState {
 
 	private final Set<Integer> alreadyMoved;
-	private Piece selected;
 	private final boolean isTopPlayerTurn;
 
 	public GameStateMovingStrongs(final boolean isTopPlayerTurn) {
@@ -39,22 +37,21 @@ public class GameStateMovingStrongs implements GameState {
 		return false;
 	}
 
-	public boolean isThereAPieceSelected(){
-		return selected != null;
-	}
-
 	@Override
 	public boolean isTopPlayerTurn() {
 		return isTopPlayerTurn;
 	}
 
 	@Override
-	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
+	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
+		if(isTopPlayerPlay != isTopPlayerTurn ){
+			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+		}
 		if(play.isAddPiece()){
-			throw new InvalidPlayException("You can't add a piece. You need to move "+GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE+" or pass the turn to putting weaks.");
+			throw InvalidPlayException.cantAddPieceWhenMovingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE); 
 		}
 		if(alreadyMoved.contains(play.getPieceId())) {
-			throw new InvalidPlayException("The strong piece "+play.getPieceId()+" was already moved this turn");
+			throw InvalidPlayException.cantMovePieceAlreadyMoved(play.getPieceId());
 		}
 		return board.validatePlay(play, isTopPlayerTurn);
 	}
@@ -84,5 +81,12 @@ public class GameStateMovingStrongs implements GameState {
 	@Override
 	public boolean isGameEnded() {
 		return false;
+	}
+
+	@Override
+	public GameState copy() {
+		final GameStateMovingStrongs copy = new GameStateMovingStrongs(isTopPlayerTurn);
+		copy.alreadyMoved.addAll(alreadyMoved);
+		return copy;
 	}
 }

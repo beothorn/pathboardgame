@@ -46,9 +46,11 @@ public interface GameState {
 
 	public boolean isPuttingStrongsTurn();
 
-	public ValidPlay validatePlay(Play play, Board board) throws InvalidPlayException;
+	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay) throws InvalidPlayException;
 	
 	public GameState play(ValidPlay validPlay, Board board);
+	
+	public GameState copy();
 
 	public boolean isGameEnded();
 }

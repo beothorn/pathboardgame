@@ -39,9 +39,12 @@ public class GameStatePuttingWeaks implements GameState {
 	}
 
 	@Override
-	public ValidPlay validatePlay(Play play, Board board)throws InvalidPlayException {
+	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
+		if(isTopPlayerPlay != isTopPlayerTurn ){
+			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+		}
 		if(play.isMoveDirection()){
-			throw new InvalidPlayException("You can't move a strong piece. You must add "+GameState.NUMBER_OF_WEAK_PIECES_TO_PUT+" weak pieces or pass the turn.");
+			throw InvalidPlayException.cantMoveStrongWhenAddingWeaks(GameState.NUMBER_OF_WEAK_PIECES_TO_PUT);
 		}
 		return board.validatePlay(play, isTopPlayerTurn);
 	}
@@ -71,5 +74,12 @@ public class GameStatePuttingWeaks implements GameState {
 	@Override
 	public boolean isGameEnded() {
 		return false;
+	}
+
+	@Override
+	public GameState copy() {
+		final GameStatePuttingWeaks copy = new GameStatePuttingWeaks(isTopPlayerTurn);
+		copy.numberOfWeaksLeft = numberOfWeaksLeft;
+		return copy;
 	}
 }

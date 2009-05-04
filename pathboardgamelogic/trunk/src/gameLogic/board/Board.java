@@ -37,36 +37,36 @@ public class Board {
 	public ValidPlay validatePlay(final Play play, final boolean forTopPlayer) throws InvalidPlayException {
 		if(play.isAddPiece()){
 			if(forTopPlayer && !canAddTopPieceIn(play.getColumn())){
-				throw new InvalidPlayException("You can' add a piece in the column "+play.getColumn());
+				throw InvalidPlayException.cantAddAPiece(play.getColumn());
 			}
 			if(!forTopPlayer && !canAddBottomPieceIn(play.getColumn())){
-				throw new InvalidPlayException("You can' add a piece in the column "+play.getColumn());
+				throw InvalidPlayException.cantAddAPiece(play.getColumn());
 			}
 		}
 		if(play.isMoveDirection()){
 			switch(play.getDirection()){
 			case Play.UP:
 				if(!canMoveStrongUp(play.getPieceId(),forTopPlayer)){
-					throw new InvalidPlayException("You can' move "+play.getPieceId()+" up.");
+					throw InvalidPlayException.cantMoveAPieceUp(play.getPieceId());
 				}
 				break;
 			case Play.DOWN:
 				if(!canMoveStrongDown(play.getPieceId(),forTopPlayer)){
-					throw new InvalidPlayException("You can' move "+play.getPieceId()+" down.");
+					throw InvalidPlayException.cantMoveAPieceDown(play.getPieceId());
 				}
 				break;
 			case Play.LEFT:
 				if(!canMoveStrongLeft(play.getPieceId(),forTopPlayer)){
-					throw new InvalidPlayException("You can' move "+play.getPieceId()+" left.");
+					throw InvalidPlayException.cantMoveAPieceLeft(play.getPieceId());
 				}
 				break;
 			case Play.RIGHT:
 				if(!canMoveStrongRight(play.getPieceId(),forTopPlayer)){
-					throw new InvalidPlayException("You can' move "+play.getPieceId()+" right.");
+					throw InvalidPlayException.cantMoveAPieceRight(play.getPieceId());
 				}
 				break;
 			default:
-				throw new InvalidPlayException("Invalid direction "+play.getDirection());	
+				throw InvalidPlayException.invalidDierction(play.getDirection());	
 			}
 		}
 		return new ValidPlay(play);
@@ -233,7 +233,7 @@ public class Board {
 		}
 	}
 
-	private int countStrongBottoms() {
+	public int countStrongBottoms() {
 			int counter = 0;
 			for (int i = 0; i < board.length; i++) {
 				for (int j = 0; j < board[i].length; j++) {

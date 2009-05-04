@@ -1,6 +1,5 @@
-package gameLogic;
+package gameLogic.board;
 
-import gameLogic.board.Play;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +7,13 @@ import java.util.List;
 public class PlaySequence {
 
 	private List<Play> plays;
-	public static final String PLAYS_SEPARATOR = "\\s";
-	public static final int MAX_PLAYS = 6;
+	public static final String PLAYS_SEPARATOR = " ";
 
 	public PlaySequence() {
 		plays = new ArrayList<Play>();
 	}
 
-	public PlaySequence(final String plays) {
+	public PlaySequence(final String plays) throws InvalidPlayStringException {
 		this();
 		addPlays(plays);
 	}
@@ -32,21 +30,16 @@ public class PlaySequence {
 	}
 
 	public void addPlay(final Play p){
-		getPlays().add(p);
-		explodeIfThereIsTooMuchPlays();
+		plays.add(p);
 	}
 	
-	public void addPlays(final String plays){
-		final String[] playsArray = plays.split(PLAYS_SEPARATOR);
+	public void addPlays(final String playsString) throws InvalidPlayStringException{
+		final String[] playsArray = playsString.split(PLAYS_SEPARATOR);
+		final ArrayList<Play> newPlays = new ArrayList<Play>();
 		for (final String play : playsArray) {
-//			addPlay(new Play(play));
+			newPlays.add(new Play(play));
 		}
-	}
-
-	private void explodeIfThereIsTooMuchPlays() {
-		if(plays.size()>MAX_PLAYS)
-			throw new RuntimeException("Just "+MAX_PLAYS+" allowed. Tried to play:\n"+toString());
-		
+		plays.addAll(newPlays);
 	}
 
 	public PlaySequence copy() {

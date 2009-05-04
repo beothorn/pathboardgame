@@ -30,7 +30,7 @@ public class GameStatePuttingStrongsTests {
 		GameStatePuttingStrongs gameStatePuttingStrongs = new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);
 		Play play = new Play(Play.NEXT_STATE);
 		Board board = new Board();
-		gameStatePuttingStrongs.validatePlay(play, board);
+		gameStatePuttingStrongs.validatePlay(play, board,gameStatePuttingStrongs.isTopPlayerTurn());
 	}
 	
 	@Test(expected = InvalidPlayException.class)
@@ -40,7 +40,7 @@ public class GameStatePuttingStrongsTests {
 		GameStatePuttingStrongs gameStatePuttingStrongs = new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);
 		final Play play = new Play(2,'u');
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
-		gameStatePuttingStrongs.validatePlay(play, board);
+		gameStatePuttingStrongs.validatePlay(play, board, gameStatePuttingStrongs.isTopPlayerTurn());
 	}
 	
 	@Test
@@ -52,7 +52,7 @@ public class GameStatePuttingStrongsTests {
 		
 		for(int i=0; i < GameState.NUMBER_OF_STRONG_PIECES_TO_PUT;i++){
 			final Play play = new Play(i);
-			final ValidPlay validPlay = gameState.validatePlay(play, board);
+			final ValidPlay validPlay = gameState.validatePlay(play, board,gameState.isTopPlayerTurn());
 			Assert.assertTrue(gameState.isTopPlayerTurn());
 			gameState = gameState.play(validPlay, board);
 		}
@@ -68,7 +68,7 @@ public class GameStatePuttingStrongsTests {
 		
 		for(int i=0; i < GameState.NUMBER_OF_STRONG_PIECES_TO_PUT;i++){
 			final Play play = new Play(i);
-			final ValidPlay validPlay = gameState.validatePlay(play, board);
+			final ValidPlay validPlay = gameState.validatePlay(play, board,gameState.isTopPlayerTurn());
 			Assert.assertTrue(gameState instanceof GameStatePuttingStrongs);
 			gameState = gameState.play(validPlay, board);
 		}

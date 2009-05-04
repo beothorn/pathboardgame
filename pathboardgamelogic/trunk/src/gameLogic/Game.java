@@ -16,7 +16,8 @@ public class Game {
 	private GameState gameState;
 	private final Board board;
 	private final Set<Integer> alreadyMoved;
-	private boolean locked = false;
+	private boolean topLocked = false;
+	private boolean bottomLocked = false;
 	private boolean stateChanged = false;
 	private CountDownLatch endedCountDownLatch;
 	private CountDownLatch topCountDownLatch;
@@ -86,10 +87,6 @@ public class Game {
 		return gameState.isBottomPlayerTurn();
 	}
 
-	public boolean isLocked() {
-		return locked;
-	}
-
 	public boolean isPuttingStrongsTurn() {
 		return gameState.isPuttingStrongsTurn();
 	}
@@ -98,25 +95,20 @@ public class Game {
 		return gameState.isTopPlayerTurn();
 	}
 	
-	public ValidPlay validatePlay(final Play play) throws InvalidPlayException{
-		if(isLocked()){
-			throw new InvalidPlayException(InvalidPlayException.MESSAGE_GAME_IS_LOCKED);
+	public ValidPlay validatePlay(final Play play,final boolean isTopPlayerPlay) throws InvalidPlayException{
+		if(isTopPlayerPlay && isTopLocked()){
+			throw InvalidPlayException.gameIsLocked();
 		}
-		return gameState.validatePlay(play,board);
-	}
-
-	public ValidPlay forceValidatePlay(final Play play) throws InvalidPlayException{
-		return gameState.validatePlay(play,board);
+		if(!isTopPlayerPlay && isBottomLocked()){
+			throw InvalidPlayException.gameIsLocked();
+		}
+		return gameState.validatePlay(play,board,isTopPlayerPlay);
 	}
 	
 	private void createCountDownLatches() {
 		endedCountDownLatch = new CountDownLatch(1);
 		topCountDownLatch = new CountDownLatch(1);
 		bottomCountDownLatch = new CountDownLatch(1);
-	}
-
-	public void setLocked(final boolean locked) {
-		this.locked = locked;
 	}
 
 	public void waitUntilEnded() {
@@ -184,5 +176,28 @@ public class Game {
 
 	public void applyGravity() {
 		board.applyGravity();
+	}
+	
+	public Game copy(){
+		Game copy = new Game(board.copy(),gameState.copy());
+		copy.alreadyMoved.addAll(alreadyMoved);
+		copy.gravityAfterPlay = gravityAfterPlay;
+		return copy;
+	}
+
+	public void setTopLocked(boolean topLocked) {
+		this.topLocked = topLocked;
+	}
+
+	public boolean isTopLocked() {
+		return topLocked;
+	}
+
+	public void setBottomLocked(boolean bottomLocked) {
+		this.bottomLocked = bottomLocked;
+	}
+
+	public boolean isBottomLocked() {
+		return bottomLocked;
 	}
 }

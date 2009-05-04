@@ -1,9 +1,13 @@
 package utils;
 
-import gameLogic.PlaySequence;
+import gameLogic.Game;
 import gameLogic.board.Board;
+import gameLogic.board.Play;
+import gameLogic.board.PlaySequence;
 import gameLogic.board.piece.Piece;
 import gameLogic.board.piece.PieceFactory;
+
+import java.util.List;
 
 public class BoardUtils {
 
@@ -56,12 +60,16 @@ public class BoardUtils {
 		throw new RuntimeException("Invalid piece string: "+pieceString);
 	}
 
-	public static String printBoardWithCoordinates(Board b) {
+	public static String printBoardWithCoordinates(final Board b) {
 		String coords = "";
 		for(int i=0; i< Board.BOARD_SIZE;i++){
 			coords += "00"+i+" ";
 		}
 		return coords+"\n"+printBoard(b);
+	}
+	
+	public static String printBoardWithCoordinates(final Game game) {
+		return printBoardWithCoordinates(game.getBoard());
 	}
 	
 	public static String printBoard(Board b) {
@@ -104,26 +112,7 @@ public class BoardUtils {
 		}
 		return boardString;
 	}
-
-	//
-	//	public void switchSides() {
-	//		String string = toString();
-	//		String newBoard = "";
-	//		for (int i = string.length()-2; i >= 0; i--) {
-	//			newBoard += string.charAt(i);
-	//		}
-	//		
-	//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_STRONG, 'X');
-	//		newBoard = newBoard.replace(Piece.PIECE_TOP_STRONG, Piece.PIECE_BOTTOM_STRONG);
-	//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_STRONG);
-	//		
-	//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_WEAK, 'X');
-	//		newBoard = newBoard.replace(Piece.PIECE_TOP_WEAK, Piece.PIECE_BOTTOM_WEAK);
-	//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_WEAK);
-	//		
-	//		fromString(newBoard);
-	//	}
-	//
+	
 	//	public static PlaySequence invertPlay(final PlaySequence playSequence) {
 	//		PlaySequence inverted = new PlaySequence();
 	//		for (Play play : playSequence.getPlays()) {
@@ -140,10 +129,16 @@ public class BoardUtils {
 	//		return inverted;
 	//	}
 	
-	public static void switchSides(Board board) {
+	public static Board newBoardSwitchedSides(final Board board){
+		final Board boardCopy = board.copy();
+		switchSides(boardCopy);
+		return boardCopy;
+	}
+	
+	private static void switchSides(final Board board) {
 		int boardSize = Board.BOARD_SIZE;
 		final int totalSize = boardSize*boardSize;
-		Board boardCopy = board.copy();
+		final Board boardCopy = board.copy();
 		for(int i=0;i<totalSize;i++){
 			int srcLine = i / boardSize;
 			int srcColumn = i % boardSize;
@@ -156,7 +151,40 @@ public class BoardUtils {
 	}
 
 	public static PlaySequence invertPlay(PlaySequence playSequence) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Play> plays = playSequence.getPlays();
+		final PlaySequence invertedPlaySequence = new PlaySequence();
+		for (int i = 0; i < plays.size(); i++) {
+			final Play play = plays.get(i);
+			final Play invertedPlay;
+			if(play.isAddPiece()){
+				invertedPlay = new Play((Board.BOARD_SIZE-1) - play.getColumn());
+			}else if(play.isMoveDirection()){
+				char direction = play.getDirection();
+				switch(direction){
+				case Play.UP:
+					invertedPlay = new Play(play.getPieceId(),Play.DOWN);
+					break;
+				case Play.DOWN:
+					invertedPlay = new Play(play.getPieceId(),Play.UP);
+					break;
+				case Play.LEFT:
+					invertedPlay = new Play(play.getPieceId(),Play.RIGHT);
+					break;
+				case Play.RIGHT:
+					invertedPlay = new Play(play.getPieceId(),Play.LEFT);
+					break;
+				default:
+					invertedPlay = play;
+				}
+			}else{
+				invertedPlay = play;
+			}
+			invertedPlaySequence.addPlay(invertedPlay);
+		}
+		return invertedPlaySequence;
+	}
+
+	public static String printBoard(Game game) {
+		return printBoard(game.getBoard());
 	}	
 }
