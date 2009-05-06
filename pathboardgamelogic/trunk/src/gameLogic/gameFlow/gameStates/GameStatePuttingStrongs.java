@@ -18,7 +18,7 @@ public class GameStatePuttingStrongs implements GameState {
 	@Override
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
 		if(isTopPlayerPlay != isTopPlayerTurn ){
-			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+			throw InvalidPlayException.itsNotYourTurn(!isTopPlayerTurn);
 		}
 		if(play.isMoveDirection()){
 			throw InvalidPlayException.cantMoveStrongWhenPuttingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_PUT);

@@ -41,7 +41,7 @@ public class GameStatePuttingWeaks implements GameState {
 	@Override
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
 		if(isTopPlayerPlay != isTopPlayerTurn ){
-			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+			throw InvalidPlayException.itsNotYourTurn(!isTopPlayerTurn);
 		}
 		if(play.isMoveDirection()){
 			throw InvalidPlayException.cantMoveStrongWhenAddingWeaks(GameState.NUMBER_OF_WEAK_PIECES_TO_PUT);

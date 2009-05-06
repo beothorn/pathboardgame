@@ -1,5 +1,7 @@
 package gameLogic.board;
 
+import java.awt.Point;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -8,7 +10,10 @@ import utils.BoardUtils;
 
 public class BoardTests {
 	
-	private final String boardWithBS1at0 = 
+	@Test
+	public void testAddBottomStrongPiece() throws InvalidPlayException{
+		boolean forTopPlayer = false;
+		final String boardWithBS1at0 =
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
@@ -17,230 +22,7 @@ public class BoardTests {
 		"--- --- --- --- --- --- --- ---\n" +
 		"--- --- --- --- --- --- --- ---\n" +
 		"BS1 --- --- --- --- --- --- ---";
-	
-	private final String testAdd3BottomStrongPiecesAnd1Weak =
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 BS2 BS3 BWK --- --- --- ---";
-	
-	private final String boardWithTS1at0 = 
-		"TS1 --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrong = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- TS2 --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testCantMoveTopWeakBlock = 
-		"TWK TS3 --- TS1 TWK TS2 TWK TWK\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BS1 --- --- --- ---\n" +
-		"--- --- --- BS2 --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongRight = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- TS2 --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongRightPushingPieces = 
-		"TWK TWK TWK TWK TS2 TWK TWK TS1\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongRightPushingPiecesResult = 
-		"TS1 TWK TWK TWK TWK TS2 TWK TWK\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongLeft = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- TS2 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongUp = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- TS2 --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testMoveTopStrongDown = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- TS2 --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testAdd3TopStrongPiecesAnd1Weak =
-		"TS1 TS2 TS3 TWK --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testTopWins =
-		"--- --- TWK --- --- --- --- ---\n" +
-		"TWK --- TWK TWK --- TWK TWK TWK\n" +
-		"TWK --- --- TWK --- TWK --- ---\n" +
-		"TWK TWK --- TWK TWK TWK --- ---\n" +
-		"--- TWK --- --- --- --- --- ---\n" +
-		"--- TWK --- --- --- --- --- ---\n" +
-		"--- TWK --- --- --- --- --- ---\n" +
-		"--- TWK --- --- --- --- --- ---";
-	
-	private final String testTopWinsBifurcationLeft =
-		"--- --- --- TWK --- --- --- ---\n" +
-		"--- --- --- TWK --- --- --- ---\n" +
-		"--- --- --- TWK TWK TWK TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- TWK TWK ---\n" +
-		"--- --- --- TWK --- --- --- ---";
-	
-	private final String testTopWinsBifurcationRight =
-		"--- --- --- TWK --- --- --- ---\n" +
-		"--- --- --- TWK --- --- --- ---\n" +
-		"--- --- --- TWK TWK TWK TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- --- TWK ---\n" +
-		"--- --- --- TWK --- TWK TWK ---\n" +
-		"--- --- --- --- --- TWK --- ---";
-	
-	private final String testBottomWins =
-		"BWK --- --- --- --- --- --- ---\n" +
-		"BWK BWK --- --- --- BWK --- ---\n" +
-		"--- BWK --- --- --- BWK --- ---\n" +
-		"--- BWK BWK BWK BWK BWK --- ---\n" +
-		"--- BWK BWK --- --- BWK --- ---\n" +
-		"--- BWK BWK --- --- BWK --- ---\n" +
-		"--- --- --- BWK BWK BWK --- ---\n" +
-		"--- --- --- BWK --- --- --- ---";
-	
-	private final String testDraw =
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---\n" +
-		"--- --- --- BWK TWK --- --- ---";
-	
-	private final String testGravity =
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"TWK TWK --- --- --- --- --- ---\n" +
-		"--- TWK TS1 BWK BS1 --- --- ---\n" +
-		"--- --- TWK TWK BWK --- --- ---\n" +
-		"--- TWK TWK --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- TWK TWK --- --- --- --- ---";
-	
-	private final String testGravityResult =
-		"TWK TWK --- --- --- --- --- ---\n" +
-		"--- TWK --- --- --- --- --- ---\n" +
-		"--- TWK --- --- --- --- --- ---\n" +
-		"--- TWK TS1 BWK BS1 --- --- ---\n" +
-		"--- --- TWK TWK --- --- --- ---\n" +
-		"--- --- TWK --- --- --- --- ---\n" +
-		"--- --- TWK --- --- --- --- ---\n" +
-		"--- --- --- --- BWK --- --- ---";
-	
-	private final String testPushingPiece =
-		"--- --- TWK --- --- --- TS1 TWK\n" +
-		"--- --- BS2 --- --- --- BS1 ---\n" +
-		"--- --- TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- TS2 --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---";
-	
-	private final String testPushingPieceTS1Right =
-		"TWK --- TWK --- --- --- --- TS1\n" +
-		"--- --- BS2 --- --- --- BS1 ---\n" +
-		"--- --- TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- TS2 --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---";
-	
-	private final String testPushingPieceTS3UpDown =
-		"--- --- BS2 --- --- --- TS1 TWK\n" +
-		"--- --- --- --- --- --- BS1 ---\n" +
-		"--- --- TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- TS2 --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---";
-	
-	private final String testPushingPieceTS2DownUp =
-		"--- --- TWK --- --- --- TS1 TWK\n" +
-		"--- --- BS2 --- --- --- BS1 ---\n" +
-		"--- --- TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- TS2 --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- TWK --- ---\n" +
-		"--- --- --- --- --- TWK --- ---";
-	
-	@Test
-	public void testAddBottomStrongPiece() throws InvalidPlayException{
-		boolean forTopPlayer = false;
+		
 		Board board = new Board();
 		addStrongPieceIn0(board,forTopPlayer);
 		Assert.assertEquals(boardWithBS1at0, BoardUtils.printBoard(board));
@@ -249,12 +31,30 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testInvalidAddBottomStrongPiece() throws InvalidPlayException{
 		boolean forTopPlayer = false;
+		final String boardWithBS1at0 =
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 --- --- --- --- --- --- ---";
 		addStrongPieceIn0(BoardUtils.newBoardFromString(boardWithBS1at0),forTopPlayer);
 	}
 	
 	@Test
 	public void testAdd3BottomStrongPiecesAnd1Weak() throws InvalidPlayException{
 		boolean forTopPlayer = false;
+		final String testAdd3BottomStrongPiecesAnd1Weak =
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"--- --- --- --- --- --- --- ---\n" +
+		"BS1 BS2 BS3 BWK --- --- --- ---";
 		final Board board = new Board();
 		add3StrongAnd1Weak(board,forTopPlayer);
 		Assert.assertEquals(testAdd3BottomStrongPiecesAnd1Weak, BoardUtils.printBoard(board));
@@ -263,6 +63,15 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testCantMoveTopStrongRight() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testCantMoveTopWeakBlock = 
+			"TWK TS3 --- TS1 TWK TS2 TWK TWK\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BS1 --- --- --- ---\n" +
+			"--- --- --- BS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'r');
 		board.validatePlay(play, forTopPlayer);
@@ -271,6 +80,15 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testCantMoveTopStrongLeft() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testCantMoveTopWeakBlock = 
+			"TWK TS3 --- TS1 TWK TS2 TWK TWK\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BS1 --- --- --- ---\n" +
+			"--- --- --- BS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(3,'l');
 		board.validatePlay(play, forTopPlayer);
@@ -279,6 +97,15 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testCantMoveTopStrongUp() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testCantMoveTopWeakBlock = 
+			"TWK TS3 --- TS1 TWK TS2 TWK TWK\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BS1 --- --- --- ---\n" +
+			"--- --- --- BS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'u');
 		board.validatePlay(play, forTopPlayer);
@@ -287,6 +114,15 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testCantMoveTopStrongDown() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testCantMoveTopWeakBlock = 
+			"TWK TS3 --- TS1 TWK TS2 TWK TWK\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BS1 --- --- --- ---\n" +
+			"--- --- --- BS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'d');
 		board.validatePlay(play, forTopPlayer);
@@ -296,6 +132,24 @@ public class BoardTests {
 	@Test
 	public void testMoveTopStrongRight() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final String testMoveTopStrongRight = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- TS2 --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'r');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -306,6 +160,24 @@ public class BoardTests {
 	@Test
 	public void testMoveTopStrongUp() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final String testMoveTopStrongUp = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'u');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -316,6 +188,24 @@ public class BoardTests {
 	@Test
 	public void testMoveTopStrongDown() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final String testMoveTopStrongDown = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'d');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -326,6 +216,24 @@ public class BoardTests {
 	@Test
 	public void testMoveTopStrongLeft() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final String testMoveTopStrongLeft = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- TS2 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'l');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -336,6 +244,24 @@ public class BoardTests {
 	@Test
 	public void testMoveTopStrongRightPushingPieces() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testMoveTopStrongRightPushingPieces = 
+			"TWK TWK TWK TWK TS2 TWK TWK TS1\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final String testMoveTopStrongRightPushingPiecesResult = 
+			"TS1 TWK TWK TWK TWK TS2 TWK TWK\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testMoveTopStrongRightPushingPieces);
 		final Play play = new Play(2,'r');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -360,6 +286,15 @@ public class BoardTests {
 	@Test
 	public void testAddTopStrongPiece() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String boardWithTS1at0 = 
+			"TS1 --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		Board board = new Board();
 		addStrongPieceIn0(board,forTopPlayer);
 		Assert.assertEquals(boardWithTS1at0, BoardUtils.printBoard(board));
@@ -375,12 +310,30 @@ public class BoardTests {
 	@Test(expected = InvalidPlayException.class)
 	public void testInvalidAddTopStrongPiece() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String boardWithTS1at0 = 
+			"TS1 --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		addStrongPieceIn0(BoardUtils.newBoardFromString(boardWithTS1at0),forTopPlayer);
 	}
 	
 	@Test
 	public void testAdd3TopStrongPiecesAnd1Weak() throws InvalidPlayException{
 		boolean forTopPlayer = true;
+		final String testAdd3TopStrongPiecesAnd1Weak =
+			"TS1 TS2 TS3 TWK --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		final Board board = new Board();
 		add3StrongAnd1Weak(board,forTopPlayer);
 		Assert.assertEquals(testAdd3TopStrongPiecesAnd1Weak, BoardUtils.printBoard(board));
@@ -388,6 +341,15 @@ public class BoardTests {
 	
 	@Test
 	public void testTopWins(){
+		final String testTopWins =
+			"--- --- TWK --- --- --- --- ---\n" +
+			"TWK --- TWK TWK --- TWK TWK TWK\n" +
+			"TWK --- --- TWK --- TWK --- ---\n" +
+			"TWK TWK --- TWK TWK TWK --- ---\n" +
+			"--- TWK --- --- --- --- --- ---\n" +
+			"--- TWK --- --- --- --- --- ---\n" +
+			"--- TWK --- --- --- --- --- ---\n" +
+			"--- TWK --- --- --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testTopWins);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
@@ -397,6 +359,15 @@ public class BoardTests {
 	
 	@Test
 	public void testTopWinsBifurcationLeft(){
+		final String testTopWinsBifurcationLeft =
+			"--- --- --- TWK --- --- --- ---\n" +
+			"--- --- --- TWK --- --- --- ---\n" +
+			"--- --- --- TWK TWK TWK TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- TWK TWK ---\n" +
+			"--- --- --- TWK --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testTopWinsBifurcationLeft);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
@@ -406,6 +377,15 @@ public class BoardTests {
 	
 	@Test
 	public void testTopWinsBifurcationRight(){
+		final String testTopWinsBifurcationRight =
+			"--- --- --- TWK --- --- --- ---\n" +
+			"--- --- --- TWK --- --- --- ---\n" +
+			"--- --- --- TWK TWK TWK TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- --- TWK ---\n" +
+			"--- --- --- TWK --- TWK TWK ---\n" +
+			"--- --- --- --- --- TWK --- ---";
 		final Board board = BoardUtils.newBoardFromString(testTopWinsBifurcationRight);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
@@ -415,6 +395,15 @@ public class BoardTests {
 	
 	@Test
 	public void testBottomWins(){
+		final String testBottomWins =
+			"BWK --- --- --- --- --- --- ---\n" +
+			"BWK BWK --- --- --- BWK --- ---\n" +
+			"--- BWK --- --- --- BWK --- ---\n" +
+			"--- BWK BWK BWK BWK BWK --- ---\n" +
+			"--- BWK BWK --- --- BWK --- ---\n" +
+			"--- BWK BWK --- --- BWK --- ---\n" +
+			"--- --- --- BWK BWK BWK --- ---\n" +
+			"--- --- --- BWK --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testBottomWins);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
@@ -424,6 +413,15 @@ public class BoardTests {
 	
 	@Test
 	public void testDraw(){
+		final String testDraw =
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---\n" +
+			"--- --- --- BWK TWK --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testDraw);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertTrue(board.isGameDraw());
@@ -433,6 +431,24 @@ public class BoardTests {
 	
 	@Test
 	public void testGravity(){
+		final String testGravity =
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"TWK TWK --- --- --- --- --- ---\n" +
+			"--- TWK TS1 BWK BS1 --- --- ---\n" +
+			"--- --- TWK TWK BWK --- --- ---\n" +
+			"--- TWK TWK --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- TWK TWK --- --- --- --- ---";
+		final String testGravityResult =
+			"TWK TWK --- --- --- --- --- ---\n" +
+			"--- TWK --- --- --- --- --- ---\n" +
+			"--- TWK --- --- --- --- --- ---\n" +
+			"--- TWK TS1 BWK BS1 --- --- ---\n" +
+			"--- --- TWK TWK --- --- --- ---\n" +
+			"--- --- TWK --- --- --- --- ---\n" +
+			"--- --- TWK --- --- --- --- ---\n" +
+			"--- --- --- --- BWK --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testGravity);
 		board.applyGravity();
 		Assert.assertEquals(testGravityResult, BoardUtils.printBoard(board));
@@ -440,6 +456,24 @@ public class BoardTests {
 	
 	@Test
 	public void testPushingPieceTS2DownUp() throws InvalidPlayException{
+		final String testPushingPiece =
+			"--- --- TWK --- --- --- TS1 TWK\n" +
+			"--- --- BS2 --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
+		final String testPushingPieceTS2DownUp =
+			"--- --- TWK --- --- --- TS1 TWK\n" +
+			"--- --- BS2 --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
 		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(2,'d');
@@ -453,6 +487,24 @@ public class BoardTests {
 	
 	@Test
 	public void testPushingPieceTS1Right() throws InvalidPlayException{
+		final String testPushingPiece =
+			"--- --- TWK --- --- --- TS1 TWK\n" +
+			"--- --- BS2 --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
+		final String testPushingPieceTS1Right =
+			"TWK --- TWK --- --- --- --- TS1\n" +
+			"--- --- BS2 --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
 		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(1,'r');
@@ -463,6 +515,24 @@ public class BoardTests {
 	
 	@Test
 	public void testPushingPieceTS3UpDown() throws InvalidPlayException{
+		final String testPushingPiece =
+			"--- --- TWK --- --- --- TS1 TWK\n" +
+			"--- --- BS2 --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
+		final String testPushingPieceTS3UpDown =
+			"--- --- BS2 --- --- --- TS1 TWK\n" +
+			"--- --- --- --- --- --- BS1 ---\n" +
+			"--- --- TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- TS2 --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---\n" +
+			"--- --- --- --- --- TWK --- ---";
 		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(3,'u');
@@ -480,4 +550,25 @@ public class BoardTests {
 		final Play play = new Play(Play.NEXT_STATE);
 		board.validatePlay(play, true);
 	}
+	
+	@Test
+	public void testGetStrongsPositions(){
+		final String testGetStrongsPositions =
+			"BS1 --- --- --- --- --- --- BS3\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- TS2 --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- TS3\n" +
+			"TS1 BS2 --- --- --- --- --- ---";
+		final Board board = BoardUtils.newBoardFromString(testGetStrongsPositions);
+		Assert.assertEquals(new Point(0,0), board.getStrongBottomPositionOrNull(1));
+		Assert.assertEquals(new Point(7,1), board.getStrongBottomPositionOrNull(2));
+		Assert.assertEquals(new Point(0,7), board.getStrongBottomPositionOrNull(3));
+		Assert.assertEquals(new Point(7,0), board.getStrongTopPositionOrNull(1));
+		Assert.assertEquals(new Point(3,4), board.getStrongTopPositionOrNull(2));
+		Assert.assertEquals(new Point(6,7), board.getStrongTopPositionOrNull(3));
+	}
+	
 }

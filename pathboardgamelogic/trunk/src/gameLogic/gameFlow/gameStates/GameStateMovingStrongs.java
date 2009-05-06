@@ -45,7 +45,7 @@ public class GameStateMovingStrongs implements GameState {
 	@Override
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
 		if(isTopPlayerPlay != isTopPlayerTurn ){
-			throw InvalidPlayException.itsNotYourTurn(isTopPlayerTurn);
+			throw InvalidPlayException.itsNotYourTurn(!isTopPlayerTurn);
 		}
 		if(play.isAddPiece()){
 			throw InvalidPlayException.cantAddPieceWhenMovingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE); 

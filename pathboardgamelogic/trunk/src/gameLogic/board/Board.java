@@ -505,84 +505,15 @@ public class Board {
 		
 		return NO_PLAYER;
 	}
-
-	//
-	//	public void switchSides() {
-	//		String string = toString();
-	//		String newBoard = "";
-	//		for (int i = string.length()-2; i >= 0; i--) {
-	//			newBoard += string.charAt(i);
-	//		}
-	//		
-	//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_STRONG, 'X');
-	//		newBoard = newBoard.replace(Piece.PIECE_TOP_STRONG, Piece.PIECE_BOTTOM_STRONG);
-	//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_STRONG);
-	//		
-	//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_WEAK, 'X');
-	//		newBoard = newBoard.replace(Piece.PIECE_TOP_WEAK, Piece.PIECE_BOTTOM_WEAK);
-	//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_WEAK);
-	//		
-	//		fromString(newBoard);
-	//	}
-	//
-	//	public static PlaySequence invertPlay(final PlaySequence playSequence) {
-	//		PlaySequence inverted = new PlaySequence();
-	//		for (Play play : playSequence.getPlays()) {
-	//			if(play.isMoveDirection())
-	//				throw new IllegalArgumentException("Cant invert move to direction play");
-	//			if(play.isNextState()){
-	//				inverted.addPlay(play);
-	//			}else{
-	//				int line = BOARD_SIZE - 1 -play.getLine();
-	//				int column = BOARD_SIZE - 1 -play.getColumn();
-	//				inverted.addPlay(new Play(line,column));
-	//			}
-	//		}
-	//		return inverted;
-	//	}
 	
-		public boolean isGameDraw() {
-			return getWinner() == Board.DRAW;
-		}
+	public boolean isGameDraw() {
+		return getWinner() == Board.DRAW;
+	}
 
-	//
-		//	public void switchSides() {
-		//		String string = toString();
-		//		String newBoard = "";
-		//		for (int i = string.length()-2; i >= 0; i--) {
-		//			newBoard += string.charAt(i);
-		//		}
-		//		
-		//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_STRONG, 'X');
-		//		newBoard = newBoard.replace(Piece.PIECE_TOP_STRONG, Piece.PIECE_BOTTOM_STRONG);
-		//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_STRONG);
-		//		
-		//		newBoard = newBoard.replace(Piece.PIECE_BOTTOM_WEAK, 'X');
-		//		newBoard = newBoard.replace(Piece.PIECE_TOP_WEAK, Piece.PIECE_BOTTOM_WEAK);
-		//		newBoard = newBoard.replace('X', Piece.PIECE_TOP_WEAK);
-		//		
-		//		fromString(newBoard);
-		//	}
-		//
-		//	public static PlaySequence invertPlay(final PlaySequence playSequence) {
-		//		PlaySequence inverted = new PlaySequence();
-		//		for (Play play : playSequence.getPlays()) {
-		//			if(play.isMoveDirection())
-		//				throw new IllegalArgumentException("Cant invert move to direction play");
-		//			if(play.isNextState()){
-		//				inverted.addPlay(play);
-		//			}else{
-		//				int line = BOARD_SIZE - 1 -play.getLine();
-		//				int column = BOARD_SIZE - 1 -play.getColumn();
-		//				inverted.addPlay(new Play(line,column));
-		//			}
-		//		}
-		//		return inverted;
-		//	}
 		
-			public boolean isGameEnded() {
-				return isGameDraw() || isTopTheWinner() || isBottomTheWinner();
-			}
+	public boolean isGameEnded() {
+		return isGameDraw() || isTopTheWinner() || isBottomTheWinner();
+	}
 
 	public boolean isBottomTheWinner() {
 		return getWinner() == Board.BOTTOM_PLAYER;
@@ -692,5 +623,29 @@ public class Board {
 
 	public Piece getPieceAt(Point p) {
 		return getPieceAt(p.y, p.x);
+	}
+
+	public Point getStrongBottomPositionOrNull(int id) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				Piece p = board[i][j];
+				if(p.isBottomPlayerStrongPiece() && p.getId() == id){
+					return new Point(i,j);
+				}
+			}
+		}
+		return null;
+	}
+
+	public Point getStrongTopPositionOrNull(int id) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				Piece p = board[i][j];
+				if(p.isTopPlayerStrongPiece() && p.getId() == id){
+					return new Point(i,j);
+				}
+			}
+		}
+		return null;
 	}
 }
