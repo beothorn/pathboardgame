@@ -1,28 +1,16 @@
 package ai.permutations;
 
-import gameLogic.Board;
+import gameLogic.board.Board;
 
 import java.awt.Point;
 
 public class DefaultCalculator implements BoardScoreCalculator {
-
-//	private static Map<Integer, Integer> aiScoreToLevels(){
-//	final Map<Integer, Integer> levels = new LinkedHashMap<Integer, Integer>();
-//	levels.put(PlayerTypes.AI_EASIEST, -700);
-//	levels.put(PlayerTypes.AI_VERY_EASY, -20);
-//	levels.put(PlayerTypes.AI_EASY, 0);
-//	levels.put(PlayerTypes.AI_MEDIUM, 20);
-//	levels.put(PlayerTypes.AI_HARD, 100);
-//	levels.put(PlayerTypes.AI_VERY_HARD, ScoreCalculator.winningPlayScore());
-//	return levels;
-//}
 	
-	private static int CONTINUOUS_BONUS = 3;
-	private static int DISTANCE_BONUS = 3;
-
-	private static int WIN_BONUS_SCORE = 99999;
-	private static int TOO_CLOSE_TO_LOSE_BONUS_SCORE = 800;
-	private static int TOO_CLOSE_TO_WIN_BONUS_SCORE = 100;
+	private static final int CONTINUOUS_BONUS = 3;
+	private static final int DISTANCE_BONUS = 3;
+	private static final int WIN_BONUS_SCORE = 99999;
+	private static final int TOO_CLOSE_TO_LOSE_BONUS_SCORE = 800;
+	private static final int TOO_CLOSE_TO_WIN_BONUS_SCORE = 100;
 	
 	private int calculateScore(final Board board,final boolean forTopPlayer){
 		int finalScore = 0;
@@ -64,7 +52,6 @@ public class DefaultCalculator implements BoardScoreCalculator {
 	}
 	
 	private final int rowScore(final boolean isEnemy,final  int countWeaks,final int distance,final boolean continuous,final boolean anyStrong ){
-
 		boolean tooCloseToWin1;
 		boolean tooCloseToWin2;
 		if(isEnemy){
@@ -96,9 +83,9 @@ public class DefaultCalculator implements BoardScoreCalculator {
 	}
 	
 	private int distanceFromColumnToStrong(final boolean isDistancefromBottomStrong ,final Board board, final int col){
-		final Point strong1 = isDistancefromBottomStrong?board.getStrongBottomId(1):board.getStrongTopById(1);
-		final Point strong2 = isDistancefromBottomStrong?board.getStrongBottomId(2):board.getStrongTopById(2);
-		final Point strong3 = isDistancefromBottomStrong?board.getStrongBottomId(3):board.getStrongTopById(3);
+		final Point strong1 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(1):board.getStrongTopPositionOrNull(1);
+		final Point strong2 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(2):board.getStrongTopPositionOrNull(2);
+		final Point strong3 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(3):board.getStrongTopPositionOrNull(3);
 		int d1 = Math.abs(col-strong1.x);
 		int d2 = Math.abs(col-strong2.x);
 		int d3 = Math.abs(col-strong3.x);
@@ -117,15 +104,10 @@ public class DefaultCalculator implements BoardScoreCalculator {
 		distance = d3 < distance? d3 : distance;
 		return distance;
 	}
-
-	@Override
-	public String toString() {
-		return "Default";
-	}
 	
 	@Override
-	public int getScoreForBoard(final String board) {
-		final Board gameBoard = new Board(board);
+	public int getScoreForBoard(final Board board) {
+		final Board gameBoard = board;
 		return calculateScore(gameBoard,false) - calculateScore(gameBoard,true);
 	}
 
