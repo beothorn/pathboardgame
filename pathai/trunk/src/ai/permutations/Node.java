@@ -1,171 +1,111 @@
 package ai.permutations;
 
-import gameLogic.Board;
-import gameLogic.Play;
-import gameLogic.PlaySequence;
+import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
+import gameLogic.board.PlaySequence;
+import gameLogic.board.ValidPlay;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import aiUtils.AiUtils;
-
 public class Node {
-	private final int nodeValue;
-	private final List<Node> nodes = new ArrayList<Node>();
-	private final boolean isMovePlay;
-	private boolean isRoot = false;
-	private static boolean forcePlay = false;
 	private final Node superNode;
+	private final List<Node> childNodes = new ArrayList<Node>();
+	private final Play play;
+	private final PlayEvaluator evaluator;
 	private Board board;
-	private PlayEvaluator evaluator;
 	
 	public Node() {
-		this(-1,false,null);
-		isRoot = true;
-	}	
-	
-	public void forcePlay(){
-		forcePlay = true;
+		this(-1,false,null,null);
 	}
 	
-	public Node(final int nodeValue,final boolean isMovePlay) {
-		this(nodeValue,isMovePlay,null);
-	}
-	
-	public Node(final int nodeValue,final boolean isMovePlay, final Node superNode) {
-		this.nodeValue = nodeValue;
-		this.isMovePlay = isMovePlay;
+	public Node(final int nodeValue,final boolean isMovePlay,final Node superNode,final PlayEvaluator evaluator) {
 		this.superNode = superNode;
-	}
-	
-	public void setEvaluatorForTree(final PlayEvaluator evaluator){
 		this.evaluator = evaluator;
-		for (final Node n : nodes) {
-			n.setEvaluatorForTree(evaluator);
-		}
+		if(isMovePlay){
+			char c;
+			final int direction = ((nodeValue%4)+1);
+			switch(direction){
+			case 1:
+				c = Play.UP;
+				break;
+			case 2:
+				c = Play.DOWN;
+				break;
+			case 3:
+				c = Play.LEFT;
+				break;
+			case 4:
+				c = Play.RIGHT;
+				break;
+			default:
+				c = '!';
+				break;
+			}
+			final int pieceNumber = (nodeValue/4)+1;
+			play = new Play(pieceNumber,c);
+		}else{
+			play = new Play(nodeValue);
+		}		
 	}
 	
+
+
 	public void addNode(final Node n){
-		nodes.add(n);
+		childNodes.add(n);
 	}
 	
 	@Override
 	public String toString() {
-		if(isMovePlay){
-			final String play = getPlayById();
-			return superNode.board.getPlaySequenceForMoveByIdPlay(new Play(play),false).toString();
-		}
-		return "(0,"+nodeValue+")";
-	}
-
-	private String getPlayById() {
-		char c;
-		final int direction = ((nodeValue%4)+1);
-		switch(direction){
-		case 1:
-			c = Play.UP;
-			break;
-		case 2:
-			c = Play.DOWN;
-			break;
-		case 3:
-			c = Play.LEFT;
-			break;
-		case 4:
-			c = Play.RIGHT;
-			break;
-		default:
-			c = '!';
-			break;
-		}
-		final int pieceNumber = (nodeValue/4)+1;
-		
-		final String play = Play.MOVE+pieceNumber+c;
-		return play;
+		return play.toString();
 	}
 	
-	public String printPlaySequence(){
-		if(isRoot){
-			return "";
+	public PlaySequence getPlaySequence(){
+		if(isRoot()){
+			return new PlaySequence();
 		}
-		if(!superNode.isRoot){
-			return superNode.printPlaySequence() +PlaySequence.PLAYS_SEPARATOR+ toString();
-		}
-		return toString();
+		final PlaySequence superPlaySequence = superNode.getPlaySequence();
+		superPlaySequence.addPlay(play);
+		return superPlaySequence;
 	}
 	
-	public String printBoardForThisPlay(){
-		if(board == null){
-			return "Invalid play";
-		}
-		return board.toString();
+	private boolean isRoot() {
+		return superNode == null;
 	}
 
 	public void setBoard(final Board board) {
 		this.board = board;
 	}
 	
-	public void playTree(){
-		boolean playIsValid = true;
-		final boolean isTopPlay = false;
-		if(!isRoot){
-			if(stopCalculating()){
-				return;
-			}
-			final Board gameBoard = copySuperBoardKeepinStrongsIds();
-			playIsValid = AiUtils.simulatePlayOnBoard(gameBoard, new Play(toStringForceOnePlayNotation()), isTopPlay);
-			board = gameBoard;
-		}else{
-			forcePlay = false;			
-		}
-		
-		if(playIsValid){
-			if(evaluator!=null){
-				if(board.isGameEnded()){
-					evaluator.evaluatePlay(printPlaySequence(), board.toString());
-					return;
-				}
-				if(isMovePlay){
-					final PlaySequence playSequence = new PlaySequence(printPlaySequence());
-					playSequence.closeSequence();
-					evaluator.evaluatePlay(playSequence.toString(), board.toString());
-				}
-			}
-		}else{
-			board = null;
-			return;
-		}
-		
+	public void sendAllPlaysToEvaluator(){
 		if(stopCalculating()){
 			return;
 		}
-		for (final Node n : nodes) {
-			n.playTree();
+		if(!isRoot()){
+			board = copySuperBoard();
+			try {
+				final boolean isTopPlay = false;
+				final ValidPlay validPlay = board.validatePlay(play, isTopPlay);
+				board.play(validPlay, false);
+			} catch (final InvalidPlayException e) {
+				return;
+			}
+			evaluator.evaluatePlay(getPlaySequence(), board);
+		}		
+		if(board.isGameEnded()){
+			return;
+		}
+		for (final Node n : childNodes) {
+			n.sendAllPlaysToEvaluator();
 		}
 	}
 
 	private boolean stopCalculating() {
-		return evaluator.stopEvaluatingAndUseBestPlay() || forcePlay;
+		return evaluator.stopEvaluatingAndUseBestPlay();
 	}
 
-	private String toStringForceOnePlayNotation() {
-		if(isMovePlay){
-			return getPlayById();
-		}
-		return "(0,"+nodeValue+")";
-	}
-
-	private Board copySuperBoardKeepinStrongsIds() {
+	private Board copySuperBoard() {
 		return superNode.board.copy();
-	}
-
-	public void printTree() {
-		System.out.println(printPlaySequence());
-		System.out.println(printBoardForThisPlay());
-		if(board != null){
-			for (final Node n : nodes) {
-				n.printTree();
-			}
-		}
 	}
 }

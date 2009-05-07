@@ -1,12 +1,12 @@
 package ai.permutations;
 
-import gameLogic.Play;
-import gameLogic.PlaySequence;
+import gameLogic.board.Board;
+import gameLogic.board.PlaySequence;
 
 public class PlayEvaluator {
 	private final BoardScoreCalculator boardCalculator;
 	
-	private String bestPlay;
+	private PlaySequence bestPlay;
 	private int bestScore;
 	private boolean alreadyFoundGoodEnoughPlay = false;
 	
@@ -14,7 +14,7 @@ public class PlayEvaluator {
 		this.boardCalculator = boardCalculator;
 	}
 	
-	public void evaluatePlay(final String plays, final String board) {
+	public void evaluatePlay(final PlaySequence plays,final Board board) {
 		final int calculateScoreForBoard = boardCalculator.getScoreForBoard(board);
 		if(calculateScoreForBoard > bestScore){
 			bestPlay = plays;
@@ -32,11 +32,11 @@ public class PlayEvaluator {
 
 	public void reset() {
 		alreadyFoundGoodEnoughPlay = false;
-		bestPlay = Play.NEXT_STATE+PlaySequence.PLAYS_SEPARATOR+Play.NEXT_STATE;
+		bestPlay = null;
 		bestScore = Integer.MIN_VALUE;
 	}
 	
-	public String getBestPlay() {
+	public PlaySequence getBestPlay() {
 		return bestPlay;
 	}
 

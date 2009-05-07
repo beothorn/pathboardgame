@@ -1,7 +1,8 @@
 package ai.permutations;
 
-import gameLogic.Board;
-import gameLogic.gameFlow.GameState;
+import gameLogic.board.Board;
+import gameLogic.board.PlaySequence;
+import gameLogic.gameFlow.gameStates.GameState;
 import utils.Logger;
 
 public class PlayTree {
@@ -10,47 +11,22 @@ public class PlayTree {
 	private static final int TOTAL = DIRECTIONS*GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE;
 
 	private final Node playTree;
-	private PlayEvaluator evaluator;
+	private final PlayEvaluator evaluator;
 	private final Logger logger = Logger.getLogger(PlayTree.class);
 	
-	public PlayTree() {
+	public PlayTree(final BoardScoreCalculator calculator) {
+		this.evaluator = new PlayEvaluator(calculator);
 		playTree = new Node();
 		logger.debug("Calculating tree...");
 		addNodesNodesAndThenAddMoveNodes(playTree, 0, 0);
 		logger.debug("Tree calculated");
 	}
 	
-	public void setEvaluator(final PlayEvaluator evaluator){
-		this.evaluator = evaluator;
+	public PlaySequence bestPlayFor(final Board board){
 		evaluator.reset();
-		playTree.setEvaluatorForTree(evaluator);
-	}
-	
-	public String bestPlayFor(final String board,final long maxTimeThinking){
-		if(evaluator == null){
-			throw new RuntimeException("Cant calc best play without an play evaluator");
-		}
-		evaluator.reset();
-		final Board b = new Board(board);
-		playTree.setBoard(b);
-		new Thread(new Runnable(){
-			@Override
-			public void run() {
-					try {
-						Thread.sleep(maxTimeThinking);
-					} catch (final InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				playTree.forcePlay();
-			}
-		}).start();
-		playTree.playTree();
+		playTree.setBoard(board);
+		playTree.sendAllPlaysToEvaluator();
 		return evaluator.getBestPlay();
-	}
-	
-	public Node getTree(){
-		return playTree;
 	}
 	
 	private void addNodesNodesAndThenAddMoveNodes(final Node superNode,final int start,final int level){
@@ -59,7 +35,7 @@ public class PlayTree {
 			return;
 		}
 		for (int i = start; i < Board.BOARD_SIZE; i++) {
-			final Node node = new Node(i,false,superNode);
+			final Node node = new Node(i,false,superNode,evaluator);
 			superNode.addNode(node);
 			addNodesNodesAndThenAddMoveNodes(node, i, level+1);
 		}
@@ -72,7 +48,7 @@ public class PlayTree {
 		for(int i = 0; i < TOTAL;i++){
 			final int pieceNumber = (i/4) +1;
 			if(!arrayContains(remainsAlreadyCalculated,pieceNumber)){
-				final Node node = new Node(i,true,superNode);
+				final Node node = new Node(i,true,superNode,evaluator);
 				superNode.addNode(node);
 				final int[] newRemainders = addIn(pieceNumber, remainsAlreadyCalculated);
 				moveNodes(node, newRemainders);

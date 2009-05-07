@@ -1,6 +1,6 @@
 package ai.permutations;
 
-import gameLogic.Board;
+import gameLogic.board.Board;
 
 public class NaiveCalculator implements BoardScoreCalculator{
 
@@ -53,8 +53,8 @@ public class NaiveCalculator implements BoardScoreCalculator{
 	}
 
 	@Override
-	public int getScoreForBoard(final String board) {
-		return calculateScore(new Board(board));
+	public int getScoreForBoard(final Board board) {
+		return calculateScore(board);
 	}
 
 	@Override
