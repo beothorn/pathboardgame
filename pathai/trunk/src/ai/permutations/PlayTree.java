@@ -16,7 +16,7 @@ public class PlayTree {
 	
 	public PlayTree(final BoardScoreCalculator calculator) {
 		this.evaluator = new PlayEvaluator(calculator);
-		playTree = new Node();
+		playTree = new Node(-1,false,evaluator);
 		logger.debug("Calculating tree...");
 		addNodesNodesAndThenAddMoveNodes(playTree, 0, 0);
 		logger.debug("Tree calculated");
@@ -35,7 +35,7 @@ public class PlayTree {
 			return;
 		}
 		for (int i = start; i < Board.BOARD_SIZE; i++) {
-			final Node node = new Node(i,false,superNode,evaluator);
+			final Node node = new Node(i,false,evaluator);
 			superNode.addNode(node);
 			addNodesNodesAndThenAddMoveNodes(node, i, level+1);
 		}
@@ -48,7 +48,7 @@ public class PlayTree {
 		for(int i = 0; i < TOTAL;i++){
 			final int pieceNumber = (i/4) +1;
 			if(!arrayContains(remainsAlreadyCalculated,pieceNumber)){
-				final Node node = new Node(i,true,superNode,evaluator);
+				final Node node = new Node(i,true,evaluator);
 				superNode.addNode(node);
 				final int[] newRemainders = addIn(pieceNumber, remainsAlreadyCalculated);
 				moveNodes(node, newRemainders);

@@ -10,18 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-	private final Node superNode;
+	private Node superNode;
 	private final List<Node> childNodes = new ArrayList<Node>();
 	private final Play play;
 	private final PlayEvaluator evaluator;
 	private Board board;
 	
-	public Node() {
-		this(-1,false,null,null);
-	}
-	
-	public Node(final int nodeValue,final boolean isMovePlay,final Node superNode,final PlayEvaluator evaluator) {
-		this.superNode = superNode;
+	public Node(final int nodeValue,final boolean isMovePlay,final PlayEvaluator evaluator) {
 		this.evaluator = evaluator;
 		if(isMovePlay){
 			char c;
@@ -49,10 +44,9 @@ public class Node {
 			play = new Play(nodeValue);
 		}		
 	}
-	
-
 
 	public void addNode(final Node n){
+		n.superNode = this;
 		childNodes.add(n);
 	}
 	
@@ -96,6 +90,7 @@ public class Node {
 		if(board.isGameEnded()){
 			return;
 		}
+		
 		for (final Node n : childNodes) {
 			n.sendAllPlaysToEvaluator();
 		}

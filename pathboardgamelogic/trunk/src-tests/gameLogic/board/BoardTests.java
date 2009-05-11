@@ -128,6 +128,22 @@ public class BoardTests {
 		board.validatePlay(play, forTopPlayer);
 	}
 	
+	@Test(expected = InvalidPlayException.class)
+	public void testCantMoveBottomStrongDown() throws InvalidPlayException{
+		boolean forTopPlayer = false;
+		final String testCantMoveTopWeakBlock = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- BS2 --- --- --- ---\n" +
+			"--- --- --- BS1 --- --- --- ---";
+		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Play play = new Play(2,'d');
+		board.validatePlay(play, forTopPlayer);
+	}
 	
 	@Test
 	public void testMoveTopStrongRight() throws InvalidPlayException{

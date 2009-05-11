@@ -6,6 +6,8 @@ import ai.permutations.DefaultCalculator;
 import ai.permutations.PlayTree;
 import externalPlayer.PathAI;
 import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayStringException;
+import gameLogic.board.Play;
 import gameLogic.board.PlaySequence;
 import gameLogic.gameFlow.gameStates.GameState;
 
@@ -46,7 +48,20 @@ public class AIPlayer implements PathAI{
 		if(isPuttingStrongsTurn(board)) {
 			return startingPlay();
 		}else{
-			return tree.bestPlayFor(board).toString();
+			final PlaySequence bestPlayFor = tree.bestPlayFor(board);
+			if(bestPlayFor.size()<6){
+				try {
+					if(bestPlayFor.size()>=3){
+						bestPlayFor.addPlay(new Play(Play.NEXT_STATE));
+					}else{
+						bestPlayFor.addPlay(new Play(Play.NEXT_STATE));
+						bestPlayFor.addPlay(new Play(Play.NEXT_STATE));
+					}
+				} catch (final InvalidPlayStringException e) {
+					e.printStackTrace();
+				}
+			}
+			return bestPlayFor.toString();
 		}
 	}
 }

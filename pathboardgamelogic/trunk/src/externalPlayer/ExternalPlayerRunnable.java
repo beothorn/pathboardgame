@@ -53,9 +53,9 @@ public class ExternalPlayerRunnable implements Runnable {
 					board = game.getBoard();
 				}
 				
-				logger.debug("Quering External player play.");
-				final String aiPlay = player.play(BoardUtils.printBoard(board));
-				
+				final String boardString = BoardUtils.printBoard(game.getBoard());
+				logger.debug("Quering External player play for board:\n"+boardString);
+				final String aiPlay = player.play(BoardUtils.printBoard(board));				
 				final PlaySequence playSequence;
 				try {
 					playSequence = new PlaySequence(aiPlay);
@@ -64,6 +64,7 @@ public class ExternalPlayerRunnable implements Runnable {
 					return;
 				}
 				final PlaySequence playSequenceForGame = isTopPlayerTurn ? BoardUtils.invertPlay(playSequence) : playSequence;
+				logger.debug("External player played: "+playSequenceForGame);
 				
 				final ValidPlaySequence validPlaySequence;
 				try {
@@ -72,8 +73,6 @@ public class ExternalPlayerRunnable implements Runnable {
 					aiError(e);
 					return;
 				}
-				logger.debug("External player played");
-				logger.debug(aiPlay);
 				playSequenceValidator.play(validPlaySequence);
 				unLockGame();
 			}

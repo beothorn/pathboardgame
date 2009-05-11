@@ -177,27 +177,25 @@ public class Board {
 	            }
 	            if(board[i][columnFromIndex].isStrong()) {
 	                    strongCount++;
-	            }
-	            if(strongCount>1) {
-	                    return false;
+	                    if(strongCount>1) {
+	                    	return false;
+	                    }
+	                    
 	            }
 	    }
 	    if(board[board.length-1][columnFromIndex].isStrong()) {
-	            return true;
+	            return false;
 	    }
-
 		return true;
 	}
 
+	//Todo: rewrite with recursion
 	private boolean canMoveStrongUp(int pieceId, boolean topStrong) {
 		final Point piecePosition = getStrongPiecePosition(pieceId, topStrong);
 		int lineFromIndex = piecePosition.x;
 		int columnFromIndex = piecePosition.y;
 		if(lineFromIndex == 0) {
             return false;
-	    }
-	    if(board[lineFromIndex][columnFromIndex].isEmpty()) {
-	            return false;
 	    }
 	    int strongCount = 0;
 	    for(int i = lineFromIndex-1; i >= 0; i--  ){
@@ -206,9 +204,9 @@ public class Board {
 	            }
 	            if(board[i][columnFromIndex].isStrong()) {
 	                    strongCount++;
-	            }
-	            if(strongCount>1) {
-	                    return false;
+	                    if(strongCount>1) {
+	                    	return false;
+	                    }
 	            }
 	    }
 	    if(board[0][columnFromIndex].isStrong()) {
