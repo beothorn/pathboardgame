@@ -2,10 +2,10 @@ package utils;
 
 import gameLogic.Game;
 import gameLogic.board.Board;
+import gameLogic.board.PieceFactory;
 import gameLogic.board.Play;
 import gameLogic.board.PlaySequence;
 import gameLogic.board.piece.Piece;
-import gameLogic.board.piece.PieceFactory;
 
 import java.util.List;
 
@@ -32,28 +32,28 @@ public class BoardUtils {
 
 	private static void addPieceAt(String pieceString, int line, int column, PieceFactory pieceMaker, Board board) {
 		if(pieceString.charAt(0) == EMPTY.charAt(0)){			
-			board.setPieceAt(line, column, pieceMaker.getEmptyPiece());
+			board.setPieceAt(line, column, PieceFactory.getEmptyPiece());
 			return;
 		}
 		if(pieceString.charAt(0) == TOP.charAt(0)){
 			if(pieceString.charAt(1) == WEAK.charAt(0)){
-				board.setPieceAt(line, column, pieceMaker.getTopWeakPiece());
+				board.setPieceAt(line, column, PieceFactory.getTopWeakPiece());
 				return;
 			}
 			if(pieceString.charAt(1) == STRONG.charAt(0)){
 				final String strongId = pieceString.substring(2);
-				board.setPieceAt(line, column, pieceMaker.getTopStrongPiece(Integer.parseInt(strongId)));
+				board.setPieceAt(line, column, PieceFactory.getTopStrongPiece(Integer.parseInt(strongId)));
 				return;
 			}
 		}
 		if(pieceString.charAt(0) == BOTTOM.charAt(0)){
 			if(pieceString.charAt(1) == WEAK.charAt(0)){
-				board.setPieceAt(line, column, pieceMaker.getBottomWeakPiece());
+				board.setPieceAt(line, column, PieceFactory.getBottomWeakPiece());
 				return;
 			}
 			if(pieceString.charAt(1) == STRONG.charAt(0)){
 				final String strongId = pieceString.substring(2);
-				board.setPieceAt(line, column, pieceMaker.getBottomStrongPiece(Integer.parseInt(strongId)));
+				board.setPieceAt(line, column, PieceFactory.getBottomStrongPiece(Integer.parseInt(strongId)));
 				return;
 			}
 		}

@@ -2,7 +2,6 @@ package gameLogic.board;
 
 
 import gameLogic.board.piece.Piece;
-import gameLogic.board.piece.PieceFactory;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ public class Board {
 	private static int DRAW = 3;
 
 	Piece[][] board = new Piece[BOARD_SIZE][BOARD_SIZE];
-	private PieceFactory pieceMaker;
 
 	public Board() {
 		reset();
@@ -31,7 +29,6 @@ public class Board {
 				board[i][j] = Piece.getEmptyPiece();
 			}
 		}
-		pieceMaker = new PieceFactory();
 	}
 
 	public ValidPlay validatePlay(final Play play, final boolean forTopPlayer) throws InvalidPlayException {
@@ -284,12 +281,12 @@ public class Board {
 
 	private void addBottomWeakPiece(final int columnIndex) {
 		movePiecesUp(board.length-1, columnIndex);
-		board[board.length-1][columnIndex] = pieceMaker.getBottomWeakPiece();
+		board[board.length-1][columnIndex] = PieceFactory.getBottomWeakPiece();
 	}
 	
 	private void addBottomStrongPiece(final int columnIndex) {
 		movePiecesUp(board.length-1, columnIndex);
-		board[board.length-1][columnIndex] = pieceMaker.getBottomStrongPiece();
+		board[board.length-1][columnIndex] = PieceFactory.getBottomStrongPiece(this);
 	}
 
 	private void addPiece(final boolean forTopPlayer, final boolean isStrongPiece, final int pieceColumn){
@@ -310,12 +307,12 @@ public class Board {
 
 	private void addTopWeakPiece(final int columnIndex) {
 		movePiecesDown(0, columnIndex);
-		board[0][columnIndex] = pieceMaker.getTopWeakPiece();
+		board[0][columnIndex] = PieceFactory.getTopWeakPiece();
 	}
 	
 	private void addTopStrongPiece(final int columnIndex) {
 		movePiecesDown(0, columnIndex);
-		board[0][columnIndex] = pieceMaker.getTopStrongPiece();
+		board[0][columnIndex] = PieceFactory.getTopStrongPiece(this);
 	}
 
 	@Override
@@ -332,13 +329,11 @@ public class Board {
 
 	public Board copy() {
 		final Board boardCopy = new Board();
-		Piece[][] copyPiecesArray = new Piece[BOARD_SIZE][BOARD_SIZE];
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				copyPiecesArray[i][j] = board[i][j].copy();
+				boardCopy.board[i][j] = board[i][j];
 			}
 		}
-		boardCopy.board = copyPiecesArray;
 		return boardCopy;
 	}
 

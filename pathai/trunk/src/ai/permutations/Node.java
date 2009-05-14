@@ -35,8 +35,7 @@ public class Node {
 				c = Play.RIGHT;
 				break;
 			default:
-				c = '!';
-				break;
+				throw new RuntimeException("Char "+direction);
 			}
 			final int pieceNumber = (nodeValue/4)+1;
 			play = new Play(pieceNumber,c);
@@ -78,19 +77,19 @@ public class Node {
 		}
 		if(!isRoot()){
 			board = copySuperBoard();
+			final ValidPlay validPlay;
 			try {
 				final boolean isTopPlay = false;
-				final ValidPlay validPlay = board.validatePlay(play, isTopPlay);
-				board.play(validPlay, false);
+				validPlay = board.validatePlay(play, isTopPlay);
 			} catch (final InvalidPlayException e) {
 				return;
 			}
+			board.play(validPlay, false);
 			evaluator.evaluatePlay(getPlaySequence(), board);
 		}		
 		if(board.isGameEnded()){
 			return;
-		}
-		
+		}		
 		for (final Node n : childNodes) {
 			n.sendAllPlaysToEvaluator();
 		}

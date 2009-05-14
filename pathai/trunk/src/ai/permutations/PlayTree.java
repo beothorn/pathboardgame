@@ -8,7 +8,7 @@ import utils.Logger;
 public class PlayTree {
 
 	private static final int DIRECTIONS = 4;
-	private static final int TOTAL = DIRECTIONS*GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE;
+	private static final int TOTAL_MOVE_POSSIBILITIES = DIRECTIONS*GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE;
 
 	private final Node playTree;
 	private final PlayEvaluator evaluator;
@@ -30,7 +30,7 @@ public class PlayTree {
 	}
 	
 	private void addNodesNodesAndThenAddMoveNodes(final Node superNode,final int start,final int level){
-		if(level >= GameState.NUMBER_OF_WEAK_PIECES_TO_PUT){
+		if(level == GameState.NUMBER_OF_WEAK_PIECES_TO_PUT){
 			moveNodes(superNode, new int[]{0,0,0});
 			return;
 		}
@@ -41,22 +41,29 @@ public class PlayTree {
 		}
 	}
 	
-	private void moveNodes(final Node superNode, final int[] remainsAlreadyCalculated){
-		if(allRemaindersCalculated(remainsAlreadyCalculated)){
+	/***
+	 * 
+	 * @param superNode
+	 * @param strongPiecesAlreadyCalculated 0 0 0 mean no strong already calculated. I pass the ones
+	 * already processed because i want all permutations (ex: 123 321 ... ) but without repetitions (ex: 332 223 ).
+	 * So i do all move possibilities skipping the ones already done. The remainer is the piece id and the mod is the piece direction. 
+	 */
+	private void moveNodes(final Node superNode, final int[] strongPiecesAlreadyCalculated){
+		if(allStrongPiecesCalculated(strongPiecesAlreadyCalculated)){
 			return;
 		}
-		for(int i = 0; i < TOTAL;i++){
-			final int pieceNumber = (i/4) +1;
-			if(!arrayContains(remainsAlreadyCalculated,pieceNumber)){
-				final Node node = new Node(i,true,evaluator);
+		for(int pieceAndDirectionBundle = 0; pieceAndDirectionBundle < TOTAL_MOVE_POSSIBILITIES;pieceAndDirectionBundle++){
+			final int strongPieceNumber = (pieceAndDirectionBundle/4) +1;
+			if(!arrayContains(strongPiecesAlreadyCalculated,strongPieceNumber)){
+				final Node node = new Node(pieceAndDirectionBundle,true,evaluator);
 				superNode.addNode(node);
-				final int[] newRemainders = addIn(pieceNumber, remainsAlreadyCalculated);
-				moveNodes(node, newRemainders);
+				final int[] newStrongPiecesAlreadyCalculated = addIn(strongPieceNumber, strongPiecesAlreadyCalculated);
+				moveNodes(node, newStrongPiecesAlreadyCalculated);
 			}
 		}
 	}
 
-	private boolean allRemaindersCalculated(final int[] remainsAlreadyCalculated) {
+	private boolean allStrongPiecesCalculated(final int[] remainsAlreadyCalculated) {
 		for (int i = 0; i < remainsAlreadyCalculated.length; i++) {
 			if(remainsAlreadyCalculated[i]==0){
 				return false;

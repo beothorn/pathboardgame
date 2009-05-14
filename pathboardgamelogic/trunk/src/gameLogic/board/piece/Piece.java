@@ -75,10 +75,6 @@ public class Piece {
 		return pieceType == PIECE_BOTTOM_STRONG;
 	}
 	
-	public Piece copy(){
-		return new Piece(this.pieceType,this.id);
-	}
-	
 	@Override
 	public String toString() {
 		return String.valueOf(pieceType);
@@ -97,6 +93,6 @@ public class Piece {
 		if(piece.pieceType == PIECE_BOTTOM_STRONG){
 			return new Piece(PIECE_TOP_STRONG,piece.id);
 		}
-		return piece.copy();
+		return piece;
 	}
 }

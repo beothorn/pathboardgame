@@ -20,17 +20,17 @@ public class Logger {
 
 	public void debug(final Object message) {
 		if(DEBUG)
-			System.out.println("[DEBUG] "+clazz.getName()+": "+message);
+			System.out.println("[DEBUG]"+System.currentTimeMillis()+" "+clazz.getName()+": "+message);
 	}
 
 	public void info(final String message) {
 		if(INFO)
-			System.out.println("[INFO] "+clazz.getName()+": "+message);
+			System.out.println("[INFO]"+System.currentTimeMillis()+" "+clazz.getName()+": "+message);
 	}
 
 	public void error(final String message) {
 		if(ERROR)
-			System.out.println("[ERROR] "+clazz.getName()+": "+message);
+			System.out.println("[ERROR]"+System.currentTimeMillis()+" "+clazz.getName()+": "+message);
 	}
 
 }
