@@ -5,6 +5,8 @@ import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 
+import java.util.Set;
+
 public interface GameState {
 
 	public static final int NUMBER_OF_STRONG_PIECES_TO_PUT = 3;
@@ -45,6 +47,8 @@ public interface GameState {
 	public boolean isTopPlayerTurn();
 
 	public boolean isPuttingStrongsTurn();
+	
+	public Set<Integer> getAlreadyMovedOrEmptySet();
 
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay) throws InvalidPlayException;
 	

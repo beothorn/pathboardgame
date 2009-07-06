@@ -1,4 +1,4 @@
-package ai.permutations;
+                                              package ai.permutations;
 
 import gameLogic.board.Board;
 import gameLogic.board.PlaySequence;

@@ -2,6 +2,7 @@ package gameLogic.board.piece;
 
 public class Piece {
 	private static final int PIECE_EMPTY = 0;
+	private static final Piece EMPTYPIECE = new Piece(PIECE_EMPTY);
 	private static final int PIECE_TOP_WEAK = 1;
 	private static final int PIECE_BOTTOM_WEAK = 2;
 	private static final int PIECE_TOP_STRONG = 3;
@@ -24,7 +25,7 @@ public class Piece {
 	}
 	
 	public static Piece getEmptyPiece(){
-		return new Piece(PIECE_EMPTY);
+		return EMPTYPIECE;
 	}
 	
 	private final int id;

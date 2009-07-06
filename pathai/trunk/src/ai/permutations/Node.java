@@ -76,10 +76,11 @@ public class Node {
 			return;
 		}
 		if(!isRoot()){
-			board = copySuperBoard();
+			copySuperBoard();
 			final ValidPlay validPlay;
 			try {
 				final boolean isTopPlay = false;
+				//TODO: too heavy here
 				validPlay = board.validatePlay(play, isTopPlay);
 			} catch (final InvalidPlayException e) {
 				return;
@@ -87,9 +88,10 @@ public class Node {
 			board.play(validPlay, false);
 			evaluator.evaluatePlay(getPlaySequence(), board);
 		}		
-		if(board.isGameEnded()){
-			return;
-		}		
+		// TODO: faster method to find winner (too heavy here)
+//		if(board.isGameEnded()){
+//			return;
+//		}		
 		for (final Node n : childNodes) {
 			n.sendAllPlaysToEvaluator();
 		}
@@ -99,7 +101,10 @@ public class Node {
 		return evaluator.stopEvaluatingAndUseBestPlay();
 	}
 
-	private Board copySuperBoard() {
-		return superNode.board.copy();
+	private void copySuperBoard() {
+		if(board == null){
+			board = new Board();
+		}
+		board.copyFrom(superNode.board);
 	}
 }

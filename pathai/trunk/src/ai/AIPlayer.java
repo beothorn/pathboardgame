@@ -49,9 +49,11 @@ public class AIPlayer implements PathAI{
 			return startingPlay();
 		}else{
 			final PlaySequence bestPlayFor = tree.bestPlayFor(board);
-			if(bestPlayFor.size()<6){
+			final int maxPlays = 6;
+			if(bestPlayFor.size()<maxPlays){
 				try {
-					if(bestPlayFor.size()>=3){
+					final int maxPlaysPerTurn = 3;
+					if(bestPlayFor.size()>=maxPlaysPerTurn){
 						bestPlayFor.addPlay(new Play(Play.NEXT_STATE));
 					}else{
 						bestPlayFor.addPlay(new Play(Play.NEXT_STATE));

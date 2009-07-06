@@ -8,6 +8,7 @@ import gameLogic.board.PlaySequence;
 import gameLogic.board.piece.Piece;
 
 import java.util.List;
+import java.util.Set;
 
 public class BoardUtils {
 
@@ -60,77 +61,28 @@ public class BoardUtils {
 		throw new RuntimeException("Invalid piece string: "+pieceString);
 	}
 
-	public static String printBoardWithCoordinates(final Board b) {
+	public static String printBoardWithCoordinates(final Game game) {
 		String coords = "";
 		for(int i=0; i< Board.BOARD_SIZE;i++){
 			coords += "00"+i+" ";
 		}
-		return coords+"\n"+printBoard(b);
+		return coords+"\n"+printBoard(game);
 	}
 	
-	public static String printBoardWithCoordinates(final Game game) {
-		return printBoardWithCoordinates(game.getBoard());
-	}
-	
-	public static String printBoard(Board b) {
-		String boardString = "";
-		boolean firstLine = true;
-		for (int i = 0; i < Board.BOARD_SIZE; i++) {
-			if(firstLine){
-				firstLine = false;
-			}else{
-				boardString += "\n";
-			}
-			boolean firstPiece = true;
-			for (int j = 0; j < Board.BOARD_SIZE; j++) {
-				if(firstPiece){
-					firstPiece = false;
-				}else{
-					boardString += " ";
-				}
-				Piece piece = b.getPieceAt(i, j);
-				if(piece.isTopPlayerPiece()){
-					boardString += TOP;
-					if(piece.isStrong()){
-						boardString += STRONG + piece.getId();
-					}else{						
-						boardString += WEAK;
-					}
-				}
-				if(piece.isBottomPlayerPiece()){
-					boardString += BOTTOM;
-					if(piece.isStrong()){
-						boardString += STRONG + piece.getId();
-					}else{						
-						boardString += WEAK;
-					}
-				}
-				if(piece.isEmpty()){
-					boardString += EMPTY;
-				}
-			}
+	public static String printBoard(final Game game) {
+		final Board board = game.getBoard();
+		String boardString = printBoard(board); 
+		Set<Integer> alreadyMovedPieces = game.getAlreadyMovedPieces();
+		for (Integer id : alreadyMovedPieces) {
+			String player = (game.isTopPlayerTurn())?"T":"B";
+			boardString = boardString.replace(player+"S"+id, player+"XX");
 		}
 		return boardString;
 	}
 	
-	//	public static PlaySequence invertPlay(final PlaySequence playSequence) {
-	//		PlaySequence inverted = new PlaySequence();
-	//		for (Play play : playSequence.getPlays()) {
-	//			if(play.isMoveDirection())
-	//				throw new IllegalArgumentException("Cant invert move to direction play");
-	//			if(play.isNextState()){
-	//				inverted.addPlay(play);
-	//			}else{
-	//				int line = BOARD_SIZE - 1 -play.getLine();
-	//				int column = BOARD_SIZE - 1 -play.getColumn();
-	//				inverted.addPlay(new Play(line,column));
-	//			}
-	//		}
-	//		return inverted;
-	//	}
-	
 	public static Board newBoardSwitchedSides(final Board board){
-		final Board boardCopy = board.copy();
+		final Board boardCopy = new Board();
+		boardCopy.copyFrom(board);		
 		switchSides(boardCopy);
 		return boardCopy;
 	}
@@ -138,7 +90,8 @@ public class BoardUtils {
 	private static void switchSides(final Board board) {
 		int boardSize = Board.BOARD_SIZE;
 		final int totalSize = boardSize*boardSize;
-		final Board boardCopy = board.copy();
+		final Board boardCopy = new Board();
+		boardCopy.copyFrom(board);
 		for(int i=0;i<totalSize;i++){
 			int srcLine = i / boardSize;
 			int srcColumn = i % boardSize;
@@ -184,7 +137,44 @@ public class BoardUtils {
 		return invertedPlaySequence;
 	}
 
-	public static String printBoard(Game game) {
-		return printBoard(game.getBoard());
-	}	
+	public static String printBoard(final Board board) {
+		String boardString = "";
+		boolean firstLine = true;
+		for (int i = 0; i < Board.BOARD_SIZE; i++) {
+			if(firstLine){
+				firstLine = false;
+			}else{
+				boardString += "\n";
+			}
+			boolean firstPiece = true;
+			for (int j = 0; j < Board.BOARD_SIZE; j++) {
+				if(firstPiece){
+					firstPiece = false;
+				}else{
+					boardString += " ";
+				}
+				Piece piece = board.getPieceAt(i, j);
+				if(piece.isTopPlayerPiece()){
+					boardString += TOP;
+					if(piece.isStrong()){
+						boardString += STRONG + piece.getId();
+					}else{						
+						boardString += WEAK;
+					}
+				}
+				if(piece.isBottomPlayerPiece()){
+					boardString += BOTTOM;
+					if(piece.isStrong()){
+						boardString += STRONG + piece.getId();
+					}else{						
+						boardString += WEAK;
+					}
+				}
+				if(piece.isEmpty()){
+					boardString += EMPTY;
+				}
+			}
+		}
+		return boardString;
+	}
 }

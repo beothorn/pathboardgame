@@ -5,6 +5,9 @@ import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class GameStatePuttingStrongs implements GameState {
 
 	private final boolean isTopPlayerTurn;
@@ -76,5 +79,10 @@ public class GameStatePuttingStrongs implements GameState {
 	@Override
 	public GameState copy() {
 		return new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);
+	}
+
+	@Override
+	public Set<Integer> getAlreadyMovedOrEmptySet() {
+		return new LinkedHashSet<Integer>();
 	}
 }

@@ -89,4 +89,9 @@ public class GameStateMovingStrongs implements GameState {
 		copy.alreadyMoved.addAll(alreadyMoved);
 		return copy;
 	}
+
+	@Override
+	public Set<Integer> getAlreadyMovedOrEmptySet() {
+		return alreadyMoved;
+	}
 }

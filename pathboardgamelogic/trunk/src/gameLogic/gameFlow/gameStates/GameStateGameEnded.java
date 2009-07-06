@@ -5,6 +5,9 @@ import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class GameStateGameEnded implements GameState {
 
 	public static final int DRAW = 0;
@@ -65,6 +68,11 @@ public class GameStateGameEnded implements GameState {
 	@Override
 	public GameState copy() {
 		return new GameStateGameEnded(result);
+	}
+
+	@Override
+	public Set<Integer> getAlreadyMovedOrEmptySet() {
+		return new LinkedHashSet<Integer>();
 	}
 
 }

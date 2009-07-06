@@ -10,19 +10,48 @@ import gameLogic.board.ValidPlaySequence;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Set;
 
 import utils.BoardUtils;
 
 public class Main {
 	
-	private final Game game;
+	private static final String VERSION = "0.2.010709";
+	protected final Game game;
 	private final PlaySequenceValidator playSequenceValidator;
 
-	public Main() {
+	public Main(final String[] args) throws IOException {
 		game = new Game();
+		addAIPlayers();
 		playSequenceValidator = new PlaySequenceValidator(game);
+		if(args.length > 0){
+			if(isArgument(args[0],"help")){
+				printHelp();
+				return;
+			}
+			if(isArgument(args[0],"version")){
+				System.out.println(VERSION);
+				return;
+			}
+		}
 		printGameState();
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String line = "";
+		while (!isGameEnded() && line != null && !line.equals("q")){
+			printBoard();
+			line = reader.readLine();
+			if(line != null)
+				play(line);
+			if(line.equals("help"))
+				printHelp();
+			if(line.equals("version"))
+				System.out.println(VERSION);
+		}
+		printBoard();
+		if(line == null || line.equals("q"))
+			System.out.println("Quitted game");
+	}
+
+	protected void addAIPlayers() {
 	}
 
 	public boolean isGameEnded(){
@@ -56,24 +85,14 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		
-		if(args.length > 0 && (args[0].equals("-help") || args[0].equals("-h") || args[0].equals("help") || args[0].equals("help"))){
-			printHelp();
-			return;
-		}
-		
-		final Main main = new Main();
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String line = "";
-		while (!main.isGameEnded() && line != null && !line.equals("q")){
-			main.printBoard();
-			line = reader.readLine();
-			if(line != null)
-				main.play(line);
-		}
-		main.printBoard();
-		if(line == null || line.equals("q"))
-			System.out.println("Quitted game");
+		new Main(args);		
+	}
+
+	private static  boolean isArgument(final String arg,final String argValid) {
+		return arg.toLowerCase().equals("-"+argValid.toLowerCase()) || 
+		arg.toLowerCase().equals("-"+argValid.toLowerCase().charAt(0)) || 
+		arg.toLowerCase().equals(argValid.toLowerCase()) || 
+		arg.equals(Character.toString(argValid.toLowerCase().charAt(0)));
 	}
 
 	private static void printHelp() {
@@ -116,10 +135,11 @@ public class Main {
 			"To win the path must have only weak pieces. If the first square of the line is blocked, the piece will not be teleported.        \r\n" +
 			"\r\n" +
 			"Board\r\n" +
-			"BS1 : Bottom Strong ID1                                                                                                          \r\n" +
-			"BWK : Bottom Weak                                                                                                                \r\n" +
-			"TS2 : Top Strong ID2                                                                                                             \r\n" +
+			"BS1 : Bottom strong ID1                                                                                                          \r\n" +
+			"BWK : Bottom weak                                                                                                                \r\n" +
+			"TS2 : Top strong ID2                                                                                                             \r\n" +
 			"TWK : Top weak                                                                                                                   \r\n" +
+			"TXX : Already moved top strong                                                                                                   \r\n" +
 			"- : Empty space                                                                                                                  \r\n" +
 			"Commands\r\n" +
 			" To add a piece just type the columns where you want to add the pieces using spaces between them. ex: 0 3 4                      \r\n" +
@@ -129,12 +149,6 @@ public class Main {
 	}
 
 	public void printBoard() {
-		String printBoardWithCoordinates = BoardUtils.printBoardWithCoordinates(game);
-		Set<Integer> alreadyMovedPieces = game.getAlreadyMovedPieces();
-		for (Integer id : alreadyMovedPieces) {
-			String player = (game.isTopPlayerTurn())?"T":"B";
-			printBoardWithCoordinates = printBoardWithCoordinates.replace(player+"S"+id, player+"XX");
-		}
-		System.out.println(printBoardWithCoordinates);
+		System.out.println(BoardUtils.printBoardWithCoordinates(game));
 	}
 }

@@ -12,10 +12,10 @@ public class Board {
 	public static final int BOARD_SIZE = 8;
 	public static final int MAX_STRONG_PIECES = 3;
 
-	private static int NO_PLAYER = 0;
-	private static int TOP_PLAYER = 1;
-	private static int BOTTOM_PLAYER = 2;
-	private static int DRAW = 3;
+	private static final int NO_PLAYER = 0;
+	private static final int TOP_PLAYER = 1;
+	private static final int BOTTOM_PLAYER = 2;
+	private static final int DRAW = 3;
 
 	Piece[][] board = new Piece[BOARD_SIZE][BOARD_SIZE];
 
@@ -327,14 +327,12 @@ public class Board {
 		return boardPrint;
 	}
 
-	public Board copy() {
-		final Board boardCopy = new Board();
+	public void copyFrom(final Board source) {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				boardCopy.board[i][j] = board[i][j];
+				this.board[i][j] = source.board[i][j];
 			}
 		}
-		return boardCopy;
 	}
 
 	public void applyGravity(){

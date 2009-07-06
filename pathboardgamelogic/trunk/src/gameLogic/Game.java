@@ -7,76 +7,72 @@ import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.gameStates.GameState;
 import gameLogic.gameFlow.gameStates.GameStateFactory;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 public class Game {
 
 	private GameState gameState;
 	private final Board board;
-	private final Set<Integer> alreadyMoved;
+	private final List<TurnChangeListener> turnListeners = new ArrayList<TurnChangeListener>();
 	private boolean topLocked = false;
 	private boolean bottomLocked = false;
-	private boolean stateChanged = false;
-	private CountDownLatch endedCountDownLatch;
-	private CountDownLatch topCountDownLatch;
-	private CountDownLatch bottomCountDownLatch;
 	private boolean gravityAfterPlay = true;
+	private boolean stateChanged;
 
 	public Game() {
 		this(new Board(), GameStateFactory.getFirstState(false));
 	}
 	
 	public Game(final Board board,final GameState gameState){
-		createCountDownLatches();
-		this.board = board.copy();
+		this.board = new Board();
+		this.board.copyFrom(board);
 		this.gameState = gameState;
-		alreadyMoved = new LinkedHashSet<Integer>();		
+	}
+	
+	public void addTurnListener(final TurnChangeListener turnChangeListener){
+		turnListeners.add(turnChangeListener);
+		if(gameState.isBottomPlayerTurn()){
+			turnChangeListener.changedToBottomTurn();
+		}else{
+			if(gameState.isBottomPlayerTurn()){
+				turnChangeListener.changedToTopTurn();
+			}
+		}
 	}
 
 	public void play(final ValidPlay validPlay){
-		playAndGetNewState(validPlay);
-		if (gameState.isTopPlayerTurn()){
-			topCountDownLatch.countDown();
+		GameState newGameState = gameState.play(validPlay,board);
+		if(newGameState == gameState){
+			this.stateChanged = false;
 		}else{
-			if(topCountDownLatch.getCount() == 0)
-				topCountDownLatch = new CountDownLatch(1);
+			this.stateChanged = true;
 		}
-		
-		if (gameState.isBottomPlayerTurn()){
-			bottomCountDownLatch.countDown();
-		}else{
-			if(bottomCountDownLatch.getCount() == 0)
-				bottomCountDownLatch = new CountDownLatch(1);
-		}
-		
-		if (gameState.isGameEnded()){
-			endedCountDownLatch.countDown();
-			topCountDownLatch.countDown();
-			bottomCountDownLatch.countDown();
-		}
+		final GameState oldState = gameState;
+		gameState = newGameState;
+		sendTurnChangedToChangeListeners(oldState);
 		if(isGravityAfterPlay())
 			board.applyGravity();
 	}
 
-	private void playAndGetNewState(final ValidPlay validPlay) {
-		GameState newGameState = gameState.play(validPlay,board);
-		if(newGameState == gameState){
-			this.stateChanged = false;
-			Play play = validPlay.unbox();
-			if(play.isMoveDirection()){
-				getAlreadyMovedPieces().add(play.getPieceId());
+	private void sendTurnChangedToChangeListeners(final GameState oldState) {
+		if(oldState.isTopPlayerTurn() && gameState.isBottomPlayerTurn()){
+			for (TurnChangeListener listener : turnListeners) {
+				listener.changedToBottomTurn();
 			}
-		}else{
-			this.stateChanged = true;
-			getAlreadyMovedPieces().clear();
 		}
-		gameState = newGameState;
+		else if(oldState.isBottomPlayerTurn() && gameState.isTopPlayerTurn()){
+			for (TurnChangeListener listener : turnListeners) {
+				listener.changedToTopTurn();
+			}
+		}
 	}
 
 	public Board getBoard() {
-		return board.copy();
+		final Board boardCopy = new Board();
+		boardCopy.copyFrom(board);
+		return boardCopy;
 	}
 
 	public String getStateDescription() {
@@ -103,43 +99,6 @@ public class Game {
 			throw InvalidPlayException.gameIsLocked();
 		}
 		return gameState.validatePlay(play,board,isTopPlayerPlay);
-	}
-	
-	private void createCountDownLatches() {
-		endedCountDownLatch = new CountDownLatch(1);
-		topCountDownLatch = new CountDownLatch(1);
-		bottomCountDownLatch = new CountDownLatch(1);
-	}
-
-	public void waitUntilEnded() {
-		if (gameState.isGameEnded())
-			return;
-		try {
-			endedCountDownLatch.await();
-		} catch (final InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void waitTopTurnOrGameEnd() {
-		if (gameState.isTopPlayerTurn())
-			return;
-		try {
-			topCountDownLatch.await();
-		} catch (final InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-		
-	}
-
-	public void waitBottomTurnOrGameEnd() {
-		if (gameState.isBottomPlayerTurn())
-			return;
-		try {
-			bottomCountDownLatch.await();
-		} catch (final InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	public boolean isGameEnded() {
@@ -171,7 +130,7 @@ public class Game {
 	}
 
 	public Set<Integer> getAlreadyMovedPieces() {
-		return alreadyMoved;
+		return gameState.getAlreadyMovedOrEmptySet();
 	}
 
 	public void applyGravity() {
@@ -179,8 +138,7 @@ public class Game {
 	}
 	
 	public Game copy(){
-		Game copy = new Game(board.copy(),gameState.copy());
-		copy.alreadyMoved.addAll(alreadyMoved);
+		Game copy = new Game(getBoard(),gameState.copy());
 		copy.gravityAfterPlay = gravityAfterPlay;
 		return copy;
 	}

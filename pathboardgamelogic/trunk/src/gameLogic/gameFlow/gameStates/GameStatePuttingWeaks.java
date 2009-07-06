@@ -5,6 +5,9 @@ import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class GameStatePuttingWeaks implements GameState {
 
 	private int numberOfWeaksLeft;
@@ -81,5 +84,10 @@ public class GameStatePuttingWeaks implements GameState {
 		final GameStatePuttingWeaks copy = new GameStatePuttingWeaks(isTopPlayerTurn);
 		copy.numberOfWeaksLeft = numberOfWeaksLeft;
 		return copy;
+	}
+
+	@Override
+	public Set<Integer> getAlreadyMovedOrEmptySet() {
+		return new LinkedHashSet<Integer>();
 	}
 }
