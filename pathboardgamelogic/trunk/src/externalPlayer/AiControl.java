@@ -101,4 +101,8 @@ public class AiControl implements TurnChangeListener {
 	public void changedToTopTurn() {
 		play();
 	}
+
+	public void stopPlaying() {
+		game.removeTurnListener(this);
+	}
 }

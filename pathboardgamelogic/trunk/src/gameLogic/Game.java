@@ -158,4 +158,12 @@ public class Game {
 	public boolean isBottomLocked() {
 		return bottomLocked;
 	}
+
+	public GameState getCurrentState() {
+		return gameState;
+	}
+
+	public void removeTurnListener(final TurnChangeListener turnChangeListener) {
+		turnListeners.remove(turnChangeListener);
+	}
 }
