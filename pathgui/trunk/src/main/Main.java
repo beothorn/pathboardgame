@@ -11,7 +11,6 @@ public class Main{
 	//TODO: depois q termina um jogo ai ainda tenta jogar
 	//TODO: clicando bastante dá pra atrapalhar ai
 	//TODO: escrever help e colocar botão no jogo :)
-	//TODO: bug Too much strong pieces in the game. What are you doing? qnd clica um monte na hora de colocar as fortes
 	//TODO: deixar Maingamepanel e game entities decente
 	//TODO: listar ias para escolher
 

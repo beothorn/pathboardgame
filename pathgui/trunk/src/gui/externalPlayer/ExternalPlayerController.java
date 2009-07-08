@@ -2,13 +2,13 @@ package gui.externalPlayer;
 
 import playerTypes.PlayerTypes;
 import ai.AIPlayer;
-import externalPlayer.ExternalPlayerRunnable;
+import externalPlayer.AiControl;
 import gameLogic.Game;
 
 public class ExternalPlayerController{
 
-	private ExternalPlayerRunnable externalBottom;
-	private ExternalPlayerRunnable externalTop;
+	private AiControl externalBottom;
+	private AiControl externalTop;
 
 	private int bottomPlayerType;
 	private final Game game;
@@ -24,8 +24,8 @@ public class ExternalPlayerController{
 		return bottomPlayerType;
 	}
 
-	private ExternalPlayerRunnable getCurrentAIEngineInstance(final boolean isTopPlayer) {
-		return new ExternalPlayerRunnable(game,new AIPlayer(),isTopPlayer);
+	private AiControl getCurrentAIEngineInstance(final boolean isTopPlayer) {
+		return new AiControl(game,new AIPlayer(),isTopPlayer);
 	}
 
 	public int getTopPlayerType(){
@@ -39,7 +39,6 @@ public class ExternalPlayerController{
 				final boolean isTopPlayer = false;
 				externalBottom = getCurrentAIEngineInstance(isTopPlayer);
 			}
-			startExternalPlayer(externalBottom);
 			return;
 		}
 		if(externalBottom != null){
@@ -55,16 +54,11 @@ public class ExternalPlayerController{
 				final boolean isTopPlayer = true;
 				externalTop = getCurrentAIEngineInstance(isTopPlayer);
 			}
-			startExternalPlayer(externalTop);
 			return;
 		}
 		if(externalTop != null){
 			externalTop.stopPlaying();
 			externalTop = null;
 		}
-	}
-
-	private void startExternalPlayer(final ExternalPlayerRunnable externalPlayer) {
-		new Thread(externalPlayer).start();
 	}
 }

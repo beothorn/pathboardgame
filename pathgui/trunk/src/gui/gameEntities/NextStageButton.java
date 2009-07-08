@@ -1,8 +1,8 @@
 package gui.gameEntities;
 
 import gameLogic.Game;
-import gameLogic.Play;
-import gameLogic.gameFlow.GameState;
+import gameLogic.board.Play;
+import gameLogic.gameFlow.gameStates.GameState;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

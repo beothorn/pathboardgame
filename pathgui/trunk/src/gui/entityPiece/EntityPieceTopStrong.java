@@ -1,5 +1,5 @@
 package gui.entityPiece;
-import gameLogic.Piece;
+import gameLogic.board.piece.Piece;
 import gui.GameLayoutDefinitions;
 
 

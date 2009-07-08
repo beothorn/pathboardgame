@@ -1,6 +1,6 @@
 package gui.entityPiece;
 
-import gameLogic.Piece;
+import gameLogic.board.piece.Piece;
 
 public class EntityPieceFactory {
 	public static EntityPiece giveMeAPiece(final Piece p){

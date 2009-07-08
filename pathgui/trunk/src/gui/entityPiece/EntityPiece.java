@@ -4,7 +4,7 @@ import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.EntityAction;
 import gameEngine.entityClasses.actions.MoveToAndStop;
 import gameEngine.gameMath.Point;
-import gameLogic.Piece;
+import gameLogic.board.piece.Piece;
 
 import java.awt.Graphics;
 

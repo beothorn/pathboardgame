@@ -1,6 +1,6 @@
 package gui.gameEntities;
 
-import gameLogic.gameFlow.GameState;
+import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
 
 public class NextStageButtomSpriteFactory {

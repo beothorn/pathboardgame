@@ -5,7 +5,6 @@ import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.MoveToAndStop;
 import gameEngine.gameMath.Point;
-import gameLogic.GameErrorListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +12,7 @@ import java.awt.Graphics;
 
 import utils.Logger;
 
-public class ErrorMessage extends Entity implements GameElement,GameErrorListener{
+public class ErrorMessage extends Entity implements GameElement{
 
 	private final static int BOX_MARGIN = 10;
 	private final static int SHOW_MESSAGE_MILISECONDS = 5000;

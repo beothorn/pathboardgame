@@ -1,11 +1,10 @@
 package gui.gameEntities;
 import gameEngine.GameElement;
 import gameEngine.gameMath.Point;
-import gameLogic.Board;
 import gameLogic.Game;
-import gameLogic.Piece;
-import gameLogic.Play;
-import gameLogic.gameFlow.BoardListener;
+import gameLogic.board.Board;
+import gameLogic.board.Play;
+import gameLogic.board.piece.Piece;
 import gui.GameLayoutDefinitions;
 import gui.entityPiece.EntityPiece;
 import gui.entityPiece.EntityPieceFactory;
@@ -35,10 +34,6 @@ public class PiecesBoard implements GameElement,MouseListener{
 		setCurrentGame(game);
 	}
 
-	public void addBoardListener(final BoardListener b) {
-		getCurrentGame().addBoardListener(b);
-	}
-
 	public void boardChanged() {
 		refreshBoard();
 	}
@@ -59,8 +54,8 @@ public class PiecesBoard implements GameElement,MouseListener{
 
 	private boolean correspondToAPiece(final EntityPiece p) {
 		final Board board = getBoard();
-		for (int i = 0; i< board.getBoardLineNumber(); i++) {
-			for (int j = 0; j < board.getBoardColumnNumber(); j++) {
+		for (int i = 0; i< Board.BOARD_SIZE; i++) {
+			for (int j = 0; j < Board.BOARD_SIZE; j++) {
 				if(p.ownsPiece(board.getPieceAt(i, j))) {
 					return true;
 				}
@@ -78,8 +73,8 @@ public class PiecesBoard implements GameElement,MouseListener{
 		if(line == 0) {
 			createAboveOrBelowLine = -1;
 		}
-		if(line == getBoard().getBoardLineNumber()-1) {
-			createAboveOrBelowLine = getBoard().getBoardLineNumber();
+		if(line == Board.BOARD_SIZE-1) {
+			createAboveOrBelowLine = Board.BOARD_SIZE;
 		}
 		final double newPieceX = getXForPieceAt(column);
 		final double newPieceY = getYForPieceAt(createAboveOrBelowLine);
@@ -109,11 +104,11 @@ public class PiecesBoard implements GameElement,MouseListener{
 
 
 	public double getBoardHeight(){
-		return getBoard().getBoardLineNumber()*gridHeight;
+		return Board.BOARD_SIZE*gridHeight;
 	}
 
 	public double getBoardWidth(){
-		return getBoard().getBoardColumnNumber()*gridWidth;
+		return Board.BOARD_SIZE*gridWidth;
 	}
 
 	public Game getCurrentGame() {
@@ -233,8 +228,8 @@ public class PiecesBoard implements GameElement,MouseListener{
 
 	public void refreshBoard(){
 		final Board board = getBoard();
-		for (int i = 0; i< board.getBoardLineNumber(); i++) {
-			for (int j = 0; j < board.getBoardColumnNumber(); j++) {
+		for (int i = 0; i< Board.BOARD_SIZE; i++) {
+			for (int j = 0; j < Board.BOARD_SIZE; j++) {
 				refreshPieceAt(board.getPieceAt(i, j), i, j);
 			}
 		}
