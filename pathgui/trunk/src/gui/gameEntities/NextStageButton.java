@@ -1,6 +1,8 @@
 package gui.gameEntities;
 
 import gameLogic.Game;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.gameFlow.gameStates.GameState;
 
@@ -24,15 +26,26 @@ public class NextStageButton extends JButton{
 
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				final Play play = new Play(Play.NEXT_STATE);
-				getCurrentGame().play(play);
+				Play play = null;
+				try {
+					play = new Play(Play.NEXT_STATE);
+				} catch (final InvalidPlayStringException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				try {
+					getCurrentGame().validatePlay(play, true);
+				} catch (final InvalidPlayException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 		});
 	}
 
 	public void gameStateChanged(final boolean isTopPlayerTurn, final boolean isBottomPlayerTurn, final GameState gs) {
-		setText("Next Stage for"+gs.asStateUniqueName());
+		//		setText("Next Stage for"+gs.asStateUniqueName());
 		//TODO: mudar sprite
 		//				if(isBottomPlayerTurn || isTopPlayerTurn){
 		//					final GameState currentState = currentGame.getCurrentState();

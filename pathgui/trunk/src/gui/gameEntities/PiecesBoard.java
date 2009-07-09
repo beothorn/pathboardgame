@@ -3,7 +3,6 @@ import gameEngine.GameElement;
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
 import gameLogic.board.Board;
-import gameLogic.board.Play;
 import gameLogic.board.piece.Piece;
 import gui.GameLayoutDefinitions;
 import gui.entityPiece.EntityPiece;
@@ -223,7 +222,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	}
 
 	private void play(final int pieceColumn, final int pieceLine) {
-		getCurrentGame().play(new Play(pieceLine, pieceColumn));
+		//		getCurrentGame().play(new Play(pieceLine, pieceColumn));
 	}
 
 	public void refreshBoard(){
