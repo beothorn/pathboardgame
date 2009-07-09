@@ -6,7 +6,7 @@ import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
 import org.junit.Assert;
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class PlaySequenceTests {
 	
@@ -51,24 +51,24 @@ public class PlaySequenceTests {
 		final PlaySequence pSPutStrongsBottom = new PlaySequence("0");
 		final ValidPlaySequence vPSPutStrongsBottom = pSValidator.validatePlays(pSPutStrongsBottom, game.isTopPlayerTurn());
 		pSValidator.play(vPSPutStrongsBottom);
-		Assert.assertEquals(boardWithBS1at0,BoardUtils.printBoard(game));
+		Assert.assertEquals(boardWithBS1at0,GameUtils.printBoard(game));
 	}
 	
 	@Test
 	public void normalPlaySequenceTest() throws InvalidPlayStringException, InvalidPlayException{
-		final Board board = BoardUtils.newBoardFromString(boardTest);
+		final Board board = GameUtils.newBoardFromString(boardTest);
 		final boolean isTopPlayerTurn = false;
 		final Game game = new Game(board,new GameStatePuttingWeaks(isTopPlayerTurn));
 		final PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);
 		final PlaySequence playSequence = new PlaySequence(playBottom);
 		final ValidPlaySequence validPlays = playSequenceValidator.validatePlays(playSequence, game.isTopPlayerTurn());
 		playSequenceValidator.play(validPlays);
-		Assert.assertEquals(boardTestResult, BoardUtils.printBoard(game));
+		Assert.assertEquals(boardTestResult, GameUtils.printBoard(game));
 	}
 	
 	@Test
 	public void wrongPlaySequenceTest() throws InvalidPlayStringException{
-		final Board board = BoardUtils.newBoardFromString(boardTest);
+		final Board board = GameUtils.newBoardFromString(boardTest);
 		final boolean isTopPlayerTurn = false;
 		final Game game = new Game(board,new GameStatePuttingWeaks(isTopPlayerTurn));
 		final PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);
@@ -79,7 +79,7 @@ public class PlaySequenceTests {
 		} catch (InvalidPlayException e) {
 			error = true;
 		}
-		Assert.assertEquals(boardTest, BoardUtils.printBoard(game));
+		Assert.assertEquals(boardTest, GameUtils.printBoard(game));
 		Assert.assertTrue(error);
 	}
 
@@ -89,23 +89,23 @@ public class PlaySequenceTests {
 		final PlaySequenceValidator pSValidator = new PlaySequenceValidator(game);
 		final ValidPlaySequence vPSPutStrongsBottom = pSValidator.validatePlays("0", game.isTopPlayerTurn());
 		pSValidator.play(vPSPutStrongsBottom);
-		Assert.assertEquals(boardWithBS1at0,BoardUtils.printBoard(game));
+		Assert.assertEquals(boardWithBS1at0,GameUtils.printBoard(game));
 	}
 	
 	@Test
 	public void normalStringPlaySequenceTest() throws InvalidPlayStringException, InvalidPlayException{
-		final Board board = BoardUtils.newBoardFromString(boardTest);
+		final Board board = GameUtils.newBoardFromString(boardTest);
 		final boolean isTopPlayerTurn = false;
 		final Game game = new Game(board,new GameStatePuttingWeaks(isTopPlayerTurn));
 		final PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);
 		final ValidPlaySequence validPlays = playSequenceValidator.validatePlays(playBottom, game.isTopPlayerTurn());
 		playSequenceValidator.play(validPlays);
-		Assert.assertEquals(boardTestResult, BoardUtils.printBoard(game));
+		Assert.assertEquals(boardTestResult, GameUtils.printBoard(game));
 	}
 	
 	@Test
 	public void wrongStringPlaySequenceTest() throws InvalidPlayStringException{
-		final Board board = BoardUtils.newBoardFromString(boardTest);
+		final Board board = GameUtils.newBoardFromString(boardTest);
 		final boolean isTopPlayerTurn = false;
 		final Game game = new Game(board,new GameStatePuttingWeaks(isTopPlayerTurn));
 		final PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);
@@ -115,13 +115,13 @@ public class PlaySequenceTests {
 		} catch (InvalidPlayException e) {
 			error = true;
 		}
-		Assert.assertEquals(boardTest, BoardUtils.printBoard(game));
+		Assert.assertEquals(boardTest, GameUtils.printBoard(game));
 		Assert.assertTrue(error);
 	}
 	
 	@Test(expected=InvalidPlayException.class)
 	public void tryToPlayForOtherPlaySequenceTest() throws InvalidPlayStringException, InvalidPlayException{
-		final Board board = BoardUtils.newBoardFromString(boardTest);
+		final Board board = GameUtils.newBoardFromString(boardTest);
 		final boolean isTopPlayerTurn = false;
 		final Game game = new Game(board,new GameStatePuttingWeaks(isTopPlayerTurn));
 		final PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);

@@ -75,8 +75,8 @@ public class Game {
 		return boardCopy;
 	}
 
-	public String getStateDescription() {
-		return gameState.getStateDescription();
+	public int getStateId() {
+		return gameState.getStateId();
 	}
 
 	public boolean isBottomPlayerTurn() {

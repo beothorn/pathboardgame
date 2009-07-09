@@ -8,7 +8,7 @@ import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.PlaySequence;
 import gameLogic.board.PlaySequenceValidator;
 import gameLogic.board.ValidPlaySequence;
-import utils.BoardUtils;
+import utils.GameUtils;
 import utils.Logger;
 
 public class AiControl implements TurnChangeListener {
@@ -62,14 +62,14 @@ public class AiControl implements TurnChangeListener {
 			final boolean isTopPlayerTurn = game.isTopPlayerTurn();
 			final Board board;
 			if(isTopPlayerTurn){
-				board = BoardUtils.newBoardSwitchedSides(game.getBoard());
+				board = GameUtils.newBoardSwitchedSides(game.getBoard());
 			}else{
 				board = game.getBoard();
 			}
 			
-			final String boardString = BoardUtils.printBoard(game.getBoard());
+			final String boardString = GameUtils.printBoard(game.getBoard());
 			logger.debug("Quering External player play for board:\n"+boardString);
-			final String aiPlay = player.play(BoardUtils.printBoard(board));				
+			final String aiPlay = player.play(GameUtils.printBoard(board));				
 			final PlaySequence playSequence;
 			try {
 				playSequence = new PlaySequence(aiPlay);
@@ -77,7 +77,7 @@ public class AiControl implements TurnChangeListener {
 				aiError(e);
 				return;
 			}
-			final PlaySequence playSequenceForGame = isTopPlayerTurn ? BoardUtils.invertPlay(playSequence) : playSequence;
+			final PlaySequence playSequenceForGame = isTopPlayerTurn ? GameUtils.invertPlay(playSequence) : playSequence;
 			logger.debug("External player played: "+playSequenceForGame);
 			
 			final ValidPlaySequence validPlaySequence;

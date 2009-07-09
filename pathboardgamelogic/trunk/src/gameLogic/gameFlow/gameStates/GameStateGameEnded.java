@@ -10,24 +10,10 @@ import java.util.Set;
 
 public class GameStateGameEnded implements GameState {
 
-	public static final int DRAW = 0;
-	public static final int TOP_WON = 1;
-	public static final int BOTTOM_WON = 2;
-	private final int result;
+	private final boolean isTopPlayerTurn;
 
-	public GameStateGameEnded(final int result) {
-		this.result = result;
-	}
-
-	@Override
-	public String getStateDescription() {
-		if(result == TOP_WON) {
-			return GameState.GAME_ENDED_TOP_WINS_DESCRIPTION;
-		} 
-		if(result == BOTTOM_WON){
-			return GameState.GAME_ENDED_BOTTOM_WINS_DESCRIPTION;
-		}
-		return GameState.GAME_ENDED_DRAW_DESCRIPTION;
+	public GameStateGameEnded(final boolean isTopPlayerTurn) {
+		this.isTopPlayerTurn = isTopPlayerTurn;
 	}
 
 	@Override
@@ -57,7 +43,7 @@ public class GameStateGameEnded implements GameState {
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay)throws InvalidPlayException {
 		if(play.isNextState())
 			return board.validatePlay(play, isTopPlayerPlay);
-		throw InvalidPlayException.gameAlreadyEnded(getStateDescription());
+		throw InvalidPlayException.gameAlreadyEnded(isTopPlayerTurn);
 	}
 
 	@Override
@@ -67,7 +53,7 @@ public class GameStateGameEnded implements GameState {
 
 	@Override
 	public GameState copy() {
-		return new GameStateGameEnded(result);
+		return new GameStateGameEnded(isTopPlayerTurn);
 	}
 
 	@Override
@@ -76,8 +62,7 @@ public class GameStateGameEnded implements GameState {
 	}
 
 	@Override
-	public int getState() {
-		return GameState.GAME_ENDED;
+	public int getStateId() {
+		return GameState.GAME_ENDED_ID;
 	}
-
 }

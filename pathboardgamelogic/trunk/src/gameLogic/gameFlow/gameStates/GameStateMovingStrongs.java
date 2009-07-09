@@ -19,15 +19,6 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	@Override
-	public String getStateDescription() {
-		if(isTopPlayerTurn) {
-			return GameState.TOP_PLAYER_MOVING_STRONGS_DESCRIPTION;
-		} else {
-			return GameState.BOTTOM_PLAYER_MOVING_STRONGS_DESCRIPTION;
-		}
-	}
-
-	@Override
 	public boolean isBottomPlayerTurn() {
 		return !isTopPlayerTurn;
 	}
@@ -63,14 +54,11 @@ public class GameStateMovingStrongs implements GameState {
 		}
 		board.play(validPlay, isTopPlayerTurn);
 		alreadyMoved.add(validPlay.unbox().getPieceId());
-		if(board.isTopTheWinner()){
-			return new GameStateGameEnded(GameStateGameEnded.TOP_WON);
-		}
-		if(board.isBottomTheWinner()){
-			return new GameStateGameEnded(GameStateGameEnded.BOTTOM_WON);
+		if(board.isTopTheWinner() || board.isBottomTheWinner()){
+			return new GameStateGameEnded(board.isTopTheWinner());
 		}
 		if(board.isGameDraw()){
-			return new GameStateGameEnded(GameStateGameEnded.DRAW);
+			return new GameStateGameEndedDraw();
 		}
 		if(alreadyMoved.size() == GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE) {
 			return new GameStatePuttingWeaks(!isTopPlayerTurn());
@@ -96,7 +84,7 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	@Override
-	public int getState() {
-		return GameState.MOVING_STRONGS;
+	public int getStateId() {
+		return GameState.GAME_MOVING_STRONS_ID;
 	}
 }

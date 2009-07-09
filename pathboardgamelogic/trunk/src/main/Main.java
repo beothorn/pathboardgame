@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class Main {
 	
@@ -81,7 +81,7 @@ public class Main {
 	}
 
 	private void printGameState() {
-		System.out.println(game.getStateDescription());
+		System.out.println(GameUtils.printStateDescription(game));
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -149,6 +149,6 @@ public class Main {
 	}
 
 	public void printBoard() {
-		System.out.println(BoardUtils.printBoardWithCoordinates(game));
+		System.out.println(GameUtils.printBoardWithCoordinates(game));
 	}
 }

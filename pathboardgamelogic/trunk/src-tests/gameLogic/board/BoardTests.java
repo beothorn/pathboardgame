@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class BoardTests {
 	
@@ -25,7 +25,7 @@ public class BoardTests {
 		
 		Board board = new Board();
 		addStrongPieceIn0(board,forTopPlayer);
-		Assert.assertEquals(boardWithBS1at0, BoardUtils.printBoard(board));
+		Assert.assertEquals(boardWithBS1at0, GameUtils.printBoard(board));
 	}
 	
 	@Test(expected = InvalidPlayException.class)
@@ -40,7 +40,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"BS1 --- --- --- --- --- --- ---";
-		addStrongPieceIn0(BoardUtils.newBoardFromString(boardWithBS1at0),forTopPlayer);
+		addStrongPieceIn0(GameUtils.newBoardFromString(boardWithBS1at0),forTopPlayer);
 	}
 	
 	@Test
@@ -57,7 +57,7 @@ public class BoardTests {
 		"BS1 BS2 BS3 BWK --- --- --- ---";
 		final Board board = new Board();
 		add3StrongAnd1Weak(board,forTopPlayer);
-		Assert.assertEquals(testAdd3BottomStrongPiecesAnd1Weak, BoardUtils.printBoard(board));
+		Assert.assertEquals(testAdd3BottomStrongPiecesAnd1Weak, GameUtils.printBoard(board));
 	}
 
 	@Test(expected = InvalidPlayException.class)
@@ -72,7 +72,7 @@ public class BoardTests {
 			"--- --- --- BS1 --- --- --- ---\n" +
 			"--- --- --- BS2 --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Board board = GameUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'r');
 		board.validatePlay(play, forTopPlayer);
 	}
@@ -89,7 +89,7 @@ public class BoardTests {
 			"--- --- --- BS1 --- --- --- ---\n" +
 			"--- --- --- BS2 --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Board board = GameUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(3,'l');
 		board.validatePlay(play, forTopPlayer);
 	}
@@ -106,7 +106,7 @@ public class BoardTests {
 			"--- --- --- BS1 --- --- --- ---\n" +
 			"--- --- --- BS2 --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Board board = GameUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'u');
 		board.validatePlay(play, forTopPlayer);
 	}
@@ -123,7 +123,7 @@ public class BoardTests {
 			"--- --- --- BS1 --- --- --- ---\n" +
 			"--- --- --- BS2 --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Board board = GameUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(1,'d');
 		board.validatePlay(play, forTopPlayer);
 	}
@@ -140,7 +140,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- BS2 --- --- --- ---\n" +
 			"--- --- --- BS1 --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testCantMoveTopWeakBlock);
+		final Board board = GameUtils.newBoardFromString(testCantMoveTopWeakBlock);
 		final Play play = new Play(2,'d');
 		board.validatePlay(play, forTopPlayer);
 	}
@@ -166,11 +166,11 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'r');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testMoveTopStrongRight, BoardUtils.printBoard(board));
+		Assert.assertEquals(testMoveTopStrongRight, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -194,11 +194,11 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'u');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testMoveTopStrongUp, BoardUtils.printBoard(board));
+		Assert.assertEquals(testMoveTopStrongUp, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -222,11 +222,11 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'d');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testMoveTopStrongDown, BoardUtils.printBoard(board));
+		Assert.assertEquals(testMoveTopStrongDown, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -250,11 +250,11 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(2,'l');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testMoveTopStrongLeft, BoardUtils.printBoard(board));
+		Assert.assertEquals(testMoveTopStrongLeft, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -278,11 +278,11 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrongRightPushingPieces);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrongRightPushingPieces);
 		final Play play = new Play(2,'r');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testMoveTopStrongRightPushingPiecesResult, BoardUtils.printBoard(board));
+		Assert.assertEquals(testMoveTopStrongRightPushingPiecesResult, GameUtils.printBoard(board));
 	}
 	
 	private void add3StrongAnd1Weak(final Board board,final boolean forTopPlayer)
@@ -313,7 +313,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---";
 		Board board = new Board();
 		addStrongPieceIn0(board,forTopPlayer);
-		Assert.assertEquals(boardWithTS1at0, BoardUtils.printBoard(board));
+		Assert.assertEquals(boardWithTS1at0, GameUtils.printBoard(board));
 	}
 
 	private void addStrongPieceIn0(final Board board,boolean forTopPlayer)
@@ -335,7 +335,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		addStrongPieceIn0(BoardUtils.newBoardFromString(boardWithTS1at0),forTopPlayer);
+		addStrongPieceIn0(GameUtils.newBoardFromString(boardWithTS1at0),forTopPlayer);
 	}
 	
 	@Test
@@ -352,7 +352,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---";
 		final Board board = new Board();
 		add3StrongAnd1Weak(board,forTopPlayer);
-		Assert.assertEquals(testAdd3TopStrongPiecesAnd1Weak, BoardUtils.printBoard(board));
+		Assert.assertEquals(testAdd3TopStrongPiecesAnd1Weak, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -366,7 +366,7 @@ public class BoardTests {
 			"--- TWK --- --- --- --- --- ---\n" +
 			"--- TWK --- --- --- --- --- ---\n" +
 			"--- TWK --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testTopWins);
+		final Board board = GameUtils.newBoardFromString(testTopWins);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
 		Assert.assertFalse(board.isBottomTheWinner());
@@ -384,7 +384,7 @@ public class BoardTests {
 			"--- --- --- TWK --- --- TWK ---\n" +
 			"--- --- --- TWK --- TWK TWK ---\n" +
 			"--- --- --- TWK --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testTopWinsBifurcationLeft);
+		final Board board = GameUtils.newBoardFromString(testTopWinsBifurcationLeft);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
 		Assert.assertFalse(board.isBottomTheWinner());
@@ -402,7 +402,7 @@ public class BoardTests {
 			"--- --- --- TWK --- --- TWK ---\n" +
 			"--- --- --- TWK --- TWK TWK ---\n" +
 			"--- --- --- --- --- TWK --- ---";
-		final Board board = BoardUtils.newBoardFromString(testTopWinsBifurcationRight);
+		final Board board = GameUtils.newBoardFromString(testTopWinsBifurcationRight);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
 		Assert.assertFalse(board.isBottomTheWinner());
@@ -420,7 +420,7 @@ public class BoardTests {
 			"--- BWK BWK --- --- BWK --- ---\n" +
 			"--- --- --- BWK BWK BWK --- ---\n" +
 			"--- --- --- BWK --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testBottomWins);
+		final Board board = GameUtils.newBoardFromString(testBottomWins);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertFalse(board.isGameDraw());
 		Assert.assertTrue(board.isBottomTheWinner());
@@ -438,7 +438,7 @@ public class BoardTests {
 			"--- --- --- BWK TWK --- --- ---\n" +
 			"--- --- --- BWK TWK --- --- ---\n" +
 			"--- --- --- BWK TWK --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testDraw);
+		final Board board = GameUtils.newBoardFromString(testDraw);
 		Assert.assertTrue(board.isGameEnded());
 		Assert.assertTrue(board.isGameDraw());
 		Assert.assertFalse(board.isBottomTheWinner());
@@ -465,9 +465,9 @@ public class BoardTests {
 			"--- --- TWK --- --- --- --- ---\n" +
 			"--- --- TWK --- --- --- --- ---\n" +
 			"--- --- --- --- BWK --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testGravity);
+		final Board board = GameUtils.newBoardFromString(testGravity);
 		board.applyGravity();
-		Assert.assertEquals(testGravityResult, BoardUtils.printBoard(board));
+		Assert.assertEquals(testGravityResult, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -490,7 +490,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- TWK --- ---\n" +
 			"--- --- --- --- --- TWK --- ---";
-		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
+		final Board board = GameUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(2,'d');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -498,7 +498,7 @@ public class BoardTests {
 		final Play play2 = new Play(2,'u');
 		ValidPlay validPlay2 = board.validatePlay(play2, forTopPlayer);
 		board.play(validPlay2, forTopPlayer);
-		Assert.assertEquals(testPushingPieceTS2DownUp, BoardUtils.printBoard(board));
+		Assert.assertEquals(testPushingPieceTS2DownUp, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -521,12 +521,12 @@ public class BoardTests {
 			"--- --- --- --- --- TWK --- ---\n" +
 			"--- --- --- --- --- TWK --- ---\n" +
 			"--- --- --- --- --- TWK --- ---";
-		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
+		final Board board = GameUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(1,'r');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
 		board.play(validPlay, forTopPlayer);
-		Assert.assertEquals(testPushingPieceTS1Right, BoardUtils.printBoard(board));
+		Assert.assertEquals(testPushingPieceTS1Right, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -549,7 +549,7 @@ public class BoardTests {
 			"--- --- --- --- --- TWK --- ---\n" +
 			"--- --- --- --- --- TWK --- ---\n" +
 			"--- --- --- --- --- TWK --- ---";
-		final Board board = BoardUtils.newBoardFromString(testPushingPiece);
+		final Board board = GameUtils.newBoardFromString(testPushingPiece);
 		boolean forTopPlayer = true;
 		final Play play = new Play(3,'u');
 		ValidPlay validPlay = board.validatePlay(play, forTopPlayer);
@@ -557,7 +557,7 @@ public class BoardTests {
 		final Play play2 = new Play(3,'d');
 		ValidPlay validPlay2 = board.validatePlay(play2, forTopPlayer);
 		board.play(validPlay2, forTopPlayer);
-		Assert.assertEquals(testPushingPieceTS3UpDown, BoardUtils.printBoard(board));
+		Assert.assertEquals(testPushingPieceTS3UpDown, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -578,7 +578,7 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- TS3\n" +
 			"TS1 BS2 --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testGetStrongsPositions);
+		final Board board = GameUtils.newBoardFromString(testGetStrongsPositions);
 		Assert.assertEquals(new Point(0,0), board.getStrongBottomPositionOrNull(1));
 		Assert.assertEquals(new Point(7,1), board.getStrongBottomPositionOrNull(2));
 		Assert.assertEquals(new Point(0,7), board.getStrongBottomPositionOrNull(3));

@@ -7,7 +7,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class BoardUtilsTests {
+public class GameUtilsTests {
 	
 	@Test
 	public void testBoardFromStringToString(){
@@ -21,8 +21,8 @@ public class BoardUtilsTests {
 			"--- --- BS3 --- BS2 --- BS1 BWK\n" +
 			"BWK BWK BWK BWK BWK BWK BWK BWK";
 		
-		Board newBoardFromString = BoardUtils.newBoardFromString(boardString);
-		Assert.assertEquals(boardString, BoardUtils.printBoard(newBoardFromString));
+		Board newBoardFromString = GameUtils.newBoardFromString(boardString);
+		Assert.assertEquals(boardString, GameUtils.printBoard(newBoardFromString));
 	}
 	
 	@Test
@@ -46,11 +46,11 @@ public class BoardUtilsTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- BWK ---";
 		
-		Board board = BoardUtils.newBoardFromString(boardNormal);
-		board = BoardUtils.newBoardSwitchedSides(board);
-		Assert.assertEquals(boardInverted, BoardUtils.printBoard(board));
-		board = BoardUtils.newBoardSwitchedSides(board);
-		Assert.assertEquals(boardNormal, BoardUtils.printBoard(board));
+		Board board = GameUtils.newBoardFromString(boardNormal);
+		board = GameUtils.newBoardSwitchedSides(board);
+		Assert.assertEquals(boardInverted, GameUtils.printBoard(board));
+		board = GameUtils.newBoardSwitchedSides(board);
+		Assert.assertEquals(boardNormal, GameUtils.printBoard(board));
 	}
 	
 	@Test
@@ -58,7 +58,7 @@ public class BoardUtilsTests {
 		final String normalPlay = "0 2 6 1u 2d 3r";
 		final String invertedPlay = "7 5 1 1d 2u 3l";
 		PlaySequence playSequence = new PlaySequence(normalPlay);
-		PlaySequence invertPlay = BoardUtils.invertPlay(playSequence);
+		PlaySequence invertPlay = GameUtils.invertPlay(playSequence);
 		Assert.assertEquals(invertedPlay, invertPlay.toString());
 	}
 }

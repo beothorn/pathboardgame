@@ -9,7 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class GameStatePuttingStrongsTests {
 
@@ -39,7 +39,7 @@ public class GameStatePuttingStrongsTests {
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingStrongs gameStatePuttingStrongs = new GameStatePuttingStrongs(isTopPlayerTurn,isFirstState);
 		final Play play = new Play(2,'u');
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		gameStatePuttingStrongs.validatePlay(play, board, gameStatePuttingStrongs.isTopPlayerTurn());
 	}
 	

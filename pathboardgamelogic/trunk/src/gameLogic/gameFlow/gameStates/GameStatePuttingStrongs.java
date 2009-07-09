@@ -33,15 +33,6 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	@Override
-	public String getStateDescription() {
-		if(isTopPlayerTurn) {
-			return GameState.TOP_PLAYER_PUTTING_STRONGS_DESCRIPTION;
-		} else {
-			return GameState.BOTTOM_PLAYER_PUTTING_STRONGS_DESCRIPTION;
-		}
-	}
-
-	@Override
 	public boolean isBottomPlayerTurn() {
 		return !isTopPlayerTurn;
 	}
@@ -87,7 +78,7 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	@Override
-	public int getState() {
-		return GameState.PUTTING_STRONGS;
+	public int getStateId() {
+		return GameState.GAME_PUTTING_STRONGS_ID;
 	}
 }

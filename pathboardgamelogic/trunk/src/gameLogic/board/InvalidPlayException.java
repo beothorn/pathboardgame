@@ -73,4 +73,15 @@ public class InvalidPlayException extends Exception {
 			return new InvalidPlayException("It is bottom players turn.");
 		}
 	}
+
+	public static InvalidPlayException gameAlreadyEnded(boolean isTopPlayerTurn) {
+		if(isTopPlayerTurn){
+			return gameAlreadyEnded("Top wins");
+		}
+		return gameAlreadyEnded("Bottom wins");
+	}
+
+	public static InvalidPlayException gameAlreadyEndedInDraw() {
+		return new InvalidPlayException("Game Draw.");
+	}
 }

@@ -9,7 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class GameStateMovingStrongsTests {
 
@@ -58,7 +58,7 @@ public class GameStateMovingStrongsTests {
 	public void testMovingStrongsStateAdvance() throws InvalidPlayException{
 		boolean isTopPlayerTurn = true;
 		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
-		Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		
 		for(int i=1; i < GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE+1;i++){
 			final Play play = new Play(i,'u');
@@ -74,7 +74,7 @@ public class GameStateMovingStrongsTests {
 	public void testTryToMoveStrongTwice() throws InvalidPlayException{
 		boolean isTopPlayerTurn = true;
 		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
-		Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		final Play play = new Play(1,'u');
 		final ValidPlay validPlay = gameState.validatePlay(play, board,gameState.isTopPlayerTurn());
 		gameState.play(validPlay, board);
@@ -87,7 +87,7 @@ public class GameStateMovingStrongsTests {
 		boolean isTopPlayerTurn = true;
 		GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Play play = new Play(1,'r');
-		Board board = BoardUtils.newBoardFromString(testEndGame);
+		Board board = GameUtils.newBoardFromString(testEndGame);
 		ValidPlay validPlay = gameState.validatePlay(play, board, gameState.isTopPlayerTurn());
 		GameState newGameState = gameState.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStateGameEnded);

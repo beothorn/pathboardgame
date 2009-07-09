@@ -9,7 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class GameStatePuttingWeaksTests {
 
@@ -38,7 +38,7 @@ public class GameStatePuttingWeaksTests {
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingWeaks gameStatePuttingWeaks = new GameStatePuttingWeaks(isTopPlayerTurn);
 		final Play play = new Play(2,'u');
-		final Board board = BoardUtils.newBoardFromString(testMoveTopStrong);
+		final Board board = GameUtils.newBoardFromString(testMoveTopStrong);
 		gameStatePuttingWeaks.validatePlay(play, board,isTopPlayerTurn);
 	}
 	
@@ -75,7 +75,7 @@ public class GameStatePuttingWeaksTests {
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingWeaks gameState = new GameStatePuttingWeaks(isTopPlayerTurn);
 		Play play = new Play(0);
-		Board board = BoardUtils.newBoardFromString(testEndGame);
+		Board board = GameUtils.newBoardFromString(testEndGame);
 		ValidPlay validPlay = gameState.validatePlay(play, board, isTopPlayerTurn);
 		GameState newGameState = gameState.play(validPlay, board);
 		Assert.assertTrue(newGameState instanceof GameStateGameEnded);

@@ -12,7 +12,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class GameTests {
 	
@@ -70,9 +70,9 @@ public class GameTests {
 	}
 
 	private void printGame(final Game game, ValidPlay validPlay) {
-		System.out.println(BoardUtils.printBoardWithCoordinates(game));
+		System.out.println(GameUtils.printBoardWithCoordinates(game));
 		System.out.println("Play: "+validPlay);
-		System.out.println(game.getStateDescription());
+		System.out.println(GameUtils.printStateDescription(game));
 	}
 	
 	@Test
@@ -100,7 +100,7 @@ public class GameTests {
 		game.setBottomLocked(false);
 		ValidPlay validPlay2 = game.validatePlay(play2, game.isTopPlayerTurn());
 		game.play(validPlay2);
-		Assert.assertEquals(testLock, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(testLock, GameUtils.printBoard(game.getBoard()));
 	}
 	
 	@Test
@@ -132,7 +132,7 @@ public class GameTests {
 			"--- --- --- BWK --- --- --- ---\n" +
 			"--- --- --- BWK --- --- --- ---\n" +
 			"--- --- --- BWK --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(testGravity);
+		final Board board = GameUtils.newBoardFromString(testGravity);
 		final boolean isTopPlayerTurn = false;
 		final GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		final Game game = new Game(board,gameState);
@@ -140,9 +140,9 @@ public class GameTests {
 		Play play = new Play(3,'r');
 		final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 		game.play(validPlay);
-		Assert.assertEquals(testGravityNoGravity, BoardUtils.printBoard(game));
+		Assert.assertEquals(testGravityNoGravity, GameUtils.printBoard(game));
 		game.applyGravity();
-		Assert.assertEquals(testGravityApplyGravity, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(testGravityApplyGravity, GameUtils.printBoard(game.getBoard()));
 	}
 	
 	@Test
@@ -174,17 +174,17 @@ public class GameTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---";
-		final Board board = BoardUtils.newBoardFromString(first);
+		final Board board = GameUtils.newBoardFromString(first);
 		final boolean isTopPlayerTurn = false;
 		final GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		final Game game = new Game(board,gameState);
 		Play play = new Play(3,'r');
 		final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
 		game.play(validPlay);
-		Assert.assertEquals(afterPlay, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(afterPlay, GameUtils.printBoard(game.getBoard()));
 		game.restartGame();
-		Assert.assertEquals(restart, BoardUtils.printBoard(game.getBoard()));
-		Assert.assertEquals(GameStateFactory.getFirstState().getState(), game.getCurrentState().getState());
+		Assert.assertEquals(restart, GameUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(GameStateFactory.getFirstState().getStateId() , game.getCurrentState().getStateId());
 		Assert.assertEquals(GameStateFactory.getFirstState().isBottomPlayerTurn(), game.getCurrentState().isBottomPlayerTurn());
 	}
 }

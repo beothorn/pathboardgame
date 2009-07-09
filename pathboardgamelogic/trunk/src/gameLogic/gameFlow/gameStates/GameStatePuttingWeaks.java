@@ -19,14 +19,6 @@ public class GameStatePuttingWeaks implements GameState {
 	}
 
 	@Override
-	public String getStateDescription() {
-		if(isTopPlayerTurn) {
-			return GameState.TOP_PLAYER_PUTTING_WEAKS_DESCRIPTION;
-		}
-		return GameState.BOTTOM_PLAYER_PUTTING_WEAKS_DESCRIPTION;
-	}
-
-	@Override
 	public boolean isBottomPlayerTurn() {
 		return !isTopPlayerTurn;
 	}
@@ -60,13 +52,10 @@ public class GameStatePuttingWeaks implements GameState {
 		board.play(validPlay, isTopPlayerTurn);
 		numberOfWeaksLeft--;
 		if(board.isGameDraw()){
-			return new GameStateGameEnded(GameStateGameEnded.DRAW);
+			return new GameStateGameEndedDraw();
 		}
-		if(board.isTopTheWinner()){
-			return new GameStateGameEnded(GameStateGameEnded.TOP_WON);
-		}
-		if(board.isBottomTheWinner()){
-			return new GameStateGameEnded(GameStateGameEnded.BOTTOM_WON);
+		if(board.isTopTheWinner() || board.isBottomTheWinner()){
+			return new GameStateGameEnded(board.isTopTheWinner());
 		}
 		if(numberOfWeaksLeft == 0){
 			return new GameStateMovingStrongs(isTopPlayerTurn());
@@ -92,7 +81,7 @@ public class GameStatePuttingWeaks implements GameState {
 	}
 
 	@Override
-	public int getState() {
-		return GameState.PUTTING_WEAKS;
+	public int getStateId() {
+		return GameState.GAME_PUTTING_WEAKS_ID;
 	}
 }
