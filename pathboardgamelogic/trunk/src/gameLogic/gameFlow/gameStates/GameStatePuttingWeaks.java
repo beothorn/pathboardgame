@@ -90,4 +90,9 @@ public class GameStatePuttingWeaks implements GameState {
 	public Set<Integer> getAlreadyMovedOrEmptySet() {
 		return new LinkedHashSet<Integer>();
 	}
+
+	@Override
+	public int getState() {
+		return GameState.PUTTING_WEAKS;
+	}
 }

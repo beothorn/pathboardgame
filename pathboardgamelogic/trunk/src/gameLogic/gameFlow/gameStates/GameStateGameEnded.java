@@ -75,4 +75,9 @@ public class GameStateGameEnded implements GameState {
 		return new LinkedHashSet<Integer>();
 	}
 
+	@Override
+	public int getState() {
+		return GameState.GAME_ENDED;
+	}
+
 }

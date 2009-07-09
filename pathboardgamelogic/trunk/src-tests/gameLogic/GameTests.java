@@ -6,6 +6,7 @@ import gameLogic.board.InvalidPlayStringException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 import gameLogic.gameFlow.gameStates.GameState;
+import gameLogic.gameFlow.gameStates.GameStateFactory;
 import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
 import junit.framework.Assert;
 
@@ -14,46 +15,6 @@ import org.junit.Test;
 import utils.BoardUtils;
 
 public class GameTests {
-	
-	private final String testLock = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- BS1 --- --- --- --- --- ---";
-	
-	private final String testGravity = 
-		"TS1 TS2 TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 BS2 BS3 BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---";
-	
-	private final String testGravityNoGravity = 
-		"TS1 TS2 TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 BS2 --- BXX BWK --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---";
-	
-	private final String testGravityApplyGravity = 
-		"TS1 TS2 TS3 --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"BS1 BS2 --- BS3 --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK --- --- --- ---\n" +
-		"--- --- --- BWK BWK --- --- ---";
 	
 	@Test
 	public void testASimpleGame() throws InvalidPlayException, InvalidPlayStringException{
@@ -116,6 +77,15 @@ public class GameTests {
 	
 	@Test
 	public void testLockGame() throws InvalidPlayException{
+		final String testLock = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- BS1 --- --- --- --- --- ---";
 		final Game game = new Game();
 		game.setBottomLocked(true);
 		Play play = new Play(0);
@@ -135,6 +105,33 @@ public class GameTests {
 	
 	@Test
 	public void testGravityOff() throws InvalidPlayException{
+		final String testGravityNoGravity = 
+			"TS1 TS2 TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 BS2 --- BXX BWK --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---";
+		final String testGravityApplyGravity = 
+			"TS1 TS2 TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 BS2 --- BS3 --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK BWK --- --- ---";
+		final String testGravity = 
+			"TS1 TS2 TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 BS2 BS3 BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---";
 		final Board board = BoardUtils.newBoardFromString(testGravity);
 		final boolean isTopPlayerTurn = false;
 		final GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
@@ -146,5 +143,48 @@ public class GameTests {
 		Assert.assertEquals(testGravityNoGravity, BoardUtils.printBoard(game));
 		game.applyGravity();
 		Assert.assertEquals(testGravityApplyGravity, BoardUtils.printBoard(game.getBoard()));
+	}
+	
+	@Test
+	public void testRestartGame() throws InvalidPlayException{
+		final String first = 
+			"TS1 TS2 TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 BS2 BS3 BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---";
+		final String afterPlay = 
+			"TS1 TS2 TS3 --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"BS1 BS2 --- BS3 --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK --- --- --- ---\n" +
+			"--- --- --- BWK BWK --- --- ---";
+		final String restart = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		final Board board = BoardUtils.newBoardFromString(first);
+		final boolean isTopPlayerTurn = false;
+		final GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
+		final Game game = new Game(board,gameState);
+		Play play = new Play(3,'r');
+		final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
+		game.play(validPlay);
+		Assert.assertEquals(afterPlay, BoardUtils.printBoard(game.getBoard()));
+		game.restartGame();
+		Assert.assertEquals(restart, BoardUtils.printBoard(game.getBoard()));
+		Assert.assertEquals(GameStateFactory.getFirstState().getState(), game.getCurrentState().getState());
+		Assert.assertEquals(GameStateFactory.getFirstState().isBottomPlayerTurn(), game.getCurrentState().isBottomPlayerTurn());
 	}
 }

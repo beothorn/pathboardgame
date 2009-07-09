@@ -22,7 +22,7 @@ public class Game {
 	private boolean stateChanged;
 
 	public Game() {
-		this(new Board(), GameStateFactory.getFirstState(false));
+		this(new Board(), GameStateFactory.getFirstState());
 	}
 	
 	public Game(final Board board,final GameState gameState){
@@ -168,7 +168,7 @@ public class Game {
 	}
 
 	public void restartGame() {
-		// TODO Auto-generated method stub
-		
+		this.board.copyFrom(new Board());
+		this.gameState = GameStateFactory.getFirstState();
 	}
 }

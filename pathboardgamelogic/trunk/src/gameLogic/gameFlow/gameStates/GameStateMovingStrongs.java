@@ -94,4 +94,9 @@ public class GameStateMovingStrongs implements GameState {
 	public Set<Integer> getAlreadyMovedOrEmptySet() {
 		return alreadyMoved;
 	}
+
+	@Override
+	public int getState() {
+		return GameState.MOVING_STRONGS;
+	}
 }
