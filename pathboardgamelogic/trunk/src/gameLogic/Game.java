@@ -166,4 +166,9 @@ public class Game {
 	public void removeTurnListener(final TurnChangeListener turnChangeListener) {
 		turnListeners.remove(turnChangeListener);
 	}
+
+	public void restartGame() {
+		// TODO Auto-generated method stub
+		
+	}
 }
