@@ -4,6 +4,7 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
+import gameLogic.board.piece.Piece;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -73,8 +74,8 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	@Override
-	public Set<Integer> getAlreadyMovedOrEmptySet() {
-		return new LinkedHashSet<Integer>();
+	public Set<Piece> getAlreadyMovedOrEmptySet() {
+		return new LinkedHashSet<Piece>();
 	}
 
 	@Override

@@ -4,18 +4,19 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
+import gameLogic.board.piece.Piece;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GameStateMovingStrongs implements GameState {
 
-	private final Set<Integer> alreadyMoved;
+	private final Set<Piece> alreadyMoved;
 	private final boolean isTopPlayerTurn;
 
 	public GameStateMovingStrongs(final boolean isTopPlayerTurn) {
 		this.isTopPlayerTurn = isTopPlayerTurn;
-		alreadyMoved = new LinkedHashSet<Integer>();
+		alreadyMoved = new LinkedHashSet<Piece>();
 	}
 
 	@Override
@@ -53,7 +54,9 @@ public class GameStateMovingStrongs implements GameState {
 			return new GameStatePuttingWeaks(!isTopPlayerTurn());
 		}
 		board.play(validPlay, isTopPlayerTurn);
-		alreadyMoved.add(validPlay.unbox().getPieceId());
+		final int pieceId = validPlay.unbox().getPieceId();
+		final Piece p = board.getStrongPiece(pieceId, isTopPlayerTurn);
+		alreadyMoved.add(p);
 		if(board.isTopTheWinner()){
 			return new GameStateGameEnded(GameStateGameEnded.RESULT_TOP_WIN);
 		}
@@ -82,7 +85,7 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	@Override
-	public Set<Integer> getAlreadyMovedOrEmptySet() {
+	public Set<Piece> getAlreadyMovedOrEmptySet() {
 		return alreadyMoved;
 	}
 

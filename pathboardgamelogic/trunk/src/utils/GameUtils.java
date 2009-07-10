@@ -78,8 +78,9 @@ public class GameUtils implements StateVisitor{
 	public static String printBoard(final Game game) {
 		final Board board = game.getBoard();
 		String boardString = printBoard(board); 
-		Set<Integer> alreadyMovedPieces = game.getAlreadyMovedPieces();
-		for (Integer id : alreadyMovedPieces) {
+		Set<Piece> alreadyMovedPieces = game.getAlreadyMovedPieces();
+		for (Piece piece : alreadyMovedPieces) {
+			final int id = piece.getId();
 			String player = (game.isTopPlayerTurn())?"T":"B";
 			boardString = boardString.replace(player+"S"+id, player+"XX");
 		}

@@ -4,6 +4,7 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
+import gameLogic.board.piece.Piece;
 import gameLogic.gameFlow.gameStates.GameState;
 import gameLogic.gameFlow.gameStates.GameStateFactory;
 
@@ -125,7 +126,7 @@ public class Game {
 		this.gravityAfterPlay = gravityAfterPlay;
 	}
 
-	public Set<Integer> getAlreadyMovedPieces() {
+	public Set<Piece> getAlreadyMovedPieces() {
 		return gameState.getAlreadyMovedOrEmptySet();
 	}
 

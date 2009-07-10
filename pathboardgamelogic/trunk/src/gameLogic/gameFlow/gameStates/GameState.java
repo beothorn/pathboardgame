@@ -4,6 +4,7 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
+import gameLogic.board.piece.Piece;
 
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public interface GameState {
 
 	public boolean isPuttingStrongsTurn();
 	
-	public Set<Integer> getAlreadyMovedOrEmptySet();
+	public Set<Piece> getAlreadyMovedOrEmptySet();
 
 	public ValidPlay validatePlay(final Play play,final Board board,final boolean isTopPlayerPlay) throws InvalidPlayException;
 	

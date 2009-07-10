@@ -628,6 +628,8 @@ public class Board {
 		return null;
 	}
 
+	
+	//TODO: make this private
 	public Point getStrongTopPositionOrNull(int id) {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
@@ -638,5 +640,19 @@ public class Board {
 			}
 		}
 		return null;
+	}
+
+	public Piece getStrongPiece(int pieceId, boolean isTopPiece) {
+		if(isTopPiece){
+			final Point strongTopPositionOrNull = getStrongTopPositionOrNull(pieceId);
+			if(strongTopPositionOrNull == null) return PieceFactory.getEmptyPiece();
+			final Piece pieceAt = getPieceAt(strongTopPositionOrNull);
+			return pieceAt;
+		}else{
+			final Point strongBottomPositionOrNull = getStrongBottomPositionOrNull(pieceId);
+			if(strongBottomPositionOrNull == null) return PieceFactory.getEmptyPiece();
+			final Piece pieceAt = getPieceAt(strongBottomPositionOrNull);
+			return pieceAt;
+		}
 	}
 }
