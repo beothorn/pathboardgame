@@ -64,10 +64,6 @@ public class BoardGamePanel extends JGamePanel{
 		addGameElement(err);
 	}
 
-	public void boardChanged() {
-		piecesBoard.boardChanged();
-	}
-
 	private void createElementsInGameFrame() {
 		addErrorMessageShower();
 	}
@@ -81,10 +77,6 @@ public class BoardGamePanel extends JGamePanel{
 
 	public Game getGame() {
 		return game;
-	}
-
-	public void movedStrong(final Piece movedPiece) {
-		piecesBoard.movedStrong(movedPiece);
 	}
 
 	private void refreshAvatarsDescription() {

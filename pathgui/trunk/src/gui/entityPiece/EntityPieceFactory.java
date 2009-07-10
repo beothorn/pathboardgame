@@ -3,7 +3,8 @@ package gui.entityPiece;
 import gameLogic.board.piece.Piece;
 
 public class EntityPieceFactory {
-	public static EntityPiece giveMeAPiece(final Piece p){
+	public static EntityPiece entityPieceOwningThis(final Piece p){
+		//TODO: BAD smell, put visitor here (or some other fix)
 		if(p.isBottomPlayerWeakPiece()) {
 			return new EntityPieceBottomWeak(p);
 		}

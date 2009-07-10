@@ -1,6 +1,6 @@
 package ai;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 import ai.permutations.BoardScoreCalculator;
 import ai.permutations.DefaultCalculator;
 import ai.permutations.PlayTree;
@@ -44,7 +44,7 @@ public class AIPlayer implements PathAI{
 
 	@Override
 	public String play(final String boardString) {
-		final Board board = BoardUtils.newBoardFromString(boardString);
+		final Board board = GameUtils.newBoardFromString(boardString);
 		if(isPuttingStrongsTurn(board)) {
 			return startingPlay();
 		}else{

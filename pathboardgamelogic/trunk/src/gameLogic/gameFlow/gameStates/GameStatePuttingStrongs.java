@@ -78,7 +78,7 @@ public class GameStatePuttingStrongs implements GameState {
 	}
 
 	@Override
-	public int getStateId() {
-		return GameState.GAME_PUTTING_STRONGS_ID;
+	public void visit(final StateVisitor stateVisitor) {
+		stateVisitor.visit(this);
 	}
 }

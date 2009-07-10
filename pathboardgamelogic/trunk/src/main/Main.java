@@ -18,6 +18,7 @@ public class Main {
 	private static final String VERSION = "0.2.010709";
 	protected final Game game;
 	private final PlaySequenceValidator playSequenceValidator;
+	private final GameUtils gameUtils = new GameUtils();
 
 	public Main(final String[] args) throws IOException {
 		game = new Game();
@@ -81,7 +82,7 @@ public class Main {
 	}
 
 	private void printGameState() {
-		System.out.println(GameUtils.printStateDescription(game));
+		gameUtils.printStateDescription(game);
 	}
 	
 	public static void main(String[] args) throws IOException {

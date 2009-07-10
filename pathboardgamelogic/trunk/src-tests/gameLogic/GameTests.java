@@ -13,8 +13,11 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import utils.GameUtils;
+import utils.Printer;
 
 public class GameTests {
+	
+	private final GameUtils gameUtils = new GameUtils();
 	
 	@Test
 	public void testASimpleGame() throws InvalidPlayException, InvalidPlayStringException{
@@ -70,9 +73,9 @@ public class GameTests {
 	}
 
 	private void printGame(final Game game, ValidPlay validPlay) {
-		System.out.println(GameUtils.printBoardWithCoordinates(game));
-		System.out.println("Play: "+validPlay);
-		System.out.println(GameUtils.printStateDescription(game));
+		Printer.writeln(GameUtils.printBoardWithCoordinates(game));
+		Printer.writeln("Play: "+validPlay);
+		gameUtils.printStateDescription(game);
 	}
 	
 	@Test
@@ -184,7 +187,6 @@ public class GameTests {
 		Assert.assertEquals(afterPlay, GameUtils.printBoard(game.getBoard()));
 		game.restartGame();
 		Assert.assertEquals(restart, GameUtils.printBoard(game.getBoard()));
-		Assert.assertEquals(GameStateFactory.getFirstState().getStateId() , game.getCurrentState().getStateId());
 		Assert.assertEquals(GameStateFactory.getFirstState().isBottomPlayerTurn(), game.getCurrentState().isBottomPlayerTurn());
 	}
 }

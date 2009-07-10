@@ -7,11 +7,16 @@ import gameLogic.board.Play;
 import gameLogic.board.PlaySequence;
 import gameLogic.board.piece.Piece;
 import gameLogic.gameFlow.gameStates.GameState;
+import gameLogic.gameFlow.gameStates.GameStateGameEnded;
+import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
+import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
+import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
+import gameLogic.gameFlow.gameStates.StateVisitor;
 
 import java.util.List;
 import java.util.Set;
 
-public class GameUtils {
+public class GameUtils implements StateVisitor{
 
 	private static final String TOP = "T";
 	private static final String BOTTOM = "B";
@@ -179,33 +184,45 @@ public class GameUtils {
 		return boardString;
 	}
 	
-	public static String printStateDescription(final Game game) {
-		if(game.getStateId() == GameState.GAME_ENDED_DRAW_ID){			
-			return "Game draw.";
-		}
-		if(game.isTopPlayerTurn()){
-			switch(game.getStateId()){
-			case GameState.GAME_ENDED_ID:
-					return "Game ended, top player won.";
-			case GameState.GAME_PUTTING_STRONGS_ID:
-				return "Top player must add 3 strong pieces to the first line.";
-			case GameState.GAME_PUTTING_WEAKS_ID:
-				return "Top player should put three weak pieces in the first line or pass to moving strongs.";
-			case GameState.GAME_MOVING_STRONS_ID:
-				return "Top player should move strong pieces or pass the turn.";
-			}
-			throw new RuntimeException("Error requesting game state.");
-		}
-		switch(game.getStateId()){
-		case GameState.GAME_ENDED_ID:
-			return "Game ended, bottom player won.";
-		case GameState.GAME_PUTTING_STRONGS_ID:
-			return "Bottom player must add 3 strong pieces to the first line.";
-		case GameState.GAME_PUTTING_WEAKS_ID:
-			return "Bottom player should put three weak pieces in the first line or pass to moving strongs.";
-		case GameState.GAME_MOVING_STRONS_ID:
-			return "Bottom player should move strong pieces or pass the turn.";
-		}
-		throw new RuntimeException("Error requesting game state.");
+	public void printStateDescription(final Game game) {
+		printStateDescription(game.getCurrentState());
+	}
+
+	public void printStateDescription(final GameState gameState) {
+		gameState.visit(this);
+	}
+
+	@Override
+	public void visit(final GameStateGameEnded gameStateGameEnded) {
+		if(gameStateGameEnded.isTopTheWinner())
+			Printer.writeln("Game ended, top player won.");
+		if(gameStateGameEnded.isBottomTheWinner())
+			Printer.writeln("Game ended, bottom player won.");
+		if(gameStateGameEnded.isGameDraw())
+			Printer.writeln("Game draw.");
+	}
+
+	@Override
+	public void visit(final GameStateMovingStrongs gameStateMovingStrongs) {
+		if(gameStateMovingStrongs.isTopPlayerTurn())
+			Printer.writeln("Top player should move strong pieces or pass the turn.");
+		else
+			Printer.writeln("Bottom player should move strong pieces or pass the turn.");
+	}
+
+	@Override
+	public void visit(final GameStatePuttingStrongs gameStatePuttingStrongs) {
+		if(gameStatePuttingStrongs.isTopPlayerTurn())
+			Printer.writeln("Top player must add 3 strong pieces to the first line.");
+		else
+			Printer.writeln("Bottom player must add 3 strong pieces to the first line.");
+	}
+
+	@Override
+	public void visit(final GameStatePuttingWeaks gameStatePuttingWeaks) {
+		if(gameStatePuttingWeaks.isTopPlayerTurn())
+			Printer.writeln("Top player should put three weak pieces in the first line or pass to moving strongs.");
+		else
+			Printer.writeln("Bottom player should put three weak pieces in the first line or pass to moving strongs.");
 	}
 }

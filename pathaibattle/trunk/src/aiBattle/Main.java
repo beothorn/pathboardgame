@@ -3,10 +3,13 @@ package aiBattle;
 import externalPlayer.AiControl;
 import externalPlayer.PathAI;
 import gameLogic.Game;
+import utils.GameUtils;
 import ai.AIPlayer;
 import ai.permutations.NaiveCalculator;
 
 public class Main{
+	
+	private final GameUtils gameUtils = new GameUtils();
 
 	public static void main(final String[] args) throws InterruptedException {
 		new Main();
@@ -19,6 +22,6 @@ public class Main{
 		final boolean stopPlayingOnGameEnd = true;
 		new AiControl(game, aiTop, stopPlayingOnGameEnd, stopPlayingOnGameEnd);
 		new AiControl(game, aiBottom, false, stopPlayingOnGameEnd);
-		System.out.println(game.getStateDescription());
+		gameUtils.printStateDescription(game);
 	}
 }

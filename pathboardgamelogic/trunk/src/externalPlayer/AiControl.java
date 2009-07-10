@@ -9,7 +9,7 @@ import gameLogic.board.PlaySequence;
 import gameLogic.board.PlaySequenceValidator;
 import gameLogic.board.ValidPlaySequence;
 import utils.GameUtils;
-import utils.Logger;
+import utils.Printer;
 
 public class AiControl implements TurnChangeListener {
 
@@ -17,8 +17,6 @@ public class AiControl implements TurnChangeListener {
 	private final boolean isTopPlayer;
 	private final PlaySequenceValidator playSequenceValidator;
 	private final PathAI player;
-
-	private static Logger logger = Logger.getLogger(AiControl.class);
 
 	public AiControl(final Game game, final PathAI player,	final boolean isTopPlayer) {
 		this(game,player,isTopPlayer,false);
@@ -33,7 +31,7 @@ public class AiControl implements TurnChangeListener {
 	}	
 	
 	private void aiError(Exception e) {
-		logger.error("Ai error (Ai was turned off): "+e);
+		Printer.error("Ai error (Ai was turned off): "+e);
 		unLockGame();
 	}
 
@@ -68,7 +66,7 @@ public class AiControl implements TurnChangeListener {
 			}
 			
 			final String boardString = GameUtils.printBoard(game.getBoard());
-			logger.debug("Quering External player play for board:\n"+boardString);
+			Printer.debug("Quering External player play for board:\n"+boardString);
 			final String aiPlay = player.play(GameUtils.printBoard(board));				
 			final PlaySequence playSequence;
 			try {
@@ -78,7 +76,7 @@ public class AiControl implements TurnChangeListener {
 				return;
 			}
 			final PlaySequence playSequenceForGame = isTopPlayerTurn ? GameUtils.invertPlay(playSequence) : playSequence;
-			logger.debug("External player played: "+playSequenceForGame);
+			Printer.debug("External player played: "+playSequenceForGame);
 			
 			final ValidPlaySequence validPlaySequence;
 			try {

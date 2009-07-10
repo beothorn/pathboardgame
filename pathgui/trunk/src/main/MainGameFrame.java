@@ -7,7 +7,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import utils.Logger;
+import utils.Printer;
 
 public class MainGameFrame extends JFrame{
 
@@ -16,7 +16,6 @@ public class MainGameFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private final BoardGamePanel mainGameCanvas;
-	private final Logger logger = Logger.getLogger(MainGameFrame.class);
 
 	public MainGameFrame() {
 		setTitle(GameLayoutDefinitions.gameName);
@@ -41,8 +40,8 @@ public class MainGameFrame extends JFrame{
 	@Override
 	public void setVisible(final boolean b) {
 		super.setVisible(b);
-		logger.debug("Starting game frame");
-		logger.debug("Frame size: "+getSize());
-		logger.debug("Main Game Canvas: "+mainGameCanvas.getSize());
+		Printer.debug("Starting game frame");
+		Printer.debug("Frame size: "+getSize());
+		Printer.debug("Main Game Canvas: "+mainGameCanvas.getSize());
 	}
 }

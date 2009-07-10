@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class NodeTests {
 
@@ -27,7 +27,7 @@ public class NodeTests {
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- --- --- ---\n" +
 			"--- --- --- --- --- BS1 BS2 BS3";
-		nRoot.setBoard(BoardUtils.newBoardFromString(initialBoard));
+		nRoot.setBoard(GameUtils.newBoardFromString(initialBoard));
 		
 		final Node n0 = new Node(0,false,playEvaluator);
 		nRoot.addNode(n0);

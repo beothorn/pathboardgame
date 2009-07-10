@@ -2,7 +2,7 @@ package gui.gameEntities;
 
 import gameLogic.gameFlow.gameStates.GameState;
 
-public class NextStageButtomSpriteFactory {
+public class NextStageButtomSpriteFactory{
 
 	public static String getNormalSprite(final GameState currentState){
 		//		if(currentState.isTopPlayerTurn()){

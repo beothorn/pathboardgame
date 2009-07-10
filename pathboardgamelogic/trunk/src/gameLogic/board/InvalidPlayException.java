@@ -74,8 +74,8 @@ public class InvalidPlayException extends Exception {
 		}
 	}
 
-	public static InvalidPlayException gameAlreadyEnded(boolean isTopPlayerTurn) {
-		if(isTopPlayerTurn){
+	public static InvalidPlayException gameAlreadyEnded(boolean topWins) {
+		if(topWins){
 			return gameAlreadyEnded("Top wins");
 		}
 		return gameAlreadyEnded("Bottom wins");

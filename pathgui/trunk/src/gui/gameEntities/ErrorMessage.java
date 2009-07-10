@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import utils.Logger;
+import utils.Printer;
 
 public class ErrorMessage extends Entity implements GameElement{
 
@@ -24,7 +24,6 @@ public class ErrorMessage extends Entity implements GameElement{
 	private final JGamePanel gamePanel;
 	private final MoveToAndStop goingToPoint;
 
-	private final Logger logger = Logger.getLogger(ErrorMessage.class);
 	private String message = "";
 
 	private Point startingPoint = new Point(-100,-100);
@@ -93,7 +92,7 @@ public class ErrorMessage extends Entity implements GameElement{
 	}
 
 	public void showMessage(final String message){
-		logger.info(message);
+		Printer.writeln(message);
 		this.message = message;
 		setVisible(true);
 		calculateStartAndEndingPositions(message);

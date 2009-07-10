@@ -3,7 +3,7 @@
 import gameLogic.board.Board;
 import gameLogic.board.PlaySequence;
 import gameLogic.gameFlow.gameStates.GameState;
-import utils.Logger;
+import utils.Printer;
 
 public class PlayTree {
 
@@ -12,14 +12,13 @@ public class PlayTree {
 
 	private final Node playTree;
 	private final PlayEvaluator evaluator;
-	private final Logger logger = Logger.getLogger(PlayTree.class);
 	
 	public PlayTree(final BoardScoreCalculator calculator) {
 		this.evaluator = new PlayEvaluator(calculator);
 		playTree = new Node(-1,false,evaluator);
-		logger.debug("Calculating tree...");
+		Printer.debug("Calculating tree...");
 		addNodesNodesAndThenAddMoveNodes(playTree, 0, 0);
-		logger.debug("Tree calculated");
+		Printer.debug("Tree calculated");
 	}
 	
 	public PlaySequence bestPlayFor(final Board board){

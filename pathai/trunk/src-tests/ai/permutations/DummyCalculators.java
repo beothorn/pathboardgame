@@ -4,7 +4,7 @@ import gameLogic.board.Board;
 
 import java.util.List;
 
-import utils.BoardUtils;
+import utils.GameUtils;
 
 public class DummyCalculators implements BoardScoreCalculator{
 
@@ -17,7 +17,7 @@ public class DummyCalculators implements BoardScoreCalculator{
 		if(boardCount>expectedBoards.size()){
 			throw new RuntimeException("Board count greater than expected boards size: ");
 					}
-		final String boardAsString = BoardUtils.printBoard(board);
+		final String boardAsString = GameUtils.printBoard(board);
 		for (final String boardExpected : expectedBoards) {
 			if(boardExpected.equals(boardAsString)){
 				return 0;

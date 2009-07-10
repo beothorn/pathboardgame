@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import playerTypes.PlayerTypes;
-import utils.Logger;
+import utils.Printer;
 
 
 public class Main{
@@ -15,9 +15,6 @@ public class Main{
 	//TODO: listar ias para escolher
 
 	private static MainGameFrame frame;
-
-	private static final Logger logger = Logger.getLogger(Main.class);
-
 
 	private static void defaultOptions() {
 		frame.setTopPlayerType(PlayerTypes.AI);
@@ -36,7 +33,7 @@ public class Main{
 		for (final String string : args) {
 			commandLine += string;
 		}
-		logger.debug("Arguments: " + commandLine);
+		Printer.debug("Arguments: " + commandLine);
 
 		frame = new MainGameFrame();
 		final CommandLineParser commandLineParser = new CommandLineParser();

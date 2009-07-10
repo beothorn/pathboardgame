@@ -3,6 +3,8 @@ import gameEngine.GameElement;
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
 import gameLogic.board.Board;
+import gameLogic.board.InvalidPlayException;
+import gameLogic.board.ValidPlay;
 import gameLogic.board.piece.Piece;
 import gui.GameLayoutDefinitions;
 import gui.entityPiece.EntityPiece;
@@ -15,43 +17,28 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: This Class is waaaaaaay to long
 public class PiecesBoard implements GameElement,MouseListener{
 
-	//	private final Sprite board;
-	private BoardGamePanel currentGame;
 	final static private double gridHeight = GameLayoutDefinitions.gridSize;
 	final static private double gridWidth = GameLayoutDefinitions.gridSize;
-	private final List<EntityPiece> pieces;
+	private final BoardGamePanel currentGame;
+	private final List<EntityPiece> entityPieces;
 	private Point position = new Point();
-	private boolean pressedOnStrong;
-
+	private final Point startDrag = new Point();
 
 	public PiecesBoard(final BoardGamePanel game) {
-		//		board = SpriteStore.get().getSprite(GameLayoutDefinitions.board);
 		game.addMouseListener(this);
-		pieces = new ArrayList<EntityPiece>();
-		setCurrentGame(game);
-	}
-
-	public void boardChanged() {
+		entityPieces = new ArrayList<EntityPiece>();
+		currentGame = game;
 		refreshBoard();
 	}
 
-	public void cleanBoard(){
-		final ArrayList<EntityPiece> piecesCopy = clonePieces();
-		for (final EntityPiece p : piecesCopy) {
-			if(!correspondToAPiece(p)) {
-				p.setMarkedToBeDestroyed(true);
-				pieces.remove(p);
-			}
-		}
+	private ArrayList<EntityPiece> cloneEntityPieces() {
+		return new ArrayList<EntityPiece>(entityPieces);
 	}
 
-	private ArrayList<EntityPiece> clonePieces() {
-		return new ArrayList<EntityPiece>(pieces);
-	}
-
-	private boolean correspondToAPiece(final EntityPiece p) {
+	private boolean correspondToALogicPiece(final EntityPiece p) {
 		final Board board = getBoard();
 		for (int i = 0; i< Board.BOARD_SIZE; i++) {
 			for (int j = 0; j < Board.BOARD_SIZE; j++) {
@@ -63,22 +50,32 @@ public class PiecesBoard implements GameElement,MouseListener{
 		return false;
 	}
 
-	private void createNewEntityPieceForPieceIn(final Piece piece, final int line,final int column) {
-		final EntityPiece newPiece = EntityPieceFactory.giveMeAPiece(piece);
-		pieces.add(newPiece);
+	private void createNewEntityPieceForLogicPieceIn(final Piece logicPiece, final int line,final int column) {
+		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece);
+		entityPieces.add(newPiece);
 		currentGame.addGameElement(newPiece);
 		currentGame.addStepAction(newPiece.getStepAction());
-		int createAboveOrBelowLine = line;
+		int createAboveOrBelowBoard = 0;
 		if(line == 0) {
-			createAboveOrBelowLine = -1;
+			createAboveOrBelowBoard = -1;
 		}
 		if(line == Board.BOARD_SIZE-1) {
-			createAboveOrBelowLine = Board.BOARD_SIZE;
+			createAboveOrBelowBoard = Board.BOARD_SIZE;
 		}
 		final double newPieceX = getXForPieceAt(column);
-		final double newPieceY = getYForPieceAt(createAboveOrBelowLine);
+		final double newPieceY = getYForPieceAt(createAboveOrBelowBoard);
 		newPiece.setPosition(new Point(newPieceX,newPieceY));
-		setNewPositionToGoFor(newPiece,line,column);
+		setNewPositionToEntityPieceGo(newPiece,line,column);
+	}
+
+	public void destroyDiscardedPieces(){
+		final ArrayList<EntityPiece> piecesCopy = cloneEntityPieces();
+		for (final EntityPiece entityPiece : piecesCopy) {
+			if(!correspondToALogicPiece(entityPiece)) {
+				entityPiece.setMarkedToBeDestroyed(true);
+				entityPieces.remove(entityPiece);
+			}
+		}
 	}
 
 	@Override
@@ -92,7 +89,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	}
 
 	public void gameTurnAdvanced() {
-		for (final EntityPiece p : clonePieces()) {
+		for (final EntityPiece p : cloneEntityPieces()) {
 			p.reset();
 		}
 	}
@@ -100,7 +97,6 @@ public class PiecesBoard implements GameElement,MouseListener{
 	private Board getBoard(){
 		return getCurrentGame().getBoard();
 	}
-
 
 	public double getBoardHeight(){
 		return Board.BOARD_SIZE*gridHeight;
@@ -158,71 +154,39 @@ public class PiecesBoard implements GameElement,MouseListener{
 		final double boardX2 = boardX1+getBoardWidth();
 		final double boardY1 = getY();
 		final double boardY2 = boardY1+getBoardHeight();
-		if(mouseX<boardX1) {
-			return;
-		}
-		if(mouseX>boardX2) {
-			return;
-		}
-		if(mouseY<boardY1) {
-			return;
-		}
-		if(mouseY>boardY2) {
-			return;
-		}
-		final int pieceColumn = (int) ((mouseX - boardX1)/ gridWidth);
-		final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
+		if(mouseX<boardX1){return;}
+		if(mouseX>boardX2){return;}
+		if(mouseY<boardY1){return;}
+		if(mouseY>boardY2){return;}
 
-		if(getCurrentGame().getBoard().getPieceAt(pieceLine, pieceColumn).isStrong()){
-			pressedOnStrong = true;
-		}else{
-			pressedOnStrong = false;
-		}
-
-		play(pieceColumn, pieceLine);
+		startDrag.setX((int) ((mouseX - boardX1)/ gridWidth));
+		startDrag.setY((int) ((mouseY - boardY1)/ gridHeight));
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		if(pressedOnStrong){
-			final int mouseX = e.getX();
-			final int mouseY = e.getY();
-			final double boardX1 = getX();
-			final double boardX2 = boardX1+getBoardWidth();
-			final double boardY1 = getY();
-			final double boardY2 = boardY1+getBoardHeight();
-			if(mouseX<boardX1) {
-				return;
-			}
-			if(mouseX>boardX2) {
-				return;
-			}
-			if(mouseY<boardY1) {
-				return;
-			}
-			if(mouseY>boardY2) {
-				return;
-			}
-			final int pieceColumn = (int) ((mouseX - boardX1)/ gridWidth);
-			final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
-
-			play(pieceColumn, pieceLine);
+		final int mouseX = e.getX();
+		final int mouseY = e.getY();
+		final double boardX1 = getX();
+		final double boardX2 = boardX1+getBoardWidth();
+		final double boardY1 = getY();
+		final double boardY2 = boardY1+getBoardHeight();
+		if(mouseX<boardX1) {return;}
+		if(mouseX>boardX2) {return;}
+		if(mouseY<boardY1) {return;}
+		if(mouseY>boardY2) {return;}
+		final int pieceColumn = (int) ((mouseX - boardX1)/ gridWidth);
+		final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
+		final Point endDrag = new Point(pieceColumn, pieceLine);
+		final ProcessPlay play = new ProcessPlay(startDrag, endDrag,getCurrentGame().isTopPlayerTurn(), getCurrentGame());
+		try {
+			final ValidPlay validPlay = getCurrentGame().validatePlay(play.getPlayOrNull(), getCurrentGame().isTopPlayerTurn());
+			getCurrentGame().play(validPlay);
+		} catch (final InvalidPlayException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		pressedOnStrong = false;
-	}
-
-	public void movedStrong(final Piece movedPiece) {
 		refreshBoard();
-		for (final EntityPiece p : pieces) {
-			if(p.ownsPiece(movedPiece)) {
-				final boolean moved = true;
-				((EntityPieceStrong)p).setMoved(moved);
-			}
-		}
-	}
-
-	private void play(final int pieceColumn, final int pieceLine) {
-		//		getCurrentGame().play(new Play(pieceLine, pieceColumn));
 	}
 
 	public void refreshBoard(){
@@ -232,35 +196,30 @@ public class PiecesBoard implements GameElement,MouseListener{
 				refreshPieceAt(board.getPieceAt(i, j), i, j);
 			}
 		}
-		cleanBoard();
+		destroyDiscardedPieces();
 	}
 
-	private void refreshPieceAt(final Piece piece, final int line, final int column) {
-		if(!piece.isEmpty()){
-			for (final EntityPiece p : pieces) {
-				if(p.ownsPiece(piece)){
-					setNewPositionToGoFor(p,line,column);
+	private void refreshPieceAt(final Piece logicPiece, final int line, final int column) {
+		if(!logicPiece.isEmpty()){
+			for (final EntityPiece entityPiece : entityPieces) {
+				if(entityPiece.ownsPiece(logicPiece)){
+					setNewPositionToEntityPieceGo(entityPiece,line,column);
 					return;
 				}
 			}
-			createNewEntityPieceForPieceIn(piece, line, column);
+			createNewEntityPieceForLogicPieceIn(logicPiece, line, column);
 		}
 	}
 
 	public void selectedStrong(final Piece selectedPiece) {
-		for (final EntityPiece p : pieces) {
+		for (final EntityPiece p : entityPieces) {
 			if(p.ownsPiece(selectedPiece)) {
 				((EntityPieceStrong)p).setSelected(true);
 			}
 		}
 	}
 
-	private void setCurrentGame(final BoardGamePanel currentGame){
-		this.currentGame = currentGame;
-		refreshBoard();
-	}
-
-	private void setNewPositionToGoFor(final EntityPiece p, final int line, final int column) {
+	private void setNewPositionToEntityPieceGo(final EntityPiece p, final int line, final int column) {
 		p.setPointToGo(new Point(getXForPieceAt(column), getYForPieceAt(line)));
 	}
 
@@ -269,7 +228,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	}
 
 	public void unselectedStrong(final Piece unselectedPiece) {
-		for (final EntityPiece p : pieces) {
+		for (final EntityPiece p : entityPieces) {
 			if(p.ownsPiece(unselectedPiece)) {
 				((EntityPieceStrong)p).setSelected(false);
 			}
