@@ -6,6 +6,7 @@ import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.ValidPlay;
 import gameLogic.board.piece.Piece;
+import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
 import gui.entityPiece.EntityPiece;
 import gui.entityPiece.EntityPieceFactory;
@@ -110,6 +111,10 @@ public class PiecesBoard implements GameElement,MouseListener{
 		return currentGame.getGame();
 	}
 
+	private GameState getCurrentState() {
+		return getCurrentGame().getCurrentState();
+	}
+
 	public double getX() {
 		return position.getX();
 	}
@@ -203,6 +208,16 @@ public class PiecesBoard implements GameElement,MouseListener{
 		if(!logicPiece.isEmpty()){
 			for (final EntityPiece entityPiece : entityPieces) {
 				if(entityPiece.ownsPiece(logicPiece)){
+					if(logicPiece.isStrong()){
+						//TODO: CLassCast??? Something is wrong here
+						final EntityPieceStrong entityPieceStrong = (EntityPieceStrong)entityPiece;
+						final boolean idAlreadyMoved = getCurrentState().getAlreadyMovedOrEmptySet().contains(logicPiece.getId());
+						if(idAlreadyMoved){
+							entityPieceStrong.setMoved(true);
+						}else{
+							entityPieceStrong.setMoved(false);
+						}
+					}
 					setNewPositionToEntityPieceGo(entityPiece,line,column);
 					return;
 				}
