@@ -189,11 +189,11 @@ public class GameUtils implements StateVisitor{
 	}
 
 	public void printStateDescription(final GameState gameState) {
-		gameState.visit(this);
+		gameState.accept(this);
 	}
 
 	@Override
-	public void visit(final GameStateGameEnded gameStateGameEnded) {
+	public void onGameEnded(final GameStateGameEnded gameStateGameEnded) {
 		if(gameStateGameEnded.isTopTheWinner())
 			Printer.writeln("Game ended, top player won.");
 		if(gameStateGameEnded.isBottomTheWinner())
@@ -203,7 +203,7 @@ public class GameUtils implements StateVisitor{
 	}
 
 	@Override
-	public void visit(final GameStateMovingStrongs gameStateMovingStrongs) {
+	public void onMovingStrongs(final GameStateMovingStrongs gameStateMovingStrongs) {
 		if(gameStateMovingStrongs.isTopPlayerTurn())
 			Printer.writeln("Top player should move strong pieces or pass the turn.");
 		else
@@ -211,7 +211,7 @@ public class GameUtils implements StateVisitor{
 	}
 
 	@Override
-	public void visit(final GameStatePuttingStrongs gameStatePuttingStrongs) {
+	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs) {
 		if(gameStatePuttingStrongs.isTopPlayerTurn())
 			Printer.writeln("Top player must add 3 strong pieces to the first line.");
 		else
@@ -219,7 +219,7 @@ public class GameUtils implements StateVisitor{
 	}
 
 	@Override
-	public void visit(final GameStatePuttingWeaks gameStatePuttingWeaks) {
+	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
 		if(gameStatePuttingWeaks.isTopPlayerTurn())
 			Printer.writeln("Top player should put three weak pieces in the first line or pass to moving strongs.");
 		else

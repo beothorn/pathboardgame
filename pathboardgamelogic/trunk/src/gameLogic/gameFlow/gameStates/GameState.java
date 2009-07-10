@@ -13,7 +13,7 @@ public interface GameState {
 	public static final int NUMBER_OF_WEAK_PIECES_TO_PUT = 3;
 	public static final int NUMBER_OF_STRONG_PIECES_TO_MOVE = 3;
 
-	public void visit(final StateVisitor stateVisitor);
+	public void accept(final StateVisitor stateVisitor);
 	
 	public boolean isBottomPlayerTurn();
 

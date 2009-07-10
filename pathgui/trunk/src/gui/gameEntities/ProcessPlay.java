@@ -23,7 +23,7 @@ public class ProcessPlay implements StateVisitor {
 		this.endDrag = endDrag;
 		this.isTopPlayerTurn = isTopPlayerTurn;
 		this.game = game;
-		game.getCurrentState().visit(this);
+		game.getCurrentState().accept(this);
 	}
 
 	public Play getPlayOrNull(){
@@ -31,12 +31,12 @@ public class ProcessPlay implements StateVisitor {
 	}
 
 	@Override
-	public void visit(final GameStateGameEnded gameStateGameEnded) {
+	public void onGameEnded(final GameStateGameEnded gameStateGameEnded) {
 		//Nothing to do
 	}
 
 	@Override
-	public void visit(final GameStateMovingStrongs gameStateMovingStrongs) {
+	public void onMovingStrongs(final GameStateMovingStrongs gameStateMovingStrongs) {
 		if(startDrag.getX() != endDrag.getX()&&startDrag.getY() != endDrag.getY() ) {
 			return;
 		}
@@ -67,12 +67,12 @@ public class ProcessPlay implements StateVisitor {
 	}
 
 	@Override
-	public void visit(final GameStatePuttingStrongs gameStatePuttingStrongs) {
+	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs) {
 		play = new Play((int)endDrag.getX());
 	}
 
 	@Override
-	public void visit(final GameStatePuttingWeaks gameStatePuttingWeaks) {
+	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
 		play = new Play((int)endDrag.getX());
 	}
 

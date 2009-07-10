@@ -1,8 +1,8 @@
 package gameLogic.gameFlow.gameStates;
 
 public interface StateVisitor {
-	public void visit(final GameStateGameEnded gameStateGameEnded);
-	public void visit(final GameStateMovingStrongs gameStateMovingStrongs);
-	public void visit(final GameStatePuttingStrongs gameStatePuttingStrongs);
-	public void visit(final GameStatePuttingWeaks gameStatePuttingWeaks);
+	public void onGameEnded(final GameStateGameEnded gameStateGameEnded);
+	public void onMovingStrongs(final GameStateMovingStrongs gameStateMovingStrongs);
+	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs);
+	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks);
 }

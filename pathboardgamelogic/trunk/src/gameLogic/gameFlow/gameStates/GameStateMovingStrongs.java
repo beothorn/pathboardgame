@@ -87,7 +87,7 @@ public class GameStateMovingStrongs implements GameState {
 	}
 
 	@Override
-	public void visit(final StateVisitor stateVisitor) {
-		stateVisitor.visit(this);
+	public void accept(final StateVisitor stateVisitor) {
+		stateVisitor.onMovingStrongs(this);
 	}
 }
