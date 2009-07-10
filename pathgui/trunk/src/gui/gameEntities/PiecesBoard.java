@@ -211,7 +211,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 					if(logicPiece.isStrong()){
 						//TODO: CLassCast??? Something is wrong here
 						final EntityPieceStrong entityPieceStrong = (EntityPieceStrong)entityPiece;
-						final boolean idAlreadyMoved = getCurrentState().getAlreadyMovedOrEmptySet().contains(logicPiece.getId());
+						final boolean idAlreadyMoved = getCurrentState().getAlreadyMovedOrEmptySet().contains(logicPiece);
 						if(idAlreadyMoved){
 							entityPieceStrong.setMoved(true);
 						}else{
