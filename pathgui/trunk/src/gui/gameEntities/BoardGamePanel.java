@@ -6,6 +6,7 @@ import gameLogic.board.piece.Piece;
 import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
 import gui.externalPlayer.ExternalPlayerController;
+import gui.gameEntities.piecesBoard.PiecesBoard;
 
 public class BoardGamePanel extends JGamePanel{
 

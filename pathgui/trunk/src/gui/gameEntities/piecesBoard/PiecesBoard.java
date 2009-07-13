@@ -1,4 +1,4 @@
-package gui.gameEntities;
+package gui.gameEntities.piecesBoard;
 import gameEngine.GameElement;
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
@@ -11,6 +11,7 @@ import gui.GameLayoutDefinitions;
 import gui.entityPiece.EntityPiece;
 import gui.entityPiece.EntityPieceFactory;
 import gui.entityPiece.EntityPieceStrong;
+import gui.gameEntities.BoardGamePanel;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -211,8 +212,8 @@ public class PiecesBoard implements GameElement,MouseListener{
 					if(logicPiece.isStrong()){
 						//TODO: CLassCast??? Something is wrong here
 						final EntityPieceStrong entityPieceStrong = (EntityPieceStrong)entityPiece;
-						final boolean idAlreadyMoved = getCurrentState().getAlreadyMovedOrEmptySet().contains(logicPiece);
-						if(idAlreadyMoved){
+						final boolean pieceAlreadyMoved = getCurrentState().getAlreadyMovedOrEmptySet().contains(logicPiece);
+						if(pieceAlreadyMoved){
 							entityPieceStrong.setMoved(true);
 						}else{
 							entityPieceStrong.setMoved(false);

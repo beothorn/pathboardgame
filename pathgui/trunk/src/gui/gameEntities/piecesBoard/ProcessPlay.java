@@ -1,4 +1,4 @@
-package gui.gameEntities;
+package gui.gameEntities.piecesBoard;
 
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
