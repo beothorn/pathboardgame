@@ -8,7 +8,8 @@ public class PieceFactory {
 	
 	public static Piece getTopStrongPiece(final Board board){
 		int id = 1;
-		while(board.getStrongTopPositionOrNull(id) != null){
+		final boolean isTopPiece = true;
+		while(!board.getStrongPiece(id, isTopPiece).isEmpty()){
 			id ++;
 		}
 		return Piece.getTopStrongPiece(id);
@@ -28,7 +29,8 @@ public class PieceFactory {
 
 	public static Piece getBottomStrongPiece(final Board board){
 		int id = 1;
-		while(board.getStrongBottomPositionOrNull(id) != null){
+		final boolean isTopPiece = false;
+		while(!board.getStrongPiece(id, isTopPiece).isEmpty()){
 			id ++;
 		}
 		return Piece.getBottomStrongPiece(id);

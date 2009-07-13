@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: this class is too big
 public class Board {
 
 	public static final int BOARD_SIZE = 8;
@@ -24,9 +25,9 @@ public class Board {
 	}
 
 	public void reset() {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				board[i][j] = Piece.getEmptyPiece();
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board[line].length; column++) {
+				board[line][column] = Piece.getEmptyPiece();
 			}
 		}
 	}
@@ -41,6 +42,7 @@ public class Board {
 			}
 		}
 		if(play.isMoveDirection()){
+			//TODO: switch? this behavior should be a composite of play?
 			switch(play.getDirection()){
 			case Play.UP:
 				if(!canMoveStrongUp(play.getPieceId(),forTopPlayer)){
@@ -101,15 +103,15 @@ public class Board {
 		return true;
 	}
 
-	private Point getStrongPiecePosition(int pieceId, boolean topStrong) {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				Piece piece = board[i][j];
+	public Point getStrongPiecePosition(int pieceId, boolean topStrong) {
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board[line].length; column++) {
+				Piece piece = board[line][column];
 				if(topStrong && piece.getId()==pieceId && piece.isTopPlayerStrongPiece()){
-					return new Point(i,j);
+					return new Point(line,column);
 				}
 				if(!topStrong && piece.getId()==pieceId && piece.isBottomPlayerStrongPiece()){
-					return new Point(i,j);
+					return new Point(line,column);
 				}
 			}
 		}
@@ -124,11 +126,11 @@ public class Board {
             return false;
 	    }
 	    int strongCount = 0;
-	    for(int i = columnFromIndex +1; i != columnFromIndex; i = (i+1)%board[lineFromIndex].length  ){
-	            if(board[lineFromIndex][i].isEmpty()){
+	    for(int column = columnFromIndex +1; column != columnFromIndex; column = (column+1)%board[lineFromIndex].length ){
+	            if(board[lineFromIndex][column].isEmpty()){
 	                    return true;
 	            }
-	            if(board[lineFromIndex][i].isStrong()) {
+	            if(board[lineFromIndex][column].isStrong()) {
 	                    strongCount++;
 	            }
 	            if(strongCount>1) {
@@ -146,11 +148,11 @@ public class Board {
             return false;
 		}
 		int strongCount = 0;
-		for(int i = columnFromIndex -1; i != columnFromIndex; i = i-1 == -1?board[lineFromIndex].length-1:i-1   ){
-            if(board[lineFromIndex][i].isEmpty()){
+		for(int column = columnFromIndex -1; column != columnFromIndex; column = column-1 == -1?board[lineFromIndex].length-1:column-1   ){
+            if(board[lineFromIndex][column].isEmpty()){
                     return true;
             }
-            if(board[lineFromIndex][i].isStrong()) {
+            if(board[lineFromIndex][column].isStrong()) {
                     strongCount++;
             }
             if(strongCount>1) {
@@ -168,11 +170,11 @@ public class Board {
             return false;
 	    }
 	    int strongCount = 0;
-	    for(int i = lineFromIndex+1; i < board.length; i++  ){
-	            if(board[i][columnFromIndex].isEmpty()){
+	    for(int line = lineFromIndex+1; line < board.length; line++  ){
+	            if(board[line][columnFromIndex].isEmpty()){
 	                    return true;
 	            }
-	            if(board[i][columnFromIndex].isStrong()) {
+	            if(board[line][columnFromIndex].isStrong()) {
 	                    strongCount++;
 	                    if(strongCount>1) {
 	                    	return false;
@@ -186,7 +188,6 @@ public class Board {
 		return true;
 	}
 
-	//Todo: rewrite with recursion
 	private boolean canMoveStrongUp(int pieceId, boolean topStrong) {
 		final Point piecePosition = getStrongPiecePosition(pieceId, topStrong);
 		int lineFromIndex = piecePosition.x;
@@ -195,11 +196,11 @@ public class Board {
             return false;
 	    }
 	    int strongCount = 0;
-	    for(int i = lineFromIndex-1; i >= 0; i--  ){
-	            if(board[i][columnFromIndex].isEmpty()){
+	    for(int line = lineFromIndex-1; line >= 0; line--  ){
+	            if(board[line][columnFromIndex].isEmpty()){
 	                    return true;
 	            }
-	            if(board[i][columnFromIndex].isStrong()) {
+	            if(board[line][columnFromIndex].isStrong()) {
 	                    strongCount++;
 	                    if(strongCount>1) {
 	                    	return false;
@@ -220,8 +221,8 @@ public class Board {
 		return countStrongBottoms() >= MAX_STRONG_PIECES;
 	}
 
-	public int countStrongsFor(boolean isTopPlayerTurn) {
-		if(isTopPlayerTurn){
+	public int countStrongsFor(boolean top) {
+		if(top){
 			return countStrongTop();
 		}else{
 			return countStrongBottoms();
@@ -230,9 +231,9 @@ public class Board {
 
 	public int countStrongBottoms() {
 			int counter = 0;
-			for (int i = 0; i < board.length; i++) {
-				for (int j = 0; j < board[i].length; j++) {
-					if(board[i][j].isBottomPlayerStrongPiece())
+			for (int line = 0; line < board.length; line++) {
+				for (int column = 0; column < board[line].length; column++) {
+					if(board[line][column].isBottomPlayerStrongPiece())
 						counter++;
 				}
 			}
@@ -241,9 +242,9 @@ public class Board {
 
 	private int countStrongTop() {
 		int counter = 0;
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if(board[i][j].isTopPlayerStrongPiece())
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board[line].length; column++) {
+				if(board[line][column].isTopPlayerStrongPiece())
 					counter++;
 			}
 		}
@@ -328,9 +329,9 @@ public class Board {
 	}
 
 	public void copyFrom(final Board source) {
-		for (int i = 0; i < BOARD_SIZE; i++) {
-			for (int j = 0; j < BOARD_SIZE; j++) {
-				this.board[i][j] = source.board[i][j];
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				this.board[line][column] = source.board[line][column];
 			}
 		}
 	}
@@ -382,9 +383,9 @@ public class Board {
 
 	public int getPieceColumn(final Piece p){
 		for (final Piece[] element : board) {
-			for (int j = 0; j < board.length; j++) {
-				if(p == element[j]) {
-					return j;
+			for (int column = 0; column < board.length; column++) {
+				if(p == element[column]) {
+					return column;
 				}
 			}
 		}
@@ -392,10 +393,10 @@ public class Board {
 	}
 
 	public int getPieceLine(final Piece p){
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if(p == board[i][j]) {
-					return i;
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board.length; column++) {
+				if(p == board[line][column]) {
+					return line;
 				}
 			}
 		}
@@ -473,18 +474,18 @@ public class Board {
 	private int getWinner(){
 		
 		boolean topWins = false;
-		for(int i = 0;i<BOARD_SIZE && !topWins;i++){
+		for(int column = 0;column<BOARD_SIZE && !topWins;column++){
 			final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
 			boolean isEvauatingTop = true;
-			topWins = scanPosition(0,i,piecesAlreadyUsedInPath,isEvauatingTop);
+			topWins = scanPosition(0,column,piecesAlreadyUsedInPath,isEvauatingTop);
 		}
 		
 		
 		boolean bottomWins = false;
-		for(int i = 0;i<BOARD_SIZE && !bottomWins;i++){
+		for(int column = 0;column<BOARD_SIZE && !bottomWins;column++){
 			final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
 			boolean isEvauatingTop = false;
-			bottomWins = scanPosition(BOARD_SIZE-1,i,piecesAlreadyUsedInPath,isEvauatingTop);
+			bottomWins = scanPosition(BOARD_SIZE-1,column,piecesAlreadyUsedInPath,isEvauatingTop);
 		}
 
 		if(topWins && bottomWins)
@@ -613,29 +614,27 @@ public class Board {
 	}
 
 	public Piece getPieceAt(Point p) {
-		return getPieceAt(p.y, p.x);
+		return getPieceAt(p.x, p.y);
 	}
 
-	public Point getStrongBottomPositionOrNull(int id) {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				Piece p = board[i][j];
+	private Point getStrongBottomPositionOrNull(int id) {
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board.length; column++) {
+				Piece p = board[line][column];
 				if(p.isBottomPlayerStrongPiece() && p.getId() == id){
-					return new Point(i,j);
+					return new Point(line,column);
 				}
 			}
 		}
 		return null;
 	}
 
-	
-	//TODO: make this private
-	public Point getStrongTopPositionOrNull(int id) {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				Piece p = board[i][j];
+	private Point getStrongTopPositionOrNull(int id) {
+		for (int line = 0; line < board.length; line++) {
+			for (int column = 0; column < board.length; column++) {
+				Piece p = board[line][column];
 				if(p.isTopPlayerStrongPiece() && p.getId() == id){
-					return new Point(i,j);
+					return new Point(line,column);
 				}
 			}
 		}

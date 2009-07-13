@@ -579,12 +579,13 @@ public class BoardTests {
 			"--- --- --- --- --- --- --- TS3\n" +
 			"TS1 BS2 --- --- --- --- --- ---";
 		final Board board = GameUtils.newBoardFromString(testGetStrongsPositions);
-		Assert.assertEquals(new Point(0,0), board.getStrongBottomPositionOrNull(1));
-		Assert.assertEquals(new Point(7,1), board.getStrongBottomPositionOrNull(2));
-		Assert.assertEquals(new Point(0,7), board.getStrongBottomPositionOrNull(3));
-		Assert.assertEquals(new Point(7,0), board.getStrongTopPositionOrNull(1));
-		Assert.assertEquals(new Point(3,4), board.getStrongTopPositionOrNull(2));
-		Assert.assertEquals(new Point(6,7), board.getStrongTopPositionOrNull(3));
-	}
-	
+		boolean topStrong = false;
+		Assert.assertEquals(new Point(0,0), board.getStrongPiecePosition(1, topStrong));
+		Assert.assertEquals(new Point(7,1), board.getStrongPiecePosition(2, topStrong));
+		Assert.assertEquals(new Point(0,7), board.getStrongPiecePosition(3, topStrong));
+		topStrong = true;
+		Assert.assertEquals(new Point(7,0), board.getStrongPiecePosition(1, topStrong));
+		Assert.assertEquals(new Point(3,4), board.getStrongPiecePosition(2, topStrong));
+		Assert.assertEquals(new Point(6,7), board.getStrongPiecePosition(3, topStrong));
+	}	
 }
