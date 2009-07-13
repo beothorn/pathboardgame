@@ -4,6 +4,7 @@ import gameEngine.gameMath.Point;
 import gameLogic.Game;
 import gameLogic.board.Board;
 import gameLogic.board.InvalidPlayException;
+import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
 import gameLogic.board.piece.Piece;
 import gameLogic.gameFlow.gameStates.GameState;
@@ -185,8 +186,13 @@ public class PiecesBoard implements GameElement,MouseListener{
 		final int pieceLine = (int) ((mouseY - boardY1)/ gridHeight);
 		final Point endDrag = new Point(pieceColumn, pieceLine);
 		final ProcessPlay play = new ProcessPlay(startDrag, endDrag,getCurrentGame().isTopPlayerTurn(), getCurrentGame());
+		final Play playOrNull = play.getPlayOrNull();
+		if(playOrNull == null){
+			//TODO: Apropriate error
+			return;
+		}
 		try {
-			final ValidPlay validPlay = getCurrentGame().validatePlay(play.getPlayOrNull(), getCurrentGame().isTopPlayerTurn());
+			final ValidPlay validPlay = getCurrentGame().validatePlay(playOrNull, getCurrentGame().isTopPlayerTurn());
 			getCurrentGame().play(validPlay);
 		} catch (final InvalidPlayException e1) {
 			// TODO Auto-generated catch block

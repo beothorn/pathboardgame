@@ -40,7 +40,9 @@ public class ProcessPlay implements StateVisitor {
 		if(startDrag.getX() != endDrag.getX()&&startDrag.getY() != endDrag.getY() ) {
 			return;
 		}
-		final java.awt.Point strongToMovePosition = new java.awt.Point((int)startDrag.getX(),(int)startDrag.getY());
+		final int line = (int)startDrag.getY();
+		final int column = (int)startDrag.getX();
+		final java.awt.Point strongToMovePosition = new java.awt.Point(line,column);
 		final Piece strongToMove = game.getBoard().getPieceAt(strongToMovePosition);
 		if(isTopPlayerTurn && !strongToMove.isTopPlayerStrongPiece()){
 			return;

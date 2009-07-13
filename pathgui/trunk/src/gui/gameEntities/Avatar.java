@@ -12,19 +12,14 @@ import playerTypes.PlayerTypes;
 public class Avatar implements GameElement {
 
 	private final Entity avatar;
-	private static final long intervalToStartThinking = 15000;
 	private boolean playing = false;
 	private final boolean isTopPlayer;
-	private final Entity thought;
-	private long timeWaitingForPlay;
 	private int playerType = PlayerTypes.HUMAN;
 
 	public Avatar(final Point position, final Point thoughtPosition, final boolean isTopPlayer) {
 		this.isTopPlayer = isTopPlayer;
 		final Point avatarPosition = position.copy();
 		avatar = new Entity(currentAvatarSpritePlaying(),avatarPosition);
-		thought = new Entity(currentAvatarThoughtSprite(),thoughtPosition);
-		thought.setVisible(false);
 	}
 
 	private String currentAvatarSpritePlaying() {
@@ -53,38 +48,23 @@ public class Avatar implements GameElement {
 		return null;
 	}
 
-	private String currentAvatarThoughtSprite() {
-		if(isTopPlayer){
-			return GameLayoutDefinitions.avatarTopThinking;
-		}
-		return GameLayoutDefinitions.avatarBottomThinking;
-	}
-
 	@Override
 	public void doStep(final long delta) {
-		if(playing) {
-			timeWaitingForPlay+= delta;
-			if(timeWaitingForPlay > intervalToStartThinking) {
-				thought.setVisible(true);
-			}
-		}
+		//Do nothing
 	}
 
 	@Override
 	public void draw(final Graphics g) {
 		avatar.draw(g);
-		thought.draw(g);
 	}
 
 	public void gameTurnAdvanced(final boolean isTopPlayerTurn, final boolean isBottomPlayerTurn) {
 		playing = isMyTurn(isTopPlayerTurn,isBottomPlayerTurn);
 		if(playing) {
-			timeWaitingForPlay = 0;
 			avatar.setSprite(currentAvatarSpritePlaying());
 			return;
 		}
 		avatar.setSprite(currentAvatarSpriteWaiting());
-		thought.setVisible(false);
 	}
 
 	private boolean isMyTurn(final boolean isTopPlayerTurn, final boolean isBottomPlayerTurn) {
