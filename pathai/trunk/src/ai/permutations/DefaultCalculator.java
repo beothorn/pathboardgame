@@ -82,22 +82,23 @@ public class DefaultCalculator implements BoardScoreCalculator {
 		return result;
 	}
 	
-	private int distanceFromColumnToStrong(final boolean isDistancefromBottomStrong ,final Board board, final int col){
-		final Point strong1 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(1):board.getStrongTopPositionOrNull(1);
-		final Point strong2 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(2):board.getStrongTopPositionOrNull(2);
-		final Point strong3 = isDistancefromBottomStrong?board.getStrongBottomPositionOrNull(3):board.getStrongTopPositionOrNull(3);
+	//TODO: redo this (does this belong to board?) 
+	private int distanceFromColumnToStrong(final boolean isDistancefromTopStrong ,final Board board, final int col){
+		final Point strong1 = board.getStrongPiecePosition(1, !isDistancefromTopStrong);
+		final Point strong2 = board.getStrongPiecePosition(2, !isDistancefromTopStrong);
+		final Point strong3 = board.getStrongPiecePosition(3, !isDistancefromTopStrong);
 		int d1 = Math.abs(col-strong1.x);
 		int d2 = Math.abs(col-strong2.x);
 		int d3 = Math.abs(col-strong3.x);
 		final int teleportPosition = Board.BOARD_SIZE-1;
-		final boolean isEnemy = !isDistancefromBottomStrong;
+		final boolean isMyPlay = isDistancefromTopStrong;
 		/**
 		 * teleport rule only for the enemy because i'm lazy to verify if enemy or self can teleport a strong (it's too complex)
 		 * so i calculate a preventive teleport value
 		 */
-		d1 = d1>=teleportPosition && isEnemy?1:d1;
-		d2 = d2>=teleportPosition && isEnemy?1:d2;
-		d3 = d3>=teleportPosition && isEnemy?1:d3;
+		d1 = d1>=teleportPosition && isMyPlay?1:d1;
+		d2 = d2>=teleportPosition && isMyPlay?1:d2;
+		d3 = d3>=teleportPosition && isMyPlay?1:d3;
 
 		int distance = d1;
 		distance = d2 < distance? d2 : distance;
