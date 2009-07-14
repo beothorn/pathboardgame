@@ -7,6 +7,7 @@ import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
 import gui.externalPlayer.ExternalPlayerController;
 import gui.gameEntities.piecesBoard.PiecesBoard;
+import gui.gameEntities.piecesBoard.ProcessPlay;
 
 public class BoardGamePanel extends JGamePanel{
 
@@ -37,8 +38,9 @@ public class BoardGamePanel extends JGamePanel{
 		final ErrorMessage err = new ErrorMessage(this);
 		addGameElement(err);
 
-		piecesBoard = new PiecesBoard(this, err);
-		piecesBoard.setPositon(GameLayoutDefinitions.boardPosition);
+		piecesBoard = new PiecesBoard(getGame().getBoard(),this,GameLayoutDefinitions.boardPosition);
+		addMouseListener(new ProcessPlay(false,getGame(),piecesBoard,err));
+		addMouseListener(new ProcessPlay(true,getGame(),piecesBoard,err));
 
 		final boolean isTopPlayer = true;
 		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition , GameLayoutDefinitions.avatarTopThinkingPosition, isTopPlayer);

@@ -11,20 +11,25 @@ import gui.gameEntities.piecesBoard.entityPiece.EntityPieceStrong;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-//TODO: This Class is waaaaaaay to long
 public class PiecesBoard implements GameElement{
 
 	final static private double gridHeight = GameLayoutDefinitions.gridSize;
 	final static private double gridWidth = GameLayoutDefinitions.gridSize;
 	private final JGamePanel panel;
 	private final List<EntityPiece> entityPieces;
-	private Point position = new Point();
+	private final Point position;
 
-	public PiecesBoard(final Board board,final Set<Piece> alreadyMoved,final JGamePanel panel,final ErrorListener errorListener) {
+	public PiecesBoard(final Board board,final JGamePanel panel,final Point position) {
+		this(board,new LinkedHashSet<Piece>(),panel,position);
+	}
+
+	public PiecesBoard(final Board board,final Set<Piece> alreadyMoved,final JGamePanel panel,final Point position) {
 		this.panel = panel;
+		this.position = position;
 		entityPieces = new ArrayList<EntityPiece>();
 		refreshBoard(board, alreadyMoved);
 	}
@@ -92,6 +97,14 @@ public class PiecesBoard implements GameElement{
 
 	public double getBoardWidth(){
 		return Board.BOARD_SIZE*getGridWidth();
+	}
+
+	public double getGridHeight() {
+		return gridHeight;
+	}
+
+	public double getGridWidth() {
+		return gridWidth;
 	}
 
 	public double getX() {
@@ -166,23 +179,11 @@ public class PiecesBoard implements GameElement{
 		p.setPointToGo(new Point(getXForPieceAt(column), getYForPieceAt(line)));
 	}
 
-	public void setPositon(final Point boardPosition) {
-		position = boardPosition.copy();
-	}
-
 	public void unselectedStrong(final Piece unselectedPiece) {
 		for (final EntityPiece p : entityPieces) {
 			if(p.ownsPiece(unselectedPiece)) {
 				((EntityPieceStrong)p).setSelected(false);
 			}
 		}
-	}
-
-	public static double getGridHeight() {
-		return gridHeight;
-	}
-
-	public static double getGridWidth() {
-		return gridWidth;
 	}
 }

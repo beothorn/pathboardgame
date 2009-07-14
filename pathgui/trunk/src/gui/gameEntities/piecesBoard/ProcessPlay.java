@@ -17,41 +17,38 @@ import java.awt.event.MouseListener;
 
 public class ProcessPlay implements StateVisitor,MouseListener {
 
-	private Play play;
-	private Point startDrag;
-	private Point endDrag;
+	private final Point startDrag = new Point();
+	private Point endDrag = new Point();
 	private final Game game;
-	private final boolean isTopPlayerTurn;
+	private final boolean playingAsTop;
 	private final PiecesBoard piecesBoard;
+	private final ErrorListener errorListener;
 
-	public ProcessPlay(final boolean isTopPlayerTurn, final Game game, final PiecesBoard piecesBoard) {
-		this.isTopPlayerTurn = isTopPlayerTurn;
+	public ProcessPlay(final boolean playingAsTop, final Game game,final PiecesBoard piecesBoard,final ErrorListener errorListener) {
+		this.playingAsTop = playingAsTop;
 		this.game = game;
 		this.piecesBoard = piecesBoard;
-		game.getCurrentState().accept(this);
+		this.errorListener = errorListener;
 	}
 
-	public Play getPlayOrNull(){
-		return play;
-	}
-
-	@Override
-	public void mouseClicked(final MouseEvent e) {
-
+	private boolean canProcessPlay(){
+		return playingAsTop && game.getCurrentState().isTopPlayerTurn() || !playingAsTop && game.getCurrentState().isBottomPlayerTurn();
 	}
 
 	@Override
-	public void mouseEntered(final MouseEvent e) {
-		//		System.out.println(e);
-	}
+	public void mouseClicked(final MouseEvent e) {}
 
 	@Override
-	public void mouseExited(final MouseEvent e) {
-		//		System.out.println(e);
-	}
+	public void mouseEntered(final MouseEvent e) {}
+
+	@Override
+	public void mouseExited(final MouseEvent e) {}
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
+		if(!canProcessPlay()) {
+			return;
+		}
 		final int mouseX = e.getX();
 		final int mouseY = e.getY();
 		final double boardX1 = piecesBoard.getX();
@@ -69,6 +66,9 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
+		if(!canProcessPlay()) {
+			return;
+		}
 		final int mouseX = e.getX();
 		final int mouseY = e.getY();
 		final double boardX1 = piecesBoard.getX();
@@ -81,19 +81,9 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		if(mouseY>boardY2) {return;}
 		final int pieceColumn = (int) ((mouseX - boardX1)/ piecesBoard.getGridWidth());
 		final int pieceLine = (int) ((mouseY - boardY1)/ piecesBoard.getGridHeight());
-		final Point endDrag = new Point(pieceColumn, pieceLine);
-		getPlayOrNull();
-		if(playOrNull == null){
-			errorListener.error("Invalid play");
-			return;
-		}
-		try {
-			final ValidPlay validPlay = getCurrentGame().validatePlay(playOrNull, getCurrentGame().isTopPlayerTurn());
-			getCurrentGame().play(validPlay);
-		} catch (final InvalidPlayException invalidPlayException) {
-			errorListener.error(invalidPlayException.getMessage());
-		}
-		refreshBoard();
+		endDrag = new Point(pieceColumn, pieceLine);
+		visitToKnowHowToPlayAndPlay();
+		piecesBoard.refreshBoard(game.getBoard(),game.getCurrentState().getAlreadyMovedOrEmptySet());
 	}
 
 	@Override
@@ -110,10 +100,10 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		final int column = (int)startDrag.getX();
 		final java.awt.Point strongToMovePosition = new java.awt.Point(line,column);
 		final Piece strongToMove = game.getBoard().getPieceAt(strongToMovePosition);
-		if(isTopPlayerTurn && !strongToMove.isTopPlayerStrongPiece()){
+		if(playingAsTop && !strongToMove.isTopPlayerStrongPiece()){
 			return;
 		}
-		if(!isTopPlayerTurn && !strongToMove.isBottomPlayerStrongPiece()){
+		if(!playingAsTop && !strongToMove.isBottomPlayerStrongPiece()){
 			return;
 		}
 
@@ -131,16 +121,33 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 			direction = Play.DOWN;
 		}
 
-		play = new Play(strongToMove.getId(), direction);
+		tryToPlay(new Play(strongToMove.getId(), direction));
 	}
 
 	@Override
 	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs) {
-		play = new Play((int)endDrag.getX());
+		tryToPlay(new Play((int)endDrag.getX()));
 	}
 
 	@Override
 	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
-		play = new Play((int)endDrag.getX());
+		tryToPlay(new Play((int)endDrag.getX()));
+	}
+
+	private void tryToPlay(final Play play){
+		if(play == null){
+			errorListener.error("Invalid play");
+			return;
+		}
+		try {
+			final ValidPlay validPlay = game.validatePlay(play, playingAsTop);
+			game.play(validPlay);
+		} catch (final InvalidPlayException invalidPlayException) {
+			errorListener.error(invalidPlayException.getMessage());
+		}
+	}
+
+	public void visitToKnowHowToPlayAndPlay(){
+		game.getCurrentState().accept(this);
 	}
 }
