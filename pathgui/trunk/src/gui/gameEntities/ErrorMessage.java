@@ -5,6 +5,7 @@ import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.MoveToAndStop;
 import gameEngine.gameMath.Point;
+import gui.gameEntities.piecesBoard.ErrorListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,7 +13,7 @@ import java.awt.Graphics;
 
 import utils.Printer;
 
-public class ErrorMessage extends Entity implements GameElement{
+public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 
 	private final static int BOX_MARGIN = 10;
 	private final static int SHOW_MESSAGE_MILISECONDS = 5000;
@@ -91,11 +92,12 @@ public class ErrorMessage extends Entity implements GameElement{
 		goingToPoint.setLocation(startingPoint);
 	}
 
-	public void showMessage(final String message){
-		Printer.writeln(message);
-		this.message = message;
+	@Override
+	public void error(final String errorMessage){
+		Printer.writeln(errorMessage);
+		this.message = errorMessage;
 		setVisible(true);
-		calculateStartAndEndingPositions(message);
+		calculateStartAndEndingPositions(errorMessage);
 		moveToEndingPoint();
 
 	}
