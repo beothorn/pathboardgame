@@ -12,26 +12,6 @@ import org.junit.Test;
 import utils.GameUtils;
 
 public class GameStateMovingStrongsTests {
-
-	private final String testMoveTopStrong = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- TS1 TS2 TS3 --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testEndGame = 
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- --- TWK --- --- ---\n" +
-		"--- --- --- TS2 TWK --- --- ---\n" +
-		"--- --- TS1 TWK --- --- --- ---";
 	
 	@Test(expected = InvalidPlayException.class)
 	public void testMovingStrongsAddPiecePlay() throws InvalidPlayException{
@@ -56,6 +36,15 @@ public class GameStateMovingStrongsTests {
 	
 	@Test
 	public void testMovingStrongsStateAdvance() throws InvalidPlayException{
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- TS1 TS2 TS3 --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		boolean isTopPlayerTurn = true;
 		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Board board = GameUtils.newBoardFromString(testMoveTopStrong);
@@ -72,6 +61,15 @@ public class GameStateMovingStrongsTests {
 	
 	@Test(expected = InvalidPlayException.class)
 	public void testTryToMoveStrongTwice() throws InvalidPlayException{
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- TS1 TS2 TS3 --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		boolean isTopPlayerTurn = true;
 		GameState gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Board board = GameUtils.newBoardFromString(testMoveTopStrong);
@@ -84,6 +82,15 @@ public class GameStateMovingStrongsTests {
 	
 	@Test
 	public void testEndGame() throws InvalidPlayException{
+		final String testEndGame = 
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- --- TWK --- --- ---\n" +
+			"--- --- --- TS2 TWK --- --- ---\n" +
+			"--- --- TS1 TWK --- --- --- ---";
 		boolean isTopPlayerTurn = true;
 		GameStateMovingStrongs gameState = new GameStateMovingStrongs(isTopPlayerTurn);
 		Play play = new Play(1,'r');

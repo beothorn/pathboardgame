@@ -42,7 +42,8 @@ public class GameStateMovingStrongs implements GameState {
 		if(play.isAddPiece()){
 			throw InvalidPlayException.cantAddPieceWhenMovingStrongs(GameState.NUMBER_OF_STRONG_PIECES_TO_MOVE); 
 		}
-		if(alreadyMoved.contains(play.getPieceId())) {
+		final Piece piece = board.getStrongPiece(play.getPieceId(), isTopPlayerTurn);
+		if(alreadyMoved.contains(piece)) {
 			throw InvalidPlayException.cantMovePieceAlreadyMoved(play.getPieceId());
 		}
 		return board.validatePlay(play, isTopPlayerTurn);
