@@ -1,4 +1,4 @@
-package gui.entityPiece;
+package gui.gameEntities.piecesBoard.entityPiece;
 
 import gameLogic.board.piece.Piece;
 

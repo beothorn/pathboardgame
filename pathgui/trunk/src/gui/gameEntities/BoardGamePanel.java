@@ -34,7 +34,10 @@ public class BoardGamePanel extends JGamePanel{
 		restartButton = new RestartButton(game);
 		restartButton.setLocation(GameLayoutDefinitions.buttomRestartPosition);
 
-		piecesBoard = new PiecesBoard(this);
+		final ErrorMessage err = new ErrorMessage(this);
+		addGameElement(err);
+
+		piecesBoard = new PiecesBoard(this, err);
 		piecesBoard.setPositon(GameLayoutDefinitions.boardPosition);
 
 		final boolean isTopPlayer = true;
@@ -60,15 +63,6 @@ public class BoardGamePanel extends JGamePanel{
 		gameStateChanged(game.isTopPlayerTurn(), game.isBottomPlayerTurn(), game.getCurrentState());
 	}
 
-	private void addErrorMessageShower() {
-		final ErrorMessage err = new ErrorMessage(this);
-		addGameElement(err);
-	}
-
-	private void createElementsInGameFrame() {
-		addErrorMessageShower();
-	}
-
 	public void gameStateChanged(final boolean isTopPlayerTurn, final boolean isBottomPlayerTurn, final GameState gs) {
 		nextStageButton.gameStateChanged(isTopPlayerTurn,isBottomPlayerTurn, gs);
 		piecesBoard.gameTurnAdvanced();
@@ -87,7 +81,6 @@ public class BoardGamePanel extends JGamePanel{
 
 	public void reset() {
 		clearElements();
-		createElementsInGameFrame();
 	}
 
 	public void selectedStrong(final Piece selectedPiece) {

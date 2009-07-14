@@ -9,10 +9,11 @@ import gameLogic.board.ValidPlay;
 import gameLogic.board.piece.Piece;
 import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
-import gui.entityPiece.EntityPiece;
-import gui.entityPiece.EntityPieceFactory;
-import gui.entityPiece.EntityPieceStrong;
 import gui.gameEntities.BoardGamePanel;
+import gui.gameEntities.ErrorMessage;
+import gui.gameEntities.piecesBoard.entityPiece.EntityPiece;
+import gui.gameEntities.piecesBoard.entityPiece.EntityPieceFactory;
+import gui.gameEntities.piecesBoard.entityPiece.EntityPieceStrong;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -25,15 +26,17 @@ public class PiecesBoard implements GameElement,MouseListener{
 
 	final static private double gridHeight = GameLayoutDefinitions.gridSize;
 	final static private double gridWidth = GameLayoutDefinitions.gridSize;
-	private final BoardGamePanel currentGame;
+	private final ErrorMessage errorMessage;
+	private final BoardGamePanel boardGamePanel;
 	private final List<EntityPiece> entityPieces;
 	private Point position = new Point();
 	private final Point startDrag = new Point();
 
-	public PiecesBoard(final BoardGamePanel game) {
+	public PiecesBoard(final BoardGamePanel game,final ErrorMessage errorMessage) {
+		this.errorMessage = errorMessage;
 		game.addMouseListener(this);
 		entityPieces = new ArrayList<EntityPiece>();
-		currentGame = game;
+		boardGamePanel = game;
 		refreshBoard();
 	}
 
@@ -54,10 +57,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	}
 
 	private void createNewEntityPieceForLogicPieceIn(final Piece logicPiece, final int line,final int column) {
-		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece);
-		entityPieces.add(newPiece);
-		currentGame.addGameElement(newPiece);
-		currentGame.addStepAction(newPiece.getStepAction());
+		final EntityPiece newPiece = newPieceOwning(logicPiece);
 		int createAboveOrBelowBoard = 0;
 		if(line == 0) {
 			createAboveOrBelowBoard = -1;
@@ -110,7 +110,7 @@ public class PiecesBoard implements GameElement,MouseListener{
 	}
 
 	public Game getCurrentGame() {
-		return currentGame.getGame();
+		return boardGamePanel.getGame();
 	}
 
 	private GameState getCurrentState() {
@@ -188,17 +188,24 @@ public class PiecesBoard implements GameElement,MouseListener{
 		final ProcessPlay play = new ProcessPlay(startDrag, endDrag,getCurrentGame().isTopPlayerTurn(), getCurrentGame());
 		final Play playOrNull = play.getPlayOrNull();
 		if(playOrNull == null){
-			//TODO: Apropriate error
+			errorMessage.showMessage("What???");
 			return;
 		}
 		try {
 			final ValidPlay validPlay = getCurrentGame().validatePlay(playOrNull, getCurrentGame().isTopPlayerTurn());
 			getCurrentGame().play(validPlay);
 		} catch (final InvalidPlayException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			errorMessage.showMessage(e1.getMessage());
 		}
 		refreshBoard();
+	}
+
+	private EntityPiece newPieceOwning(final Piece logicPiece) {
+		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece);
+		entityPieces.add(newPiece);
+		boardGamePanel.addGameElement(newPiece);
+		boardGamePanel.addStepAction(newPiece.getStepAction());
+		return newPiece;
 	}
 
 	public void refreshBoard(){
