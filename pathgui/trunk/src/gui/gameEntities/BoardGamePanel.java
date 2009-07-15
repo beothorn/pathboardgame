@@ -24,12 +24,6 @@ public class BoardGamePanel extends JGamePanel{
 	public BoardGamePanel(final boolean isTopAi, final boolean isBottomAi) {
 		super(GameLayoutDefinitions.background);
 		game = new Game();
-		if(isTopAi){
-			game.addTurnListener(new AiControl(new AIPlayer(), true));
-		}
-		if(isBottomAi){
-			game.addTurnListener(new AiControl(new AIPlayer(), false));
-		}
 
 		piecesBoard = new PiecesBoard(game.getBoard(),this,GameLayoutDefinitions.boardPosition);
 		addGameElement(piecesBoard);
@@ -37,7 +31,12 @@ public class BoardGamePanel extends JGamePanel{
 		final boolean processForBottom = true;
 		final BoardPlayInputDecoder processMouseEventForBoard = new BoardPlayInputDecoder(processForTop,processForBottom,game,piecesBoard);
 		addMouseListener(processMouseEventForBoard);
-
+		if(isTopAi){
+			game.addTurnListener(new AiControl(new AIPlayer(), true));
+		}
+		if(isBottomAi){
+			game.addTurnListener(new AiControl(new AIPlayer(), false));
+		}
 		nextStageButton = new NextStageButton(processMouseEventForBoard);
 		nextStageButton.setLocation(GameLayoutDefinitions.buttomNextStagePosition);
 		restartButton = new RestartButton(processMouseEventForBoard);

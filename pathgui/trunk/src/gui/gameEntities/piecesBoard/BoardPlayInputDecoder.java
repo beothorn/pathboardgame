@@ -2,6 +2,7 @@ package gui.gameEntities.piecesBoard;
 
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
+import gameLogic.TurnChangeListener;
 import gameLogic.board.InvalidPlayException;
 import gameLogic.board.Play;
 import gameLogic.board.ValidPlay;
@@ -17,7 +18,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardPlayInputDecoder implements StateVisitor,MouseListener {
+public class BoardPlayInputDecoder implements StateVisitor,TurnChangeListener,MouseListener {
 
 	private final Point startDrag = new Point();
 	private Point endDrag = new Point();
@@ -32,6 +33,7 @@ public class BoardPlayInputDecoder implements StateVisitor,MouseListener {
 		this.processForTop = processForTop;
 		this.processForBottom = processForBottom;
 		this.game = game;
+		game.addTurnListener(this);
 		this.piecesBoard = piecesBoard;
 	}
 
@@ -41,6 +43,11 @@ public class BoardPlayInputDecoder implements StateVisitor,MouseListener {
 
 	public void addPlayListener(final PlayListener playListener){
 		playListeners.add(playListener);
+	}
+
+	@Override
+	public void changedTurn(final Game game) {
+		refreshBoard();
 	}
 
 	@Override
