@@ -7,10 +7,8 @@ import utils.Printer;
 
 public class Main{
 
-	//TODO: depois q termina um jogo ai ainda tenta jogar
 	//TODO: clicando bastante dá pra atrapalhar ai
 	//TODO: escrever help e colocar botão no jogo :)
-	//TODO: deixar Maingamepanel e game entities decente
 	//TODO: listar ias para escolher
 
 	private static MainGameFrame frame;
@@ -29,7 +27,6 @@ public class Main{
 	 * @throws UnknownHostException
 	 */
 	public static void main(final String[] args){
-		//		BasicConfigurator.configure(); if i ever use log4j again
 		String commandLine = "";
 		for (final String string : args) {
 			commandLine += string;
