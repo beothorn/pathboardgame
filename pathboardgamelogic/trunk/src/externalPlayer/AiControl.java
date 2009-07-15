@@ -26,8 +26,7 @@ public class AiControl implements TurnChangeListener {
 	}	
 	
 	private void aiError(final Exception e,final Game game) {
-		Printer.error("Ai error (Ai was turned off): "+e);
-		game.clearTurnListeners();
+		Printer.error("Ai error: "+e);
 		unLockGame(game);
 	}
 
