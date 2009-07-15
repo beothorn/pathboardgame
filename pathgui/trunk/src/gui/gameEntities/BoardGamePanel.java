@@ -46,7 +46,6 @@ public class BoardGamePanel extends JGamePanel{
 		addGameElement(errorMessageShower);
 		processMouseEventForBoard.addErrorListener(errorMessageShower);
 
-
 		final boolean isTopPlayer = processForTop;
 		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition,isTopAi,  isTopPlayer);
 		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition,isBottomAi, !isTopPlayer);
