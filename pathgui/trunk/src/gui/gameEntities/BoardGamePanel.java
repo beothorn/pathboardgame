@@ -1,13 +1,12 @@
 package gui.gameEntities;
 
+import externalPlayer.AiControl;
 import gameEngine.JGamePanel;
 import gameLogic.Game;
-import gameLogic.board.piece.Piece;
-import gameLogic.gameFlow.gameStates.GameState;
 import gui.GameLayoutDefinitions;
-import gui.externalPlayer.ExternalPlayerController;
+import gui.gameEntities.piecesBoard.BoardPlayInputDecoder;
 import gui.gameEntities.piecesBoard.PiecesBoard;
-import gui.gameEntities.piecesBoard.ProcessPlay;
+import ai.AIPlayer;
 
 public class BoardGamePanel extends JGamePanel{
 
@@ -17,90 +16,45 @@ public class BoardGamePanel extends JGamePanel{
 	private static final long serialVersionUID = 1L;
 	private final Avatar avatarBottom;
 	private final Avatar avatarTop;
-
-	private final ExternalPlayerController externalPlayerController;
-	private final Game game = new Game();
+	private final Game game;
 	private final NextStageButton nextStageButton;
 	private final RestartButton restartButton;
 	private final PiecesBoard piecesBoard;
 
-	public BoardGamePanel() {
+	public BoardGamePanel(final boolean isTopAi, final boolean isBottomAi) {
 		super(GameLayoutDefinitions.background);
-		reset();
+		game = new Game();
+		if(isTopAi){
+			game.addTurnListener(new AiControl(new AIPlayer(), true));
+		}
+		if(isBottomAi){
+			game.addTurnListener(new AiControl(new AIPlayer(), false));
+		}
 
-		externalPlayerController = new ExternalPlayerController(game);
+		piecesBoard = new PiecesBoard(game.getBoard(),this,GameLayoutDefinitions.boardPosition);
+		addGameElement(piecesBoard);
+		final boolean processForTop = true;
+		final boolean processForBottom = true;
+		final BoardPlayInputDecoder processMouseEventForBoard = new BoardPlayInputDecoder(processForTop,processForBottom,game,piecesBoard);
+		addMouseListener(processMouseEventForBoard);
 
-		nextStageButton = new NextStageButton(game);
+		nextStageButton = new NextStageButton(processMouseEventForBoard);
 		nextStageButton.setLocation(GameLayoutDefinitions.buttomNextStagePosition);
-		restartButton = new RestartButton(game);
+		restartButton = new RestartButton(processMouseEventForBoard);
 		restartButton.setLocation(GameLayoutDefinitions.buttomRestartPosition);
 
-		final ErrorMessage err = new ErrorMessage(this);
-		addGameElement(err);
+		final ErrorMessage errorMessageShower = new ErrorMessage(this);
+		addGameElement(errorMessageShower);
+		processMouseEventForBoard.addErrorListener(errorMessageShower);
 
-		piecesBoard = new PiecesBoard(getGame().getBoard(),this,GameLayoutDefinitions.boardPosition);
-		addMouseListener(new ProcessPlay(false,getGame(),piecesBoard,err));
-		addMouseListener(new ProcessPlay(true,getGame(),piecesBoard,err));
 
-		final boolean isTopPlayer = true;
-		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition , GameLayoutDefinitions.avatarTopThinkingPosition, isTopPlayer);
-		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition, GameLayoutDefinitions.avatarBottomThinkingPosition, !isTopPlayer);
-
-		refreshAvatarsDescription();
+		final boolean isTopPlayer = processForTop;
+		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition,isTopAi,  isTopPlayer);
+		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition,isBottomAi, !isTopPlayer);
 
 		addGameElement(avatarTop);
 		addGameElement(avatarBottom);
-		addGameElement(piecesBoard);
 		add(nextStageButton);
 		add(restartButton);
-
-		//		gameFrame.addButton(new PlayerTypeButton(isTopPlayer,PlayerTypes.HUMAN,this,GameLayoutDefinitions.buttomTopPlayerTypeHumanPosition));
-		//		gameFrame.addButton(new PlayerTypeButton(isTopPlayer,PlayerTypes.NETWORK,this,GameLayoutDefinitions.buttomTopPlayerTypeNetPosition));
-		//		gameFrame.addButton(new PlayerTypeButton(isTopPlayer,PlayerTypes.AI_EASIEST,this,GameLayoutDefinitions.buttomTopPlayerTypeAIPosition));
-		//
-		//		gameFrame.addButton(new PlayerTypeButton(false,PlayerTypes.HUMAN,this,GameLayoutDefinitions.buttomBottomPlayerTypeHumanPosition));
-		//		gameFrame.addButton(new PlayerTypeButton(false,PlayerTypes.NETWORK,this,GameLayoutDefinitions.buttomBottomPlayerTypeNetPosition));
-		//		gameFrame.addButton(new PlayerTypeButton(false,PlayerTypes.AI_EASIEST,this,GameLayoutDefinitions.buttomBottomPlayerTypeAIPosition));
-
-		gameStateChanged(game.isTopPlayerTurn(), game.isBottomPlayerTurn(), game.getCurrentState());
 	}
-
-	public void gameStateChanged(final boolean isTopPlayerTurn, final boolean isBottomPlayerTurn, final GameState gs) {
-		nextStageButton.gameStateChanged(isTopPlayerTurn,isBottomPlayerTurn, gs);
-		piecesBoard.gameTurnAdvanced();
-		avatarTop.gameTurnAdvanced(isTopPlayerTurn,isBottomPlayerTurn);
-		avatarBottom.gameTurnAdvanced(isTopPlayerTurn,isBottomPlayerTurn);
-	}
-
-	public Game getGame() {
-		return game;
-	}
-
-	private void refreshAvatarsDescription() {
-		avatarTop.setPlayerType(externalPlayerController.getTopPlayerType());
-		avatarBottom.setPlayerType(externalPlayerController.getBottomPlayerType());
-	}
-
-	public void reset() {
-		clearElements();
-	}
-
-	public void selectedStrong(final Piece selectedPiece) {
-		piecesBoard.selectedStrong(selectedPiece);
-	}
-
-	public void setBottomPlayerType(final int type) {
-		externalPlayerController.setBottomPlayerType(type);
-		refreshAvatarsDescription();
-	}
-
-	public void setTopPlayerType(final int type) {
-		externalPlayerController.setTopPlayerType(type);
-		refreshAvatarsDescription();
-	}
-
-	public void unselectedStrong(final Piece unselectedPiece) {
-		piecesBoard.unselectedStrong(unselectedPiece);
-	}
-
 }

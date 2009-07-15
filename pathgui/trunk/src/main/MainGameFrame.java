@@ -17,24 +17,16 @@ public class MainGameFrame extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private final BoardGamePanel mainGameCanvas;
 
-	public MainGameFrame() {
+	public MainGameFrame(final boolean isTopAi, final boolean isBottomAi) {
 		setTitle(GameLayoutDefinitions.gameName);
 		setLayout(new BorderLayout());
-		mainGameCanvas = new BoardGamePanel();
+		mainGameCanvas = new BoardGamePanel(isTopAi,isBottomAi);
 
 		setResizable(false);
 		setPreferredSize(GameLayoutDefinitions.screenSize);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(mainGameCanvas,BorderLayout.CENTER);
 		pack();
-	}
-
-	public void setBottomPlayerType(final int type) {
-		mainGameCanvas.setBottomPlayerType(type);
-	}
-
-	public void setTopPlayerType(final int type) {
-		mainGameCanvas.setTopPlayerType(type);
 	}
 
 	@Override

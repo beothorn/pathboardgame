@@ -56,8 +56,6 @@ public abstract class EntityPiece implements GameElement{
 		return logicPiece == p;
 	}
 
-	public abstract void reset();
-
 	public void setEntity(final Entity entity) {
 		this.entity = entity;
 	}

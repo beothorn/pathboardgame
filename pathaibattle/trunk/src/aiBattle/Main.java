@@ -20,8 +20,8 @@ public class Main{
 		final PathAI aiTop = new AIPlayer();
 		final PathAI aiBottom = new AIPlayer(new NaiveCalculator());		
 		final boolean stopPlayingOnGameEnd = true;
-		new AiControl(game, aiTop, stopPlayingOnGameEnd, stopPlayingOnGameEnd);
-		new AiControl(game, aiBottom, false, stopPlayingOnGameEnd);
+		game.addTurnListener(new AiControl(aiTop, stopPlayingOnGameEnd, stopPlayingOnGameEnd));
+		game.addTurnListener(new AiControl(aiBottom, false, stopPlayingOnGameEnd));
 		gameUtils.printStateDescription(game);
 	}
 }

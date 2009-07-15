@@ -187,6 +187,6 @@ public class GameTests {
 		Assert.assertEquals(afterPlay, GameUtils.printBoard(game.getBoard()));
 		game.restartGame();
 		Assert.assertEquals(restart, GameUtils.printBoard(game.getBoard()));
-		Assert.assertEquals(GameStateFactory.getFirstState().isBottomPlayerTurn(), game.getCurrentState().isBottomPlayerTurn());
+		Assert.assertEquals(GameStateFactory.getFirstState().isBottomPlayerTurn(), game.isBottomPlayerTurn());
 	}
 }

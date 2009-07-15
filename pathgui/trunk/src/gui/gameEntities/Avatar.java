@@ -7,45 +7,34 @@ import gui.GameLayoutDefinitions;
 
 import java.awt.Graphics;
 
-import playerTypes.PlayerTypes;
-
 public class Avatar implements GameElement {
 
 	private final Entity avatar;
 	private boolean playing = false;
 	private final boolean isTopPlayer;
-	private int playerType = PlayerTypes.HUMAN;
+	private final String playingSprite;
+	private final String waitingSprite;
 
-	public Avatar(final Point position, final Point thoughtPosition, final boolean isTopPlayer) {
+	public Avatar(final Point position, final boolean isAi, final boolean isTopPlayer) {
+		if(isAi){
+			playingSprite = GameLayoutDefinitions.avatarPCPlaying;
+			waitingSprite = GameLayoutDefinitions.avatarPCWaiting;
+		}else{
+			playingSprite = GameLayoutDefinitions.avatarHumanPlaying;
+			waitingSprite = GameLayoutDefinitions.avatarHumanPlaying;
+		}
+
 		this.isTopPlayer = isTopPlayer;
 		final Point avatarPosition = position.copy();
 		avatar = new Entity(currentAvatarSpritePlaying(),avatarPosition);
 	}
 
 	private String currentAvatarSpritePlaying() {
-		if(PlayerTypes.isAiType(playerType)){
-			return GameLayoutDefinitions.avatarPCPlaying;
-		}
-		if(playerType == PlayerTypes.HUMAN){
-			return GameLayoutDefinitions.avatarHumanPlaying;
-		}
-		if(playerType == PlayerTypes.NETWORK){
-			return GameLayoutDefinitions.avatarNetPlaying;
-		}
-		return null;
+		return playingSprite;
 	}
 
 	private String currentAvatarSpriteWaiting() {
-		if(PlayerTypes.isAiType(playerType)){
-			return GameLayoutDefinitions.avatarPCWaiting;
-		}
-		if(playerType == PlayerTypes.HUMAN){
-			return GameLayoutDefinitions.avatarHumanWaiting;
-		}
-		if(playerType == PlayerTypes.NETWORK){
-			return GameLayoutDefinitions.avatarNetWaiting;
-		}
-		return null;
+		return waitingSprite;
 	}
 
 	@Override
@@ -84,14 +73,5 @@ public class Avatar implements GameElement {
 
 	public boolean pointIsInsideEntity(final java.awt.Point point) {
 		return avatar.getRectangle().contains(point);
-	}
-
-	public void setPlayerType(final int playerType) {
-		this.playerType = playerType;
-		if(playing){
-			avatar.setSprite(currentAvatarSpritePlaying());
-		}else{
-			avatar.setSprite(currentAvatarSpriteWaiting());
-		}
 	}
 }

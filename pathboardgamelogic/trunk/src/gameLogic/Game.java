@@ -34,13 +34,7 @@ public class Game {
 	
 	public void addTurnListener(final TurnChangeListener turnChangeListener){
 		turnListeners.add(turnChangeListener);
-		if(gameState.isBottomPlayerTurn()){
-			turnChangeListener.changedToBottomTurn();
-		}else{
-			if(gameState.isBottomPlayerTurn()){
-				turnChangeListener.changedToTopTurn();
-			}
-		}
+		turnChangeListener.changedTurn(this);
 	}
 
 	public void play(final ValidPlay validPlay){
@@ -58,15 +52,16 @@ public class Game {
 	}
 
 	private void sendTurnChangedToChangeListeners(final GameState oldState) {
-		if(oldState.isTopPlayerTurn() && gameState.isBottomPlayerTurn()){
-			for (TurnChangeListener listener : turnListeners) {
-				listener.changedToBottomTurn();
-			}
+		boolean changedToBottom = oldState.isTopPlayerTurn() && gameState.isBottomPlayerTurn();
+		boolean changedToTop = oldState.isBottomPlayerTurn() && gameState.isTopPlayerTurn();
+		if(changedToBottom || changedToTop){
+			shoutToTurnChangedListeners();
 		}
-		else if(oldState.isBottomPlayerTurn() && gameState.isTopPlayerTurn()){
-			for (TurnChangeListener listener : turnListeners) {
-				listener.changedToTopTurn();
-			}
+	}
+
+	private void shoutToTurnChangedListeners() {
+		for (TurnChangeListener listener : turnListeners) {
+			listener.changedTurn(this);
 		}
 	}
 
@@ -167,5 +162,9 @@ public class Game {
 	public void restartGame() {
 		this.board.copyFrom(new Board());
 		this.gameState = GameStateFactory.getFirstState();
+	}
+
+	public void clearTurnListeners() {
+		turnListeners.clear();
 	}
 }

@@ -10,8 +10,4 @@ public class EntityPieceBottomWeak extends EntityPiece{
 		getEntity().setSprite(GameLayoutDefinitions.pieceBottom);
 	}
 
-	@Override
-	public void reset() {
-		//NOTAISSUE: unused event
-	}
 }

@@ -81,15 +81,8 @@ public class PiecesBoard implements GameElement{
 
 	@Override
 	public void draw(final Graphics g) {
-		//		board.draw(g, (int)getX(), (int)getY());
+		//Currently, board is drawn on background
 	}
-
-	public void gameTurnAdvanced() {
-		for (final EntityPiece p : cloneEntityPieces()) {
-			p.reset();
-		}
-	}
-
 
 	public double getBoardHeight(){
 		return Board.BOARD_SIZE*getGridHeight();
@@ -167,23 +160,7 @@ public class PiecesBoard implements GameElement{
 		}
 	}
 
-	public void selectedStrong(final Piece selectedPiece) {
-		for (final EntityPiece p : entityPieces) {
-			if(p.ownsPiece(selectedPiece)) {
-				((EntityPieceStrong)p).setSelected(true);
-			}
-		}
-	}
-
 	private void setNewPositionToEntityPieceGo(final EntityPiece p, final int line, final int column) {
 		p.setPointToGo(new Point(getXForPieceAt(column), getYForPieceAt(line)));
-	}
-
-	public void unselectedStrong(final Piece unselectedPiece) {
-		for (final EntityPiece p : entityPieces) {
-			if(p.ownsPiece(unselectedPiece)) {
-				((EntityPieceStrong)p).setSelected(false);
-			}
-		}
 	}
 }

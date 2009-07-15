@@ -15,7 +15,7 @@ public class MainPlayAsHuman extends Main{
 
 	@Override
 	protected void addAIPlayers() {
-		new AiControl(game, new AIPlayer(), true, true);
+		game.addTurnListener(new AiControl(new AIPlayer(), true, true));
 	}
 	
 	public static void main(final String[] args) throws IOException {

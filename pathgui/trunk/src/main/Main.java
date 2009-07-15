@@ -2,7 +2,6 @@ package main;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import playerTypes.PlayerTypes;
 import utils.Printer;
 
 
@@ -15,10 +14,12 @@ public class Main{
 	//TODO: listar ias para escolher
 
 	private static MainGameFrame frame;
+	private static boolean isTopAi;
+	private static boolean isBottomAi;
 
 	private static void defaultOptions() {
-		frame.setTopPlayerType(PlayerTypes.AI);
-		frame.setBottomPlayerType(PlayerTypes.HUMAN);
+		isTopAi = true;
+		isBottomAi = false;
 	}
 
 	/**
@@ -35,7 +36,6 @@ public class Main{
 		}
 		Printer.debug("Arguments: " + commandLine);
 
-		frame = new MainGameFrame();
 		final CommandLineParser commandLineParser = new CommandLineParser();
 		commandLineParser.parse(args);
 
@@ -48,24 +48,25 @@ public class Main{
 				processArguments(commandLineParser);
 			}
 		}
+		frame = new MainGameFrame(isTopAi,isBottomAi);
 		frame.setVisible(true);
 	}
 
 
 	private static void processArguments(final CommandLineParser commandLineParser) {
 		if(commandLineParser.isSetted(CommandLineParser.TOPAI)){
-			frame.setTopPlayerType(PlayerTypes.AI);
+			isTopAi = true;
 		}else{
-			frame.setTopPlayerType(PlayerTypes.HUMAN);
+			isTopAi = false;
 		}
 		if(commandLineParser.isSetted(CommandLineParser.BOTTOMAI)){
-			frame.setBottomPlayerType(PlayerTypes.AI);
+			isBottomAi = true;
 		}else{
-			frame.setBottomPlayerType(PlayerTypes.HUMAN);
+			isBottomAi = false;
 		}
 		if(commandLineParser.isSetted(CommandLineParser.LOCALGAME)){
-			frame.setBottomPlayerType(PlayerTypes.HUMAN);
-			frame.setTopPlayerType(PlayerTypes.HUMAN);
+			isTopAi = false;
+			isBottomAi = false;
 		}
 	}
 }

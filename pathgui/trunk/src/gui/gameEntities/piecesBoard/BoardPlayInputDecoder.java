@@ -14,25 +14,33 @@ import gameLogic.gameFlow.gameStates.StateVisitor;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ProcessPlay implements StateVisitor,MouseListener {
+public class BoardPlayInputDecoder implements StateVisitor,MouseListener {
 
 	private final Point startDrag = new Point();
 	private Point endDrag = new Point();
 	private final Game game;
-	private final boolean playingAsTop;
 	private final PiecesBoard piecesBoard;
-	private final ErrorListener errorListener;
+	private final List<ErrorListener> errorListeners = new ArrayList<ErrorListener>();
+	private final List<PlayListener> playListeners = new ArrayList<PlayListener>();
+	private final boolean processForTop;
+	private final boolean processForBottom;
 
-	public ProcessPlay(final boolean playingAsTop, final Game game,final PiecesBoard piecesBoard,final ErrorListener errorListener) {
-		this.playingAsTop = playingAsTop;
+	public BoardPlayInputDecoder(final boolean processForTop,final boolean processForBottom, final Game game,final PiecesBoard piecesBoard) {
+		this.processForTop = processForTop;
+		this.processForBottom = processForBottom;
 		this.game = game;
 		this.piecesBoard = piecesBoard;
-		this.errorListener = errorListener;
 	}
 
-	private boolean canProcessPlay(){
-		return playingAsTop && game.getCurrentState().isTopPlayerTurn() || !playingAsTop && game.getCurrentState().isBottomPlayerTurn();
+	public void addErrorListener(final ErrorListener errorListener){
+		errorListeners.add(errorListener);
+	}
+
+	public void addPlayListener(final PlayListener playListener){
+		playListeners.add(playListener);
 	}
 
 	@Override
@@ -46,7 +54,7 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		if(!canProcessPlay()) {
+		if(!shouldProcessThis()){
 			return;
 		}
 		final int mouseX = e.getX();
@@ -66,7 +74,7 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		if(!canProcessPlay()) {
+		if(!shouldProcessThis()){
 			return;
 		}
 		final int mouseX = e.getX();
@@ -83,7 +91,6 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		final int pieceLine = (int) ((mouseY - boardY1)/ piecesBoard.getGridHeight());
 		endDrag = new Point(pieceColumn, pieceLine);
 		visitToKnowHowToPlayAndPlay();
-		piecesBoard.refreshBoard(game.getBoard(),game.getCurrentState().getAlreadyMovedOrEmptySet());
 	}
 
 	@Override
@@ -100,10 +107,10 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		final int column = (int)startDrag.getX();
 		final java.awt.Point strongToMovePosition = new java.awt.Point(line,column);
 		final Piece strongToMove = game.getBoard().getPieceAt(strongToMovePosition);
-		if(playingAsTop && !strongToMove.isTopPlayerStrongPiece()){
+		if(game.isTopPlayerTurn() && !strongToMove.isTopPlayerStrongPiece()){
 			return;
 		}
-		if(!playingAsTop && !strongToMove.isBottomPlayerStrongPiece()){
+		if(game.isBottomPlayerTurn() && !strongToMove.isBottomPlayerStrongPiece()){
 			return;
 		}
 
@@ -120,8 +127,9 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		if(startDrag.getY() < endDrag.getY()){
 			direction = Play.DOWN;
 		}
-
-		tryToPlay(new Play(strongToMove.getId(), direction));
+		if(direction != 'x'){
+			tryToPlay(new Play(strongToMove.getId(), direction));
+		}
 	}
 
 	@Override
@@ -134,20 +142,48 @@ public class ProcessPlay implements StateVisitor,MouseListener {
 		tryToPlay(new Play((int)endDrag.getX()));
 	}
 
-	private void tryToPlay(final Play play){
-		if(play == null){
-			errorListener.error("Invalid play");
-			return;
-		}
-		try {
-			final ValidPlay validPlay = game.validatePlay(play, playingAsTop);
-			game.play(validPlay);
-		} catch (final InvalidPlayException invalidPlayException) {
-			errorListener.error(invalidPlayException.getMessage());
+	private void refreshBoard() {
+		piecesBoard.refreshBoard(game.getBoard(),game.getCurrentState().getAlreadyMovedOrEmptySet());
+	}
+
+	public void restartGame(){
+		game.restartGame();
+		refreshBoard();
+	}
+
+	private boolean shouldProcessThis() {
+		return processForTop && game.isTopPlayerTurn()||processForBottom && game.isBottomPlayerTurn();
+	}
+
+	private void shoutToErrorListeners(final String errorMessage){
+		for (final ErrorListener errorListener : errorListeners) {
+			errorListener.error(errorMessage);
 		}
 	}
 
-	public void visitToKnowHowToPlayAndPlay(){
+	private void shoutToPlayListeners(){
+		for (final PlayListener playListener : playListeners) {
+			playListener.played();
+		}
+	}
+
+	public void tryToPlay(final Play play){
+		if(play == null){
+			shoutToErrorListeners("Invalid play");
+			return;
+		}
+		try {
+			final ValidPlay validPlay = game.validatePlay(play, game.isTopPlayerTurn());
+			game.play(validPlay);
+		} catch (final InvalidPlayException invalidPlayException) {
+			shoutToErrorListeners(invalidPlayException.getMessage());
+			return;
+		}
+		refreshBoard();
+		shoutToPlayListeners();
+	}
+
+	private void visitToKnowHowToPlayAndPlay(){
 		game.getCurrentState().accept(this);
 	}
 }

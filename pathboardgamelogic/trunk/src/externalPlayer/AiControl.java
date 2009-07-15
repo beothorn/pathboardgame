@@ -13,36 +13,32 @@ import utils.Printer;
 
 public class AiControl implements TurnChangeListener {
 
-	private final Game game;
 	private final boolean isTopPlayer;
-	private final PlaySequenceValidator playSequenceValidator;
 	private final PathAI player;
 
-	public AiControl(final Game game, final PathAI player,	final boolean isTopPlayer) {
-		this(game,player,isTopPlayer,false);
+	public AiControl(final PathAI player,	final boolean isTopPlayer) {
+		this(player,isTopPlayer,false);
 	}
 	
-	public AiControl(final Game game, final PathAI player,final boolean isTopPlayer, final boolean stopPlayingOnGameEnd) {
-		this.game = game;
+	public AiControl(final PathAI player,final boolean isTopPlayer, final boolean stopPlayingOnGameEnd) {
 		this.player = player;
 		this.isTopPlayer = isTopPlayer;
-		playSequenceValidator = new PlaySequenceValidator(game);
-		game.addTurnListener(this);
 	}	
 	
-	private void aiError(Exception e) {
+	private void aiError(final Exception e,final Game game) {
 		Printer.error("Ai error (Ai was turned off): "+e);
-		unLockGame();
+		game.clearTurnListeners();
+		unLockGame(game);
 	}
 
-	private void unLockGame() {
+	private void unLockGame(final Game game) {
 		if(isTopPlayer)
 			game.setTopLocked(false);
 		else
 			game.setBottomLocked(false);
 	}
 
-	private void lockGame() {
+	private void lockGame(final Game game) {
 		if(isTopPlayer)
 			game.setTopLocked(true);
 		else
@@ -50,13 +46,13 @@ public class AiControl implements TurnChangeListener {
 	}
 
 
-	private boolean isBrainTurn() {
+	private boolean isBrainTurn(final Game game) {
 		return (game.isTopPlayerTurn() && isTopPlayer) || (game.isBottomPlayerTurn() && !isTopPlayer) && !game.isGameEnded();
 	}
 
-	public void play() {
-		if(isBrainTurn()){
-			lockGame();
+	private void play(final Game game) {
+		if(isBrainTurn(game)){
+			lockGame(game);
 			final boolean isTopPlayerTurn = game.isTopPlayerTurn();
 			final Board board;
 			if(isTopPlayerTurn){
@@ -72,35 +68,31 @@ public class AiControl implements TurnChangeListener {
 			try {
 				playSequence = new PlaySequence(aiPlay);
 			} catch (InvalidPlayStringException e) {
-				aiError(e);
+				aiError(e, game);
 				return;
 			}
 			final PlaySequence playSequenceForGame = isTopPlayerTurn ? GameUtils.invertPlay(playSequence) : playSequence;
 			Printer.debug("External player played: "+playSequenceForGame);
 			
 			final ValidPlaySequence validPlaySequence;
+			PlaySequenceValidator playSequenceValidator = new PlaySequenceValidator(game);
 			try {
 				validPlaySequence = playSequenceValidator.validatePlays(playSequenceForGame,isTopPlayerTurn);
+				playSequenceValidator.play(validPlaySequence);
 			}catch (InvalidPlayException e) {
-				aiError(e);
+				aiError(e, game);
 				return;
 			}
-			playSequenceValidator.play(validPlaySequence);
-			unLockGame();
+			unLockGame(game);
 		}
 	}
 
 	@Override
-	public void changedToBottomTurn() {
-		play();
+	public void changedTurn(final Game game){
+		play(game);
 	}
 
-	@Override
-	public void changedToTopTurn() {
-		play();
-	}
-
-	public void stopPlaying() {
+	public void stopPlaying(final Game game) {
 		game.removeTurnListener(this);
 	}
 }

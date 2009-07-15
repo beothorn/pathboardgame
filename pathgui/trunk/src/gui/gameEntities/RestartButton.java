@@ -1,6 +1,6 @@
 package gui.gameEntities;
 
-import gameLogic.Game;
+import gui.gameEntities.piecesBoard.BoardPlayInputDecoder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,18 +13,14 @@ public class RestartButton extends JButton{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final Game currentGame;
 
-	public RestartButton(final Game game) {
+	public RestartButton(final BoardPlayInputDecoder eventsProcessor) {
 		setText("Restart");
-		currentGame = game;
 		addActionListener(new ActionListener(){
-
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				currentGame.restartGame();
+				eventsProcessor.restartGame();
 			}
-
 		});
 	}
 }
