@@ -89,10 +89,16 @@ public class AiControl implements TurnChangeListener {
 
 	@Override
 	public void changedTurn(final Game game){
-		play(game);
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				play(game);
+			}
+		}).start();
 	}
 
 	public void stopPlaying(final Game game) {
 		game.removeTurnListener(this);
 	}
+
 }
