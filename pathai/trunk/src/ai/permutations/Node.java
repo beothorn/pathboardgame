@@ -88,10 +88,9 @@ public class Node {
 			board.play(validPlay, false);
 			evaluator.evaluatePlay(getPlaySequence(), board);
 		}		
-		// TODO: faster method to find winner (too heavy here)
-//		if(board.isGameEnded()){
-//			return;
-//		}		
+		if(board.isGameEnded()){
+			return;
+		}		
 		for (final Node n : childNodes) {
 			n.sendAllPlaysToEvaluator();
 		}

@@ -471,21 +471,34 @@ public class Board {
 		return false;
 	}
 
+	private static class SurelyNotWon{
+		public boolean top;
+		public boolean bottom;
+		public SurelyNotWon() {
+			top = false;
+			bottom =false;
+		}
+	}
+	
 	private int getWinner(){
 		
+		SurelyNotWon surelyNotWon = isThereAtLeastOnePieceInEachLine();
 		boolean topWins = false;
-		for(int column = 0;column<BOARD_SIZE && !topWins;column++){
-			final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
-			boolean isEvauatingTop = true;
-			topWins = scanPosition(0,column,piecesAlreadyUsedInPath,isEvauatingTop);
+		if(!surelyNotWon.top){
+			for(int column = 0;column<BOARD_SIZE && !topWins;column++){
+				final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
+				boolean isEvauatingTop = true;
+				topWins = scanPosition(0,column,piecesAlreadyUsedInPath,isEvauatingTop);
+			}
 		}
 		
-		
 		boolean bottomWins = false;
-		for(int column = 0;column<BOARD_SIZE && !bottomWins;column++){
-			final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
-			boolean isEvauatingTop = false;
-			bottomWins = scanPosition(BOARD_SIZE-1,column,piecesAlreadyUsedInPath,isEvauatingTop);
+		if(!surelyNotWon.bottom){
+			for(int column = 0;column<BOARD_SIZE && !bottomWins;column++){
+				final List<Piece> piecesAlreadyUsedInPath = new ArrayList<Piece>();
+				boolean isEvauatingTop = false;
+				bottomWins = scanPosition(BOARD_SIZE-1,column,piecesAlreadyUsedInPath,isEvauatingTop);
+			}
 		}
 
 		if(topWins && bottomWins)
@@ -498,13 +511,39 @@ public class Board {
 		return NO_PLAYER;
 	}
 	
+	private SurelyNotWon isThereAtLeastOnePieceInEachLine() {
+		SurelyNotWon surelyNotWon = new SurelyNotWon();
+		
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			boolean atLeastOneTop = false;
+			boolean atLeastOneBottom = false;
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if(board[line][column].isTopPlayerWeakPiece()){
+					atLeastOneTop = true;
+				}else if(board[line][column].isBottomPlayerWeakPiece()){
+					atLeastOneBottom = true;
+				}
+			}
+			if(!atLeastOneTop){
+				surelyNotWon.top = true;
+			}
+			if(!atLeastOneBottom){
+				surelyNotWon.bottom = true;
+			}
+			if(surelyNotWon.top && surelyNotWon.bottom){
+				return surelyNotWon;
+			}
+		}
+		return surelyNotWon;
+	}
+
 	public boolean isGameDraw() {
 		return getWinner() == Board.DRAW;
 	}
 
 		
 	public boolean isGameEnded() {
-		return isGameDraw() || isTopTheWinner() || isBottomTheWinner();
+		return getWinner() != NO_PLAYER;
 	}
 
 	public boolean isBottomTheWinner() {

@@ -13,7 +13,6 @@ import gameLogic.gameFlow.gameStates.GameState;
 
 public class AIPlayer implements PathAI{
 
-//	private final Logger logger = Logger.getLogger(AIPlayer.class);
 	private final PlayTree tree;
 
 	public AIPlayer() {

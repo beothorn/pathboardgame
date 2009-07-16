@@ -5,11 +5,11 @@
 	<property name="tempDir.src" value="${tempDir}/src" />
 	<property name="tempDir.bin" value="${tempDir}/bin" />
 
-	<property name="engineDir" value="../pathengine" />
+	<property name="engineDir" value="../../pathengine/trunk" />
 	<property name="engineDir.src" value="${engineDir}/src" />
-	<property name="logicDir" value="../pathboardgamelogic" />
+	<property name="logicDir" value="../../pathboardgamelogic/trunk" />
 	<property name="logicDir.src" value="${logicDir}/src" />
-	<property name="aiDir" value="../pathai" />
+	<property name="aiDir" value="../../pathai/trunk" />
 	<property name="aiDir.src" value="${aiDir}/src" />
 
 	<property name="gameDir" value="." />
