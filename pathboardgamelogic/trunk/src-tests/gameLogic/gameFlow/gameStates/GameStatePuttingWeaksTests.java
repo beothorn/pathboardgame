@@ -12,29 +12,18 @@ import org.junit.Test;
 import utils.GameUtils;
 
 public class GameStatePuttingWeaksTests {
-
-	private final String testMoveTopStrong = 
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- TS2 --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
-	
-	private final String testEndGame = 
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"TWK --- --- --- --- --- --- ---\n" +
-		"--- --- --- --- --- --- --- ---";
 	
 	@Test(expected = InvalidPlayException.class)
 	public void testPuttingWeaksMoveStrongPlay() throws InvalidPlayException{
+		final String testMoveTopStrong = 
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- TS2 --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingWeaks gameStatePuttingWeaks = new GameStatePuttingWeaks(isTopPlayerTurn);
 		final Play play = new Play(2,'u');
@@ -72,12 +61,32 @@ public class GameStatePuttingWeaksTests {
 	
 	@Test
 	public void testEndGame() throws InvalidPlayException{
+		final String almostEndedGame = 
+			"TWK --- TS1 TS2 TS3 --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"--- --- --- --- --- --- --- ---";
+		
+		final String testEndGame = 
+			"TWK --- TS1 TS2 TS3 --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---\n" +
+			"TWK --- --- --- --- --- --- ---";
 		boolean isTopPlayerTurn = true;
 		GameStatePuttingWeaks gameState = new GameStatePuttingWeaks(isTopPlayerTurn);
+		Board board = GameUtils.newBoardFromString(almostEndedGame);
 		Play play = new Play(0);
-		Board board = GameUtils.newBoardFromString(testEndGame);
 		ValidPlay validPlay = gameState.validatePlay(play, board, isTopPlayerTurn);
 		GameState newGameState = gameState.play(validPlay, board);
+		Assert.assertEquals(testEndGame, GameUtils.printBoard(board));
 		Assert.assertTrue(newGameState instanceof GameStateGameEnded);
 		Assert.assertTrue(newGameState.isGameEnded());
 	}
