@@ -16,7 +16,10 @@
    inkscape:version="0.46"
    version="1.0"
    sodipodi:docname="layout.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/lucas/workspace/pathboardgame/pathgui/trunk/src/sprites/layout.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -190,6 +193,44 @@
          d="M 0.4812912,0.4812912 L 729.54875,0.4812912"
          id="path3189" />
     </pattern>
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="997.56992"
+       height="1.913282"
+       patternTransform="matrix(1.569835,0,0,1.569835,-129.95969,-82.811309)"
+       id="pattern3983">
+      <g
+         id="g3262"
+         transform="translate(129.95969,82.811309)">
+        <path
+           style="fill:none;fill-rule:evenodd;stroke:#9f9f9f;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="M -129.45969,-82.311309 L 867.11023,-82.311309"
+           id="path2482" />
+        <path
+           id="path2484"
+           d="M -129.45969,-81.398027 L 867.11023,-81.398027"
+           style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+    </pattern>
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="913.01548"
+       height="2.8245335"
+       patternTransform="translate(-116.20972,-147.47996)"
+       id="pattern3998">
+      <g
+         id="g3994"
+         transform="translate(116.20972,147.47996)">
+        <path
+           style="fill:none;fill-rule:evenodd;stroke:#cccccc;stroke-width:1.41421354px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="M -115.50261,-146.77285 L 796.09866,-146.77285"
+           id="path3990" />
+        <path
+           id="path3992"
+           d="M -115.50261,-145.36253 L 796.09866,-145.36253"
+           style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.41421354px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+    </pattern>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -198,11 +239,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.74154355"
-     inkscape:cx="215.98806"
-     inkscape:cy="244.57364"
+     inkscape:zoom="1"
+     inkscape:cx="329.22341"
+     inkscape:cy="285.71515"
      inkscape:document-units="px"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="813"
@@ -225,13 +266,17 @@
      inkscape:label="fundo"
      style="display:inline">
     <rect
-       style="fill:url(#pattern4220);fill-opacity:1;stroke:#000000;stroke-width:1.075;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:url(#pattern3983);fill-opacity:1.0;stroke:#000000;stroke-width:1.07499999999999996;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect2403"
        width="730.26581"
        height="504.87549"
        x="1.0473893"
        y="1.4558933"
        ry="13.477095" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41421354000000021px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -101.51282,-118.3971 L 783.09889,-118.3971"
+       id="path4005" />
   </g>
   <g
      inkscape:groupmode="layer"
