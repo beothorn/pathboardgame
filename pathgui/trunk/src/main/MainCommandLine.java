@@ -13,14 +13,14 @@ import java.io.InputStreamReader;
 
 import utils.GameUtils;
 
-public class Main {
+public class MainCommandLine {
 	
 	private static final String VERSION = "0.2.010709";
 	protected final Game game;
 	private final PlaySequenceValidator playSequenceValidator;
 	private final GameUtils gameUtils = new GameUtils();
 
-	public Main(final String[] args) throws IOException {
+	public MainCommandLine(final String[] args) throws IOException {
 		game = new Game();
 		addAIPlayers();
 		playSequenceValidator = new PlaySequenceValidator(game);
@@ -86,7 +86,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new Main(args);		
+		new MainCommandLine(args);		
 	}
 
 	private static  boolean isArgument(final String arg,final String argValid) {

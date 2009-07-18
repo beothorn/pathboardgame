@@ -151,7 +151,7 @@ public class BoardPlayInputDecoder implements StateVisitor,TurnChangeListener,Mo
 
 	private void refreshBoard() {
 		if(piecesBoard!=null) {
-			piecesBoard.refreshBoard(game.getBoard(),game.getCurrentState().getAlreadyMovedOrEmptySet());
+			piecesBoard.refreshBoard(game.getCurrentState());
 		}
 	}
 

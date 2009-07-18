@@ -25,7 +25,7 @@ public class BoardGamePanel extends JGamePanel{
 		super(GameLayoutDefinitions.background);
 		game = new Game();
 
-		piecesBoard = new PiecesBoard(game.getBoard(),this,GameLayoutDefinitions.boardPosition);
+		piecesBoard = new PiecesBoard(game.getBoard(),game.getCurrentState(),this,GameLayoutDefinitions.boardPosition);
 		addGameElement(piecesBoard);
 		final boolean processForTop = true;
 		final boolean processForBottom = true;
@@ -49,6 +49,10 @@ public class BoardGamePanel extends JGamePanel{
 		final boolean isTopPlayer = processForTop;
 		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition,isTopAi,  isTopPlayer);
 		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition,isBottomAi, !isTopPlayer);
+
+		final TopPuttingPiecesDisplay topPuttingPiecesDisplay = new TopPuttingPiecesDisplay(this);
+		game.addTurnListener(topPuttingPiecesDisplay);
+		addMouseMotionListener(topPuttingPiecesDisplay);
 
 		addGameElement(avatarTop);
 		addGameElement(avatarBottom);

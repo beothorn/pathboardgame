@@ -2,19 +2,13 @@ package gui.gameEntities.piecesBoard.entityPiece;
 
 import gameLogic.board.piece.Piece;
 
-public class EntityPieceStrong extends EntityPiece {
 
-	private boolean moved = false;
+public abstract class EntityPieceStrong extends EntityPiece {
 
 	public EntityPieceStrong(final Piece p) {
 		super(p);
+		// TODO Auto-generated constructor stub
 	}
 
-	public boolean isMoved() {
-		return moved;
-	}
-
-	public void setMoved(final boolean moved) {
-		this.moved = moved;
-	}
+	public abstract void setState(final boolean moved,final boolean isPlaying) ;
 }

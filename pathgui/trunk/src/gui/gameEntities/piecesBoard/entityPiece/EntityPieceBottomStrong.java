@@ -11,12 +11,15 @@ public class EntityPieceBottomStrong extends EntityPieceStrong {
 	}
 
 	@Override
-	public void setMoved(final boolean moved) {
-		super.setMoved(moved);
+	public void setState(final boolean moved, final boolean isPlaying) {
 		if(moved) {
 			getEntity().setSprite(GameLayoutDefinitions.pieceMovedStrongBottom);
-		} else {
-			getEntity().setSprite(GameLayoutDefinitions.pieceStrongBottom);
+			return;
 		}
+		if(isPlaying){
+			getEntity().setSprite(GameLayoutDefinitions.pieceSelectedStrongBottom);
+			return;
+		}
+		getEntity().setSprite(GameLayoutDefinitions.pieceStrongBottom);
 	}
 }

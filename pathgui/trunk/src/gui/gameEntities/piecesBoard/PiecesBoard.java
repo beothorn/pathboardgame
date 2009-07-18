@@ -4,6 +4,12 @@ import gameEngine.JGamePanel;
 import gameEngine.gameMath.Point;
 import gameLogic.board.Board;
 import gameLogic.board.piece.Piece;
+import gameLogic.gameFlow.gameStates.GameState;
+import gameLogic.gameFlow.gameStates.GameStateGameEnded;
+import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
+import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
+import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
+import gameLogic.gameFlow.gameStates.StateVisitor;
 import gui.GameLayoutDefinitions;
 import gui.gameEntities.piecesBoard.entityPiece.EntityPiece;
 import gui.gameEntities.piecesBoard.entityPiece.EntityPieceFactory;
@@ -11,34 +17,31 @@ import gui.gameEntities.piecesBoard.entityPiece.EntityPieceStrong;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PiecesBoard implements GameElement{
+public class PiecesBoard implements GameElement,StateVisitor{
 
 	final static private double gridHeight = GameLayoutDefinitions.gridSize;
 	final static private double gridWidth = GameLayoutDefinitions.gridSize;
 	private final JGamePanel panel;
 	private final List<EntityPiece> entityPieces;
 	private final Point position;
+	private final Board board;
 
-	public PiecesBoard(final Board board,final JGamePanel panel,final Point position) {
-		this(board,new LinkedHashSet<Piece>(),panel,position);
-	}
-
-	public PiecesBoard(final Board board,final Set<Piece> alreadyMoved,final JGamePanel panel,final Point position) {
+	public PiecesBoard(final Board board,final GameState gameState,final JGamePanel panel,final Point position) {
+		this.board = board;
 		this.panel = panel;
 		this.position = position;
 		entityPieces = new ArrayList<EntityPiece>();
-		refreshBoard(board, alreadyMoved);
+		refreshBoard(gameState);
 	}
 
 	private ArrayList<EntityPiece> cloneEntityPieces() {
 		return new ArrayList<EntityPiece>(entityPieces);
 	}
 
-	private boolean correspondToALogicPiece(final EntityPiece p,final Board board) {
+	private boolean correspondToALogicPiece(final EntityPiece p) {
 		for (int i = 0; i< Board.BOARD_SIZE; i++) {
 			for (int j = 0; j < Board.BOARD_SIZE; j++) {
 				if(p.ownsPiece(board.getPieceAt(i, j))) {
@@ -64,10 +67,10 @@ public class PiecesBoard implements GameElement{
 		setNewPositionToEntityPieceGo(newPiece,line,column);
 	}
 
-	private void destroyDiscardedPieces(final Board board){
+	private void destroyDiscardedPieces(){
 		final ArrayList<EntityPiece> piecesCopy = cloneEntityPieces();
 		for (final EntityPiece entityPiece : piecesCopy) {
-			if(!correspondToALogicPiece(entityPiece, board)) {
+			if(!correspondToALogicPiece(entityPiece)) {
 				entityPiece.setMarkedToBeDestroyed(true);
 				entityPieces.remove(entityPiece);
 			}
@@ -116,6 +119,15 @@ public class PiecesBoard implements GameElement{
 		return getY()+line*getGridHeight();
 	}
 
+	private void internalRefreshBoard(final boolean isBottomMovingStrongsTurn,final boolean isTopMovingStrongsTurn,final Set<Piece> alreadyMoved) {
+		for (int i = 0; i< Board.BOARD_SIZE; i++) {
+			for (int j = 0; j < Board.BOARD_SIZE; j++) {
+				refreshPieceAt(board.getPieceAt(i, j),isBottomMovingStrongsTurn,isTopMovingStrongsTurn,alreadyMoved, i, j);
+			}
+		}
+		destroyDiscardedPieces();
+	}
+
 	@Override
 	public boolean markedToBeDestroyed() {
 		return false;
@@ -129,16 +141,31 @@ public class PiecesBoard implements GameElement{
 		return newPiece;
 	}
 
-	public void refreshBoard(final Board board,final Set<Piece> alreadyMoved){
-		for (int i = 0; i< Board.BOARD_SIZE; i++) {
-			for (int j = 0; j < Board.BOARD_SIZE; j++) {
-				refreshPieceAt(board.getPieceAt(i, j),alreadyMoved, i, j);
-			}
-		}
-		destroyDiscardedPieces(board);
+	@Override
+	public void onGameEnded(final GameStateGameEnded gameStateGameEnded) {
+		internalRefreshBoard(false,false,gameStateGameEnded.getAlreadyMovedOrEmptySet());
 	}
 
-	private void refreshPieceAt(final Piece logicPiece,final Set<Piece> alreadyMoved, final int line, final int column) {
+	@Override
+	public void onMovingStrongs(final GameStateMovingStrongs gameStateMovingStrongs) {
+		internalRefreshBoard(gameStateMovingStrongs.isBottomPlayerTurn(),gameStateMovingStrongs.isTopPlayerTurn(),gameStateMovingStrongs.getAlreadyMovedOrEmptySet());
+	}
+
+	@Override
+	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs) {
+		internalRefreshBoard(false,false,gameStatePuttingStrongs.getAlreadyMovedOrEmptySet());
+	}
+
+	@Override
+	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
+		internalRefreshBoard(false,false,gameStatePuttingWeaks.getAlreadyMovedOrEmptySet());
+	}
+
+	public void refreshBoard(final GameState gameState){
+		gameState.accept(this);
+	}
+
+	private void refreshPieceAt(final Piece logicPiece,final boolean isBottomMovingStrongsTurn,final boolean isTopMovingStrongsTurn,final Set<Piece> alreadyMoved, final int line, final int column) {
 		if(!logicPiece.isEmpty()){
 			for (final EntityPiece entityPiece : entityPieces) {
 				if(entityPiece.ownsPiece(logicPiece)){
@@ -147,9 +174,15 @@ public class PiecesBoard implements GameElement{
 						final EntityPieceStrong entityPieceStrong = (EntityPieceStrong)entityPiece;
 						final boolean pieceAlreadyMoved = alreadyMoved.contains(logicPiece);
 						if(pieceAlreadyMoved){
-							entityPieceStrong.setMoved(true);
+							entityPieceStrong.setState(true,true);
 						}else{
-							entityPieceStrong.setMoved(false);
+							final boolean isPlayingBottom = isBottomMovingStrongsTurn && logicPiece.isBottomPlayerStrongPiece();
+							final boolean isPlayingTop = isTopMovingStrongsTurn && logicPiece.isTopPlayerStrongPiece();
+							if(isPlayingBottom || isPlayingTop) {
+								entityPieceStrong.setState(false,true);
+							}else{
+								entityPieceStrong.setState(false,false);
+							}
 						}
 					}
 					setNewPositionToEntityPieceGo(entityPiece,line,column);

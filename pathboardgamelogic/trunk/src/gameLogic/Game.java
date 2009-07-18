@@ -66,9 +66,7 @@ public class Game {
 	}
 
 	public Board getBoard() {
-		final Board boardCopy = new Board();
-		boardCopy.copyFrom(board);
-		return boardCopy;
+		return board;
 	}
 
 	public boolean isBottomPlayerTurn() {
