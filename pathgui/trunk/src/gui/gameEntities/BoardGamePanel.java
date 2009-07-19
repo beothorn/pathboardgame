@@ -51,7 +51,7 @@ public class BoardGamePanel extends JGamePanel{
 		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition,isBottomAi, !isTopPlayer);
 
 		final TopPuttingPiecesDisplay topPuttingPiecesDisplay = new TopPuttingPiecesDisplay(this);
-		game.addTurnListener(topPuttingPiecesDisplay);
+		game.addPhaseChangeListener(topPuttingPiecesDisplay);
 		addMouseMotionListener(topPuttingPiecesDisplay);
 
 		addGameElement(avatarTop);

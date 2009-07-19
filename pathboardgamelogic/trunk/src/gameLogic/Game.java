@@ -17,10 +17,10 @@ public class Game {
 	private GameState gameState;
 	private final Board board;
 	private final List<TurnChangeListener> turnListeners = new ArrayList<TurnChangeListener>();
+	private final List<PhaseChangeListener> phaseListeners = new ArrayList<PhaseChangeListener>();
 	private boolean topLocked = false;
 	private boolean bottomLocked = false;
 	private boolean gravityAfterPlay = true;
-	private boolean stateChanged;
 
 	public Game() {
 		this(new Board(), GameStateFactory.getFirstState());
@@ -36,13 +36,16 @@ public class Game {
 		turnListeners.add(turnChangeListener);
 		turnChangeListener.changedTurn(this);
 	}
+	
+	public void addPhaseChangeListener(final PhaseChangeListener phaseChangeListener){
+		phaseListeners.add(phaseChangeListener);
+		phaseChangeListener.changedPhase(this);
+	}
 
 	public void play(final ValidPlay validPlay){
 		GameState newGameState = gameState.play(validPlay,board);
-		if(newGameState == gameState){
-			this.stateChanged = false;
-		}else{
-			this.stateChanged = true;
+		if(newGameState != gameState){
+			shoutToPhaseChangedListeners();//TODO: make clear the difference between turn and phase
 		}
 		final GameState oldState = gameState;
 		gameState = newGameState;
@@ -62,6 +65,12 @@ public class Game {
 	private void shoutToTurnChangedListeners() {
 		for (TurnChangeListener listener : turnListeners) {
 			listener.changedTurn(this);
+		}
+	}
+	
+	private void shoutToPhaseChangedListeners() {
+		for (PhaseChangeListener listener : phaseListeners) {
+			listener.changedPhase(this);
 		}
 	}
 
@@ -105,10 +114,6 @@ public class Game {
 
 	public boolean isGameDraw() {
 		return board.isGameDraw();
-	}
-	
-	public boolean stateChanged() {
-		return stateChanged;
 	}
 
 	public boolean isGravityAfterPlay() {

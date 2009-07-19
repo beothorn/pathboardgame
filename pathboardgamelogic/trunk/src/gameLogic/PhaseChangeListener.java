@@ -1,5 +1,5 @@
 package gameLogic;
 
 public interface PhaseChangeListener {
-	//TODO: must implement for topputtingpiece display to work
+	public void changedPhase(final Game game);
 }

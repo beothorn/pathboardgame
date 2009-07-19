@@ -3,7 +3,7 @@ package gui.gameEntities;
 import gameEngine.JGamePanel;
 import gameEngine.gameMath.Point;
 import gameLogic.Game;
-import gameLogic.TurnChangeListener;
+import gameLogic.PhaseChangeListener;
 import gameLogic.gameFlow.gameStates.GameStateGameEnded;
 import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
@@ -14,7 +14,7 @@ import gui.gameEntities.piecesBoard.entityPiece.EntityPieceTopWeak;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class TopPuttingPiecesDisplay implements MouseMotionListener,TurnChangeListener,StateVisitor{
+public class TopPuttingPiecesDisplay implements MouseMotionListener,PhaseChangeListener,StateVisitor{
 
 	private final EntityPieceTopWeak entityPieceTopWeak;
 
@@ -25,7 +25,7 @@ public class TopPuttingPiecesDisplay implements MouseMotionListener,TurnChangeLi
 	}
 
 	@Override
-	public void changedTurn(final Game game) {
+	public void changedPhase(final Game game) {
 		game.getCurrentState().accept(this);
 	}
 
@@ -56,7 +56,11 @@ public class TopPuttingPiecesDisplay implements MouseMotionListener,TurnChangeLi
 
 	@Override
 	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
-		entityPieceTopWeak.setVisible(true);
+		if(gameStatePuttingWeaks.isTopPlayerTurn()) {
+			entityPieceTopWeak.setVisible(true);
+		} else {
+			entityPieceTopWeak.setVisible(false);
+		}
 	}
 
 }
