@@ -6,6 +6,8 @@ import java.awt.Dimension;
 
 public class GameLayoutDefinitions {
 
+	//TODO: change into instance passed on constructor
+
 
 	//Constants
 	public static final String gameName = "Path";
@@ -22,7 +24,7 @@ public class GameLayoutDefinitions {
 
 	private static final int OFFSET = 5;
 	private static final int ALL_BOX_X = OFFSET;
-	private static final int BOARD_SIZE = PIECE_SIZE * 8;
+	public static final int BOARD_SIZE = PIECE_SIZE * 8;
 
 	private static final int BUTTONS_TOP_BOX_X = ALL_BOX_X+BUTTON_RESTART_SIZE;
 	private static final int BUTTONS_TOP_BOX_Y = OFFSET;
@@ -46,6 +48,8 @@ public class GameLayoutDefinitions {
 	//
 	public static final java.awt.Point buttomNextStagePosition = new java.awt.Point(BOARD_BOX_X, BOARD_BOX_Y);
 	public static final Point boardPosition = new Point(28, 68);
+	public static final Point topPuttingPreviewPosition = new Point(28, 68-gridSize);
+	public static final Point bottomPuttingPreviewPosition = new Point(28, 68+BOARD_SIZE);
 	public static final java.awt.Point buttomRestartPosition = new java.awt.Point((int) (boardPosition.getX()+BOARD_SIZE), BOARD_BOX_Y);
 
 	public static final Point avatarBottomPosition = new Point(BUTTONS_BOTTOM_BOX_X,BUTTONS_BOTTOM_BOX_Y);

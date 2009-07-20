@@ -75,8 +75,4 @@ public abstract class EntityPiece implements GameElement{
 	public void setPosition(final Point p){
 		getEntity().setPosition(p);
 	}
-
-	public void setVisible(final boolean visible){
-		entity.setVisible(visible);
-	}
 }

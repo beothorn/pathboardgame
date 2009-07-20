@@ -44,11 +44,11 @@ public class Game {
 
 	public void play(final ValidPlay validPlay){
 		GameState newGameState = gameState.play(validPlay,board);
+		final GameState oldState = gameState;
 		if(newGameState != gameState){
+			gameState = newGameState;
 			shoutToPhaseChangedListeners();//TODO: make clear the difference between turn and phase
 		}
-		final GameState oldState = gameState;
-		gameState = newGameState;
 		sendTurnChangedToChangeListeners(oldState);
 		if(isGravityAfterPlay())
 			board.applyGravity();
