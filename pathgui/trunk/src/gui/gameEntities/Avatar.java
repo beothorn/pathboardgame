@@ -3,7 +3,6 @@ package gui.gameEntities;
 import gameEngine.GameElement;
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Point;
-import gui.GameLayoutDefinitions;
 
 import java.awt.Graphics;
 
@@ -15,14 +14,10 @@ public class Avatar implements GameElement {
 	private final String playingSprite;
 	private final String waitingSprite;
 
-	public Avatar(final Point position, final boolean isAi, final boolean isTopPlayer) {
-		if(isAi){
-			playingSprite = GameLayoutDefinitions.avatarPCPlaying;
-			waitingSprite = GameLayoutDefinitions.avatarPCWaiting;
-		}else{
-			playingSprite = GameLayoutDefinitions.avatarHumanPlaying;
-			waitingSprite = GameLayoutDefinitions.avatarHumanPlaying;
-		}
+	public Avatar(final Point position, final boolean isTopPlayer, final String playingSprite, final String waitingSprite) {
+
+		this.playingSprite = playingSprite;
+		this.waitingSprite = waitingSprite;
 
 		this.isTopPlayer = isTopPlayer;
 		final Point avatarPosition = position.copy();

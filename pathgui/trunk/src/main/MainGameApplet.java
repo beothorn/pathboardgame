@@ -1,5 +1,6 @@
 package main;
 
+import gui.GameDefinitions;
 import gui.gameEntities.BoardGamePanel;
 
 import java.awt.BorderLayout;
@@ -18,7 +19,7 @@ public class MainGameApplet extends JApplet {
 		setLayout(new BorderLayout());
 		final boolean isTopAi = true;
 		final boolean isBottomAi = false;
-		final BoardGamePanel mainGamePanel = new BoardGamePanel(isTopAi,isBottomAi);
+		final BoardGamePanel mainGamePanel = new BoardGamePanel(isTopAi,isBottomAi,new GameDefinitions());
 		add(mainGamePanel,BorderLayout.CENTER);
 	}
 }

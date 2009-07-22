@@ -1,6 +1,6 @@
 package main;
 
-import gui.GameLayoutDefinitions;
+import gui.GameDefinitions;
 import gui.gameEntities.BoardGamePanel;
 
 import java.awt.BorderLayout;
@@ -18,12 +18,13 @@ public class MainGameFrame extends JFrame{
 	private final BoardGamePanel mainGameCanvas;
 
 	public MainGameFrame(final boolean isTopAi, final boolean isBottomAi) {
-		setTitle(GameLayoutDefinitions.gameName);
+		final GameDefinitions gameDefinitions = new GameDefinitions();
+		setTitle(gameDefinitions.getGameName());
 		setLayout(new BorderLayout());
-		mainGameCanvas = new BoardGamePanel(isTopAi,isBottomAi);
+		mainGameCanvas = new BoardGamePanel(isTopAi,isBottomAi,gameDefinitions);
 
 		setResizable(false);
-		setPreferredSize(GameLayoutDefinitions.screenSize);
+		setPreferredSize(gameDefinitions.getScreenSize());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(mainGameCanvas,BorderLayout.CENTER);
 		pack();

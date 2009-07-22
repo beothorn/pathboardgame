@@ -9,7 +9,7 @@ import gameLogic.board.piece.Piece;
 import java.awt.Graphics;
 
 
-public abstract class EntityPiece implements GameElement{
+public class EntityPiece implements GameElement{
 
 	private Entity entity;
 	private Piece logicPiece;
@@ -17,10 +17,22 @@ public abstract class EntityPiece implements GameElement{
 	private final MoveToAndStop moveToAndStop;
 	private static final int snappingRadius = 10;
 	private static final int speed = 250;
+	private final String normalSprite;
+	private final String movedSprite;
+	private final String playingSprite;
 
-	public EntityPiece(final Piece p) {
+
+	public EntityPiece(final Piece p, final String sprite){
+		this(p,sprite,sprite,sprite);
+	}
+
+	public EntityPiece(final Piece p, final String normalSprite, final String movedSprite, final String playingSprite) {
+		this.normalSprite = normalSprite;
+		this.movedSprite = movedSprite;
+		this.playingSprite = playingSprite;
 		setPiece(p);
 		setEntity(new Entity(0, 0));
+		entity.setSprite(normalSprite);
 		final boolean killOnSnap = false;
 		moveToAndStop = new MoveToAndStop(new Point(),speed, snappingRadius,killOnSnap,getEntity());
 	}
@@ -74,5 +86,17 @@ public abstract class EntityPiece implements GameElement{
 
 	public void setPosition(final Point p){
 		getEntity().setPosition(p);
+	}
+
+	public void setState(final boolean moved, final boolean isPlaying) {
+		if(moved) {
+			getEntity().setSprite(movedSprite);
+			return;
+		}
+		if(isPlaying){
+			getEntity().setSprite(playingSprite);
+			return;
+		}
+		getEntity().setSprite(normalSprite);
 	}
 }

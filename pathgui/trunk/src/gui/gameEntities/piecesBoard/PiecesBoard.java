@@ -1,5 +1,4 @@
 package gui.gameEntities.piecesBoard;
-import gameEngine.GameElement;
 import gameEngine.JGamePanel;
 import gameEngine.gameMath.Point;
 import gameLogic.board.Board;
@@ -10,29 +9,24 @@ import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
 import gameLogic.gameFlow.gameStates.StateVisitor;
-import gui.GameLayoutDefinitions;
+import gui.GameDefinitions;
 import gui.gameEntities.piecesBoard.entityPiece.EntityPiece;
-import gui.gameEntities.piecesBoard.entityPiece.EntityPieceFactory;
-import gui.gameEntities.piecesBoard.entityPiece.EntityPieceStrong;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class PiecesBoard implements GameElement,StateVisitor{
+public class PiecesBoard implements StateVisitor{
 
-	final static private double gridHeight = GameLayoutDefinitions.gridSize;
-	final static private double gridWidth = GameLayoutDefinitions.gridSize;
 	private final JGamePanel panel;
 	private final List<EntityPiece> entityPieces;
-	private final Point position;
 	private final Board board;
+	private final GameDefinitions gameDefinitions;
 
-	public PiecesBoard(final Board board,final GameState gameState,final JGamePanel panel,final Point position) {
+	public PiecesBoard(final Board board,final GameState gameState,final JGamePanel panel,final GameDefinitions gameDefinitions) {
+		this.gameDefinitions = gameDefinitions;
 		this.board = board;
 		this.panel = panel;
-		this.position = position;
 		entityPieces = new ArrayList<EntityPiece>();
 		refreshBoard(gameState);
 	}
@@ -77,16 +71,6 @@ public class PiecesBoard implements GameElement,StateVisitor{
 		}
 	}
 
-	@Override
-	public void doStep(final long delta) {
-		//NOTAISSUE: unused event
-	}
-
-	@Override
-	public void draw(final Graphics g) {
-		//Currently, board is drawn on background
-	}
-
 	public double getBoardHeight(){
 		return Board.BOARD_SIZE*getGridHeight();
 	}
@@ -96,15 +80,15 @@ public class PiecesBoard implements GameElement,StateVisitor{
 	}
 
 	public double getGridHeight() {
-		return gridHeight;
+		return gameDefinitions.getGridHeight();
 	}
 
 	public double getGridWidth() {
-		return gridWidth;
+		return gameDefinitions.getGridWidth();
 	}
 
 	public double getX() {
-		return position.getX();
+		return gameDefinitions.getBoardX();
 	}
 
 	private double getXForPieceAt(final int column){
@@ -112,7 +96,7 @@ public class PiecesBoard implements GameElement,StateVisitor{
 	}
 
 	public double getY() {
-		return position.getY();
+		return gameDefinitions.getBoardY();
 	}
 
 	private double getYForPieceAt(final int line){
@@ -128,13 +112,8 @@ public class PiecesBoard implements GameElement,StateVisitor{
 		destroyDiscardedPieces();
 	}
 
-	@Override
-	public boolean markedToBeDestroyed() {
-		return false;
-	}
-
 	private EntityPiece newPieceOwning(final Piece logicPiece) {
-		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece);
+		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece,gameDefinitions);
 		entityPieces.add(newPiece);
 		panel.addGameElement(newPiece);
 		panel.addStepAction(newPiece.getStepAction());
@@ -170,18 +149,16 @@ public class PiecesBoard implements GameElement,StateVisitor{
 			for (final EntityPiece entityPiece : entityPieces) {
 				if(entityPiece.ownsPiece(logicPiece)){
 					if(logicPiece.isStrong()){
-						//TODO: CLassCast??? Something is wrong here
-						final EntityPieceStrong entityPieceStrong = (EntityPieceStrong)entityPiece;
 						final boolean pieceAlreadyMoved = alreadyMoved.contains(logicPiece);
 						if(pieceAlreadyMoved){
-							entityPieceStrong.setState(true,true);
+							entityPiece.setState(true,true);
 						}else{
 							final boolean isPlayingBottom = isBottomMovingStrongsTurn && logicPiece.isBottomPlayerStrongPiece();
 							final boolean isPlayingTop = isTopMovingStrongsTurn && logicPiece.isTopPlayerStrongPiece();
 							if(isPlayingBottom || isPlayingTop) {
-								entityPieceStrong.setState(false,true);
+								entityPiece.setState(false,true);
 							}else{
-								entityPieceStrong.setState(false,false);
+								entityPiece.setState(false,false);
 							}
 						}
 					}

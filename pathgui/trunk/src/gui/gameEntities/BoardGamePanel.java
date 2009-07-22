@@ -3,7 +3,7 @@ package gui.gameEntities;
 import externalPlayer.AiControl;
 import gameEngine.JGamePanel;
 import gameLogic.Game;
-import gui.GameLayoutDefinitions;
+import gui.GameDefinitions;
 import gui.gameEntities.piecesBoard.BoardPlayInputDecoder;
 import gui.gameEntities.piecesBoard.PiecesBoard;
 import ai.AIPlayer;
@@ -14,21 +14,14 @@ public class BoardGamePanel extends JGamePanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final Avatar avatarBottom;
-	private final Avatar avatarTop;
-	private final Game game;
-	private final NextStageButton nextStageButton;
-	private final RestartButton restartButton;
-	private final PiecesBoard piecesBoard;
 
-	public BoardGamePanel(final boolean isTopAi, final boolean isBottomAi) {
-		super(GameLayoutDefinitions.background);
-		game = new Game();
+	public BoardGamePanel(final boolean isTopAi, final boolean isBottomAi, final GameDefinitions gameDefinitions) {
+		super(gameDefinitions.getBackground());
+		final Game game = new Game();
 
-		piecesBoard = new PiecesBoard(game.getBoard(),game.getCurrentState(),this,GameLayoutDefinitions.boardPosition);
-		addGameElement(piecesBoard);
-		final boolean processForTop = true;
-		final boolean processForBottom = true;
+		final PiecesBoard piecesBoard = new PiecesBoard(game.getBoard(),game.getCurrentState(),this,gameDefinitions);
+		final boolean processForTop = !isTopAi;
+		final boolean processForBottom = !isBottomAi;
 		final BoardPlayInputDecoder processMouseEventForBoard = new BoardPlayInputDecoder(processForTop,processForBottom,game,piecesBoard);
 		addMouseListener(processMouseEventForBoard);
 		if(isTopAi){
@@ -37,27 +30,34 @@ public class BoardGamePanel extends JGamePanel{
 		if(isBottomAi){
 			game.addTurnListener(new AiControl(new AIPlayer(), false));
 		}
-		nextStageButton = new NextStageButton(processMouseEventForBoard);
-		nextStageButton.setLocation(GameLayoutDefinitions.buttomNextStagePosition);
-		restartButton = new RestartButton(processMouseEventForBoard);
-		restartButton.setLocation(GameLayoutDefinitions.buttomRestartPosition);
+		final NextStageButton nextStageButton = new NextStageButton(processMouseEventForBoard);
+		nextStageButton.setLocation(gameDefinitions.getButtomNextStagePosition());
+
+		final RestartButton restartButton = new RestartButton(processMouseEventForBoard);
+		restartButton.setLocation(gameDefinitions.getButtomRestartPosition());
 
 		final ErrorMessage errorMessageShower = new ErrorMessage(this);
 		addGameElement(errorMessageShower);
 		processMouseEventForBoard.addErrorListener(errorMessageShower);
 
-		final boolean isTopPlayer = processForTop;
-		avatarTop = new Avatar(GameLayoutDefinitions.avatarTopPosition,isTopAi,  isTopPlayer);
-		avatarBottom = new Avatar(GameLayoutDefinitions.avatarBottomPosition,isBottomAi, !isTopPlayer);
+		//		if(isTopAi){
+		//			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
+		//		}else{
+		//			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
+		//		}
+		//
+		//		if(isBottomAi){
+		//			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
+		//		}else{
+		//			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
+		//		}
 
-		final PuttingPiecesDisplay topPuttingPiecesDisplay = PuttingPiecesDisplay.getTopDisplay(this,GameLayoutDefinitions.topPuttingPreviewPosition);
+		final PuttingPiecesDisplay topPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getTopPuttingPreviewPosition(), gameDefinitions.getPieceTop(), gameDefinitions.getPieceStrongTop(),true,gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
 		game.addPhaseChangeListener(topPuttingPiecesDisplay);
 
-		final PuttingPiecesDisplay bottomPuttingPiecesDisplay = PuttingPiecesDisplay.getBottomDisplay(this,GameLayoutDefinitions.bottomPuttingPreviewPosition);
+		final PuttingPiecesDisplay bottomPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getBottomPuttingPreviewPosition(), gameDefinitions.getPieceBottom(), gameDefinitions.getPieceStrongBottom(),false,gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
 		game.addPhaseChangeListener(bottomPuttingPiecesDisplay);
 
-		addGameElement(avatarTop);
-		addGameElement(avatarBottom);
 		add(nextStageButton);
 		add(restartButton);
 	}

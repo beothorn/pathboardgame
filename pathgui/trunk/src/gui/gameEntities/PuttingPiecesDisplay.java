@@ -10,7 +10,6 @@ import gameLogic.gameFlow.gameStates.GameStateMovingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
 import gameLogic.gameFlow.gameStates.StateVisitor;
-import gui.GameLayoutDefinitions;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -20,20 +19,16 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 	private final Entity entityPieceWeak;
 	private final Entity entityPieceStrong;
 
-	final static private double gridWidth = GameLayoutDefinitions.gridSize;
-	public static PuttingPiecesDisplay getBottomDisplay(final JGamePanel gamePanel,final Point boardPosition) {
-		return new 	PuttingPiecesDisplay(gamePanel, boardPosition, GameLayoutDefinitions.pieceBottom, GameLayoutDefinitions.pieceStrongBottom,false);
-	}
-
-	public static PuttingPiecesDisplay getTopDisplay(final JGamePanel gamePanel,final Point boardPosition) {
-		return new 	PuttingPiecesDisplay(gamePanel, boardPosition, GameLayoutDefinitions.pieceTop, GameLayoutDefinitions.pieceStrongTop,true);
-	}
 
 	private final int x;
 	private final int y;
 	private final boolean isTop;
+	private final int boardSize;
+	private final int gridWidth;
 
-	private PuttingPiecesDisplay(final JGamePanel gamePanel,final Point position, final String weakPieceSprite, final String strongPieceSprite,final boolean isTop) {
+	public PuttingPiecesDisplay(final JGamePanel gamePanel,final Point position, final String weakPieceSprite, final String strongPieceSprite,final boolean isTop,final int boardSize, final int gridWidth) {
+		this.boardSize = boardSize;
+		this.gridWidth = gridWidth;
 		this.isTop = isTop;
 		x = (int)position.getX();
 		y = (int)position.getY();
@@ -64,11 +59,11 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 		final int mouseX = e.getX();
-		if(mouseX < x||mouseX>x+GameLayoutDefinitions.BOARD_SIZE){
+		if(mouseX < x||mouseX>x+boardSize){
 			return;
 		}
-		final int wichSquare = (int)((mouseX-x)/gridWidth);
-		final int pieceX = (int) (wichSquare*gridWidth)+x;
+		final int wichSquare = (mouseX-x)/gridWidth;
+		final int pieceX = wichSquare*gridWidth+x;
 		entityPieceWeak.setPosition(pieceX,y);
 		entityPieceStrong.setPosition(pieceX,y);
 	}
