@@ -40,17 +40,17 @@ public class BoardGamePanel extends JGamePanel{
 		addGameElement(errorMessageShower);
 		processMouseEventForBoard.addErrorListener(errorMessageShower);
 
-		//		if(isTopAi){
-		//			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
-		//		}else{
-		//			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
-		//		}
-		//
-		//		if(isBottomAi){
-		//			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
-		//		}else{
-		//			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
-		//		}
+		if(isTopAi){
+			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
+		}else{
+			addGameElement(new Avatar(gameDefinitions.getAvatarTopPosition(), true, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
+		}
+
+		if(isBottomAi){
+			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarPCPlaying(), gameDefinitions.getAvatarPCWaiting()));
+		}else{
+			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
+		}
 
 		final PuttingPiecesDisplay topPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getTopPuttingPreviewPosition(), gameDefinitions.getPieceTop(), gameDefinitions.getPieceStrongTop(),true,gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
 		game.addPhaseChangeListener(topPuttingPiecesDisplay);

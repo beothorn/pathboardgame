@@ -6,7 +6,7 @@ import java.awt.Dimension;
 
 public class GameDefinitions {
 
-	private static final int PIECE_SIZE = 46;
+	private static final int PIECE_SIZE = 50;
 	private static final int BOARD_SIZE = PIECE_SIZE * 8;
 
 	public Point getAvatarBottomPosition() {
@@ -54,7 +54,7 @@ public class GameDefinitions {
 	}
 
 	public Point getBottomPuttingPreviewPosition() {
-		return new Point(28, 68+BOARD_SIZE);
+		return new Point(getBoardX(), getBoardY() +BOARD_SIZE);
 	}
 
 	public java.awt.Point getButtomNextStagePosition() {
@@ -114,7 +114,7 @@ public class GameDefinitions {
 	}
 
 	public Point getTopPuttingPreviewPosition() {
-		return new Point(28, 68-PIECE_SIZE);
+		return new Point(getBoardX(), getBoardY()-PIECE_SIZE);
 	}
 
 }
