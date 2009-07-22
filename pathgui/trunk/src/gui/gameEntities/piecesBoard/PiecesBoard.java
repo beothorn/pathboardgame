@@ -10,7 +10,6 @@ import gameLogic.gameFlow.gameStates.GameStatePuttingStrongs;
 import gameLogic.gameFlow.gameStates.GameStatePuttingWeaks;
 import gameLogic.gameFlow.gameStates.StateVisitor;
 import gui.GameDefinitions;
-import gui.gameEntities.piecesBoard.entityPiece.EntityPiece;
 
 import java.util.ArrayList;
 import java.util.List;

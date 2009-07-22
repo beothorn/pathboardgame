@@ -2,7 +2,6 @@ package gui.gameEntities.piecesBoard;
 
 import gameLogic.board.piece.Piece;
 import gui.GameDefinitions;
-import gui.gameEntities.piecesBoard.entityPiece.EntityPiece;
 
 public class EntityPieceFactory {
 	public static EntityPiece entityPieceOwningThis(final Piece p, final GameDefinitions gameDefinitions){

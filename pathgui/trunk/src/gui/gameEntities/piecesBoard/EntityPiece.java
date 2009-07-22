@@ -1,4 +1,4 @@
-package gui.gameEntities.piecesBoard.entityPiece;
+package gui.gameEntities.piecesBoard;
 import gameEngine.GameElement;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.EntityAction;
