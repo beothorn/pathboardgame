@@ -1,6 +1,7 @@
 package gui.gameEntities;
 
 import gameEngine.GameElement;
+import gameEngine.GameElementChangedListener;
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Point;
 
@@ -22,6 +23,12 @@ public class Avatar implements GameElement {
 		this.isTopPlayer = isTopPlayer;
 		final Point avatarPosition = position.copy();
 		avatar = new Entity(currentAvatarSpritePlaying(),avatarPosition);
+	}
+
+	@Override
+	public void addGameElementChangedListener(
+			final GameElementChangedListener gameElementChangedListener) {
+		avatar.addGameElementChangedListener(gameElementChangedListener);
 	}
 
 	private String currentAvatarSpritePlaying() {

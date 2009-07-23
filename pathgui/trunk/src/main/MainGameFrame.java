@@ -36,5 +36,6 @@ public class MainGameFrame extends JFrame{
 		Printer.debug("Starting game frame");
 		Printer.debug("Frame size: "+getSize());
 		Printer.debug("Main Game Canvas: "+mainGameCanvas.getSize());
+		Printer.debug("Main Game Canvas: "+mainGameCanvas);
 	}
 }

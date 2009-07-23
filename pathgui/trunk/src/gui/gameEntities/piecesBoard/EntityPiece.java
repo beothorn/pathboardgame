@@ -1,5 +1,6 @@
 package gui.gameEntities.piecesBoard;
 import gameEngine.GameElement;
+import gameEngine.GameElementChangedListener;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.EntityAction;
 import gameEngine.entityClasses.actions.MoveToAndStop;
@@ -35,6 +36,11 @@ public class EntityPiece implements GameElement{
 		entity.setSprite(normalSprite);
 		final boolean killOnSnap = false;
 		moveToAndStop = new MoveToAndStop(new Point(),speed, snappingRadius,killOnSnap,getEntity());
+	}
+
+	@Override
+	public void addGameElementChangedListener(final GameElementChangedListener gameElementChangedListener) {
+		entity.addGameElementChangedListener(gameElementChangedListener);
 	}
 
 	@Override

@@ -3,17 +3,14 @@ package gameEngine.entityClasses.actions;
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Point;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MoveToAndStop implements EntityAction, SnapToPointListener {
 
 	private final boolean killOnSnap;
 	private final MoveTowards moveTowards;
 	private final SnapToPoint pointToSnap;
 	private boolean shouldBeKilled = false;
-	private List<SnapToPointListener> snapListeners;
 	private boolean snapped = false;
+	private EntityActionListener entityActionListener;
 
 	public MoveToAndStop(final Point destination,final double speed, final double snappingRadius, final boolean killOnSnap,final Entity entity) {
 		this.killOnSnap = killOnSnap;
@@ -27,22 +24,6 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 		this(destination,speed,snappingRadius, false, entity);
 	}
 
-	public boolean addSnapListener(final SnapToPointListener spL) {
-		if(snapListeners == null) {
-			snapListeners = new ArrayList<SnapToPointListener>();
-		}
-		return snapListeners.add(spL);
-	}
-
-	private void callSnapListeners(final Point point) {
-		if(snapListeners == null) {
-			return;
-		}
-		for (final SnapToPointListener spL : snapListeners) {
-			spL.snappedToPoint(point);
-		}
-	}
-
 	@Override
 	public String describeAction() {
 		return "MoveToAndStop: \n"+ moveTowards.describeAction() + pointToSnap.describeAction();
@@ -54,7 +35,6 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 			shouldBeKilled = true;
 			return;
 		}
-		snapped = false;
 		moveTowards.doAction(delta);
 		pointToSnap.doAction(delta);
 	}
@@ -68,18 +48,13 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 		return shouldBeKilled;
 	}
 
-	public boolean removeSnapListener(final SnapToPointListener spL) {
-		if(snapListeners == null) {
-			return false;
-		}
-		return snapListeners.remove(spL);
-	}
-
 	public void setLocation(final int x, final int y) {
 		setLocation(new Point(x,y));
 	}
 
 	public void setLocation(final Point point) {
+		snapped = false;
+		entityActionListener.actionPerformed();
 		moveTowards.setLocation(point);
 		pointToSnap.setLocation(point);
 	}
@@ -87,7 +62,6 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	@Override
 	public void snappedToPoint(final Point point) {
 		snapped = true;
-		callSnapListeners(point);
 	}
 
 	@Override
@@ -96,15 +70,13 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	}
 
 	@Override
-	public void addActionListener(EntityActionListener entityActionListener) {
-		// TODO Auto-generated method stub
-		
+	public void addActionListener(final EntityActionListener entityActionListener) {
+		this.entityActionListener = entityActionListener;
 	}
 
 	@Override
 	public boolean isPerformingAction() {
-		// TODO Auto-generated method stub
-		return false;
+		return !snapped;
 	}
 
 }

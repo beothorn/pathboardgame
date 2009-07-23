@@ -2,6 +2,7 @@ package gameEngine.entityClasses;
 
 
 import gameEngine.GameElement;
+import gameEngine.GameElementChangedListener;
 import gameEngine.Sprite;
 import gameEngine.SpriteStore;
 import gameEngine.gameMath.Point;
@@ -23,6 +24,7 @@ public class Entity implements GameElement {
 	private final Point position;
 	private double speedPixPerSec;
 	private Sprite sprite;
+	private GameElementChangedListener gameElementChangedListener;
 
 	public Entity() {
 		this(new Point());
@@ -156,7 +158,10 @@ public class Entity implements GameElement {
 	}
 
 	public void setPosition(final double x, final double y) {
-		position.setLocation(x, y);
+		if(position.getX() != x || position.getY() != y){
+			position.setLocation(x, y);
+			gameElementChanged();
+		}
 	}
 
 	public void setPosition(final Point p) {
@@ -178,6 +183,12 @@ public class Entity implements GameElement {
 
 	public void setSprite(final String sprite){
 		this.sprite = SpriteStore.get().getSprite(sprite);
+		gameElementChanged();
+	}
+
+	private void gameElementChanged() {
+		if(gameElementChangedListener!=null)
+			gameElementChangedListener.gameElementChanged();
 	}
 
 	/**
@@ -189,6 +200,7 @@ public class Entity implements GameElement {
 
 	public void setVisible(final boolean isVisible) {
 		this.isVisible = isVisible;
+		gameElementChanged();
 	}
 
 	public void setX(final double x) {
@@ -197,5 +209,10 @@ public class Entity implements GameElement {
 
 	public void setY(final double y) {
 		position.setLocation(position.getX(),y);
+	}
+
+	@Override
+	public void addGameElementChangedListener(final GameElementChangedListener gameElementChangedListener) {
+		this.gameElementChangedListener = gameElementChangedListener;
 	}
 }

@@ -64,10 +64,10 @@ public class SnapToPoint implements EntityAction {
 	public void doAction(final long delta) {
 		final double distance = entityToSnap.getPosition().distance(point);
 		if(Eval.lessOrEqualsTo(distance,radius)){
-			callSnapListeners();
 			entityToSnap.setPosition(point);
 			entityToSnap.setSpeed(0);
 			setOnPoint(true);
+			callSnapListeners();
 			if(isKillOnSnap()) {
 				shouldBeKilled = true;
 			}
@@ -118,14 +118,12 @@ public class SnapToPoint implements EntityAction {
 	}
 
 	@Override
-	public void addActionListener(EntityActionListener entityActionListener) {
+	public void addActionListener(final EntityActionListener entityActionListener) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean isPerformingAction() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

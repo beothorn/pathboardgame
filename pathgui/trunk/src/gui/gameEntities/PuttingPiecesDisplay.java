@@ -19,7 +19,6 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 	private final Entity entityPieceWeak;
 	private final Entity entityPieceStrong;
 
-
 	private final int x;
 	private final int y;
 	private final boolean isTop;

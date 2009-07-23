@@ -1,6 +1,7 @@
 package gameEngine;
 
 import gameEngine.entityClasses.actions.EntityAction;
+import gameEngine.entityClasses.actions.EntityActionListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +14,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 
-public class JGamePanel extends JPanel implements ImageObserver{
+public class JGamePanel extends JPanel implements ImageObserver,EntityActionListener,GameElementChangedListener{
 
 	/**
 	 * 
@@ -24,17 +25,15 @@ public class JGamePanel extends JPanel implements ImageObserver{
 	private Sprite backgroundSprite;
 	private Color color = Color.GRAY;
 	private final GameDrawer drawer = new StaticFrameDrawer();
-	private List<GameElement> elements = new ArrayList<GameElement>();
-	private boolean gameRunning = false;
-	private List<EntityAction> stepActions;
-
-	public JGamePanel() {
-		runGameLoop();
-	}
+	private final List<GameElement> elements = new ArrayList<GameElement>();
+	private final List<EntityAction> stepActions = new ArrayList<EntityAction>();
+	private boolean continuousGameLoop = false;
+	private boolean alreadyOnLoop = false;
+	private boolean actionAddedOnMidLoop = false;
 	
-	public void runGameLoop(){
-		gameRunning = true;
-		gameLoop();
+	
+	public JGamePanel() {
+//		continuousGameLoop();
 	}
 
 	public JGamePanel(final Color backgroundColor) {
@@ -47,19 +46,18 @@ public class JGamePanel extends JPanel implements ImageObserver{
 		setBackground(background);
 	}
 
-	public void addGameElement(final GameElement ent){
-		elements.add(ent);
+	public void addGameElement(final GameElement element){
+		element.addGameElementChangedListener(this);
+		elements.add(element);
 	}
 
 	public boolean addStepAction(final EntityAction action){
-		if(stepActions == null){
-			stepActions = new ArrayList<EntityAction>();
-		}
+		action.addActionListener(this);
 		return stepActions.add(action);
 	}
 
 	public void clearElements(){
-		elements = new ArrayList<GameElement>();
+		elements.clear();
 	}
 
 
@@ -81,9 +79,6 @@ public class JGamePanel extends JPanel implements ImageObserver{
 
 
 	private void doStepActions(final long delta) {
-		if(stepActions==null) {
-			return;
-		}
 		for (int i=0;i<stepActions.size();i++) {
 			final EntityAction sa = stepActions.get(i);
 			if(sa.markedToBeDestroyed()) {
@@ -98,22 +93,47 @@ public class JGamePanel extends JPanel implements ImageObserver{
 		drawer.drawElements(g,elements);
 	}
 
-	private void gameLoop() {
+	private void stepGame(final long delta) {
+		doStepActions(delta);
+		doCollisions();
+		doStep(delta);
+		repaint();
+	}
+	
+	public void continuousGameLoop() {
+		continuousGameLoop = true;
+		gameLoop();
+	}
+	
+	private void gameLoop(){
+		if(alreadyOnLoop)
+			return;
+		alreadyOnLoop = true;
 		new Thread(){
 			@Override
 			public void run() {
 				super.run();
 				long lastLoopTime = System.currentTimeMillis();
-				while (gameRunning) {
+				boolean processAgain = false;
+				while (continuousGameLoop || processAgain || actionAddedOnMidLoop) {
+					actionAddedOnMidLoop = false;
 					final long delta = System.currentTimeMillis() - lastLoopTime;
 					lastLoopTime = System.currentTimeMillis();
-					// cycle round drawing all the entities we have in the game
-					doStepActions(delta);
-					doCollisions();
-					doStep(delta);
-					repaint();
+					stepGame(delta);
 					try { Thread.sleep(30); } catch (final Exception e) {}
+					processAgain = false;
+					if(actionsStillProcessing()){
+						processAgain = true;
+					}
 				}
+				alreadyOnLoop = false;
+			}
+
+			private boolean actionsStillProcessing() {
+				for(int i = 0;i < stepActions.size(); i++){
+					if(stepActions.get(i).isPerformingAction()) return true;
+				}
+				return false;
 			}
 
 		}.start();
@@ -129,9 +149,6 @@ public class JGamePanel extends JPanel implements ImageObserver{
 	}
 
 	public boolean removeStepAction(final EntityAction action){
-		if(stepActions == null){
-			return false;
-		}
 		return stepActions.remove(action);
 	}
 
@@ -173,7 +190,7 @@ public class JGamePanel extends JPanel implements ImageObserver{
 	@Override
 	public String toString() {
 		String toStr = "Elements count: "+elements.size();
-		if(stepActions != null){
+		if(stepActions.size() > 0){
 			toStr += "\nOn Step Actions:\n";
 			for (final EntityAction ea : stepActions) {
 				toStr += ea.toString();
@@ -182,4 +199,18 @@ public class JGamePanel extends JPanel implements ImageObserver{
 		return toStr;
 	}
 
+	@Override
+	public void actionPerformed() {
+		changeTrigger();
+	}
+
+	private void changeTrigger() {
+		actionAddedOnMidLoop = true;
+		gameLoop();
+	}
+
+	@Override
+	public void gameElementChanged() {
+		changeTrigger();
+	}
 }
