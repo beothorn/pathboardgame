@@ -19,4 +19,16 @@ public class FollowPath implements EntityAction {
 		throw new RuntimeException("Not implemented method");
 	}
 
+	@Override
+	public void addActionListener(EntityActionListener entityActionListener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPerformingAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

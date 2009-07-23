@@ -9,14 +9,17 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="46"
-   height="46"
+   width="50"
+   height="50"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.46"
    sodipodi:docname="whiteWeak.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   version="1.0">
+   version="1.0"
+   inkscape:export-filename="/home/lucas/workspace/pathboardgame/pathgui/trunk/src/sprites/whiteWeak.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -101,22 +104,27 @@
          stdDeviation="0.85264072"
          id="feGaussianBlur3196" />
     </filter>
-    <filter
+    <radialGradient
        inkscape:collect="always"
-       id="filter3363">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.9030429"
-         id="feGaussianBlur3365" />
-    </filter>
-    <filter
+       xlink:href="#linearGradient3167"
+       id="radialGradient2407"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1509077,0.5710642,-0.4515342,0.9195676,130.5254,-104.51354)"
+       cx="220.12259"
+       cy="392.39993"
+       fx="220.12259"
+       fy="392.39993"
+       r="254.78572" />
+    <linearGradient
        inkscape:collect="always"
-       id="filter3378">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.0909346"
-         id="feGaussianBlur3380" />
-    </filter>
+       xlink:href="#linearGradient3189"
+       id="linearGradient2409"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-0.1713688,-0.1142458)"
+       x1="18.36828"
+       y1="2.4574327"
+       x2="35.012539"
+       y2="24.87068" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -157,30 +165,34 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       sodipodi:type="arc"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="path2383"
-       sodipodi:cx="374.28571"
-       sodipodi:cy="452.36218"
-       sodipodi:rx="254.28572"
-       sodipodi:ry="260"
-       d="M 628.57143,452.36218 A 254.28572,260 0 1 1 119.99998,452.36218 A 254.28572,260 0 1 1 628.57143,452.36218 z"
-       transform="matrix(5.5625896e-2,6.379928e-2,-6.3459816e-2,5.5923453e-2,30.868503,-26.337095)" />
-    <path
-       transform="matrix(5.5625896e-2,6.379928e-2,-6.3459816e-2,5.5923453e-2,30.868503,-26.337095)"
-       d="M 628.57143,452.36218 A 254.28572,260 0 1 1 119.99998,452.36218 A 254.28572,260 0 1 1 628.57143,452.36218 z"
-       sodipodi:ry="260"
-       sodipodi:rx="254.28572"
-       sodipodi:cy="452.36218"
-       sodipodi:cx="374.28571"
-       id="path3227"
-       style="opacity:1;fill:url(#radialGradient3229);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       sodipodi:type="arc" />
-    <path
-       style="opacity:1;fill:url(#linearGradient3172);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter3194)"
-       d="M 23.544946,0.17307693 C 18.099122,0.13485727 12.579856,2.0503283 8.1209387,5.9797126 C 3.8804159,9.716639 1.3115151,14.647266 0.48881011,19.794355 C 4.3627696,23.93498 11.563203,26.719676 19.804626,26.719675 C 32.139814,26.719675 42.152909,20.483209 42.152909,12.797041 C 42.152909,11.668031 41.93533,10.569858 41.527687,9.5185207 C 41.095529,8.9069279 40.627911,8.313983 40.125755,7.7380407 C 35.793502,2.7692281 29.716882,0.21639143 23.544946,0.17307693 z"
-       id="path3229"
-       transform="matrix(0.9574656,0,0,0.9574656,1.0351742,0.8068116)" />
+    <g
+       id="g2402"
+       transform="matrix(1.0555716,0,0,1.0524011,0.7412127,0.9770768)">
+      <path
+         transform="matrix(5.5625896e-2,6.379928e-2,-6.3459816e-2,5.5923453e-2,30.868503,-26.337095)"
+         d="M 628.57143,452.36218 A 254.28572,260 0 1 1 119.99998,452.36218 A 254.28572,260 0 1 1 628.57143,452.36218 z"
+         sodipodi:ry="260"
+         sodipodi:rx="254.28572"
+         sodipodi:cy="452.36218"
+         sodipodi:cx="374.28571"
+         id="path2383"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:type="arc"
+         style="opacity:1;fill:url(#radialGradient2407);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="path3227"
+         sodipodi:cx="374.28571"
+         sodipodi:cy="452.36218"
+         sodipodi:rx="254.28572"
+         sodipodi:ry="260"
+         d="M 628.57143,452.36218 A 254.28572,260 0 1 1 119.99998,452.36218 A 254.28572,260 0 1 1 628.57143,452.36218 z"
+         transform="matrix(5.5625896e-2,6.379928e-2,-6.3459816e-2,5.5923453e-2,30.868503,-26.337095)" />
+      <path
+         transform="matrix(0.9574656,0,0,0.9574656,1.0351742,0.8068116)"
+         id="path3229"
+         d="M 23.544946,0.17307693 C 18.099122,0.13485727 12.579856,2.0503283 8.1209387,5.9797126 C 3.8804159,9.716639 1.3115151,14.647266 0.48881011,19.794355 C 4.3627696,23.93498 11.563203,26.719676 19.804626,26.719675 C 32.139814,26.719675 42.152909,20.483209 42.152909,12.797041 C 42.152909,11.668031 41.93533,10.569858 41.527687,9.5185207 C 41.095529,8.9069279 40.627911,8.313983 40.125755,7.7380407 C 35.793502,2.7692281 29.716882,0.21639143 23.544946,0.17307693 z"
+         style="opacity:1;fill:url(#linearGradient2409);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter3194)" />
+    </g>
   </g>
 </svg>

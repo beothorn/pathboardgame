@@ -29,6 +29,10 @@ public class JGamePanel extends JPanel implements ImageObserver{
 	private List<EntityAction> stepActions;
 
 	public JGamePanel() {
+		runGameLoop();
+	}
+	
+	public void runGameLoop(){
 		gameRunning = true;
 		gameLoop();
 	}
@@ -107,8 +111,8 @@ public class JGamePanel extends JPanel implements ImageObserver{
 					doStepActions(delta);
 					doCollisions();
 					doStep(delta);
-					// finally pause for a bit.
-					try { Thread.sleep(10); } catch (final Exception e) {}
+					repaint();
+					try { Thread.sleep(30); } catch (final Exception e) {}
 				}
 			}
 
@@ -150,7 +154,6 @@ public class JGamePanel extends JPanel implements ImageObserver{
 		drawElements(g);
 		paintComponents(g);
 		g.dispose();
-		repaint();
 	}
 
 	@Override

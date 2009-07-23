@@ -95,4 +95,16 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 		return describeAction();
 	}
 
+	@Override
+	public void addActionListener(EntityActionListener entityActionListener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPerformingAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
