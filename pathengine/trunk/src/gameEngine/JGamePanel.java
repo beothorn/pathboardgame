@@ -120,7 +120,7 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 					final long delta = System.currentTimeMillis() - lastLoopTime;
 					lastLoopTime = System.currentTimeMillis();
 					stepGame(delta);
-					try { Thread.sleep(30); } catch (final Exception e) {}
+					try { Thread.sleep(10); } catch (final Exception e) {}
 					processAgain = false;
 					if(actionsStillProcessing()){
 						processAgain = true;
