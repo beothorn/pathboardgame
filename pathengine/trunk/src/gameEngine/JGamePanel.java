@@ -52,6 +52,7 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	}
 
 	public boolean addStepAction(final EntityAction action){
+		//TODO: get rid of listeners, make actions immutable
 		action.addActionListener(this);
 		return stepActions.add(action);
 	}

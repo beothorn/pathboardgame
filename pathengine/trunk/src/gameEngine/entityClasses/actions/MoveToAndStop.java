@@ -58,7 +58,8 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 
 	public void setLocation(final Point point) {
 		snapped = false;
-		entityActionListener.actionPerformed();
+		if(entityActionListener!=null)
+			entityActionListener.actionPerformed();
 		moveTowards.setLocation(point);
 		pointToSnap.setLocation(point);
 	}

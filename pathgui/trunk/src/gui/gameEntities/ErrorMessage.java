@@ -3,7 +3,7 @@ package gui.gameEntities;
 import gameEngine.GameElement;
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
-import gameEngine.entityClasses.actions.MoveToAndStop;
+import gameEngine.entityClasses.actions.MoveToStopAndGoBack;
 import gameEngine.gameMath.Point;
 import gui.gameEntities.piecesBoard.ErrorListener;
 
@@ -17,38 +17,23 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 
 	private final static int BOX_MARGIN = 10;
 	private final static int SHOW_MESSAGE_MILISECONDS = 5000;
-	private final static int SNAP_RADIUS = 5;
 
 	private final static int SPEED = 250;
 	private  Point endingPoint;
 
 	private final JGamePanel gamePanel;
-	private final MoveToAndStop goingToPoint;
+	private final MoveToStopAndGoBack goingToPoint;
 
 	private String message = "";
 
 	private Point startingPoint = new Point(-100,-100);
-	private int timeShown = 0;
 
 	public ErrorMessage(final JGamePanel gF) {
 		super(0, 0);
 		gamePanel = gF;
 		message = "404";
-		//		calculateStartAndEndingPositions(message);
-		goingToPoint = new MoveToAndStop(new Point(), SPEED, SNAP_RADIUS, this);
+		goingToPoint = new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this);
 		gF.addStepAction(goingToPoint);
-		setVisible(false);
-	}
-
-	@Override
-	protected void afterStep(final long delta){
-		if(goingToPoint.isSnapped()){
-			timeShown += delta;
-		}
-		if(timeShown >= SHOW_MESSAGE_MILISECONDS){
-			timeShown = 0;
-			moveToStartingPoint();
-		}
 	}
 
 	private void calculateStartAndEndingPositions(final String message) {
@@ -80,25 +65,16 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 		}
 	}
 
-	public int getErrorBoxMargin() {
-		return BOX_MARGIN;
-	}
-
-	private void moveToEndingPoint() {
-		goingToPoint.setLocation(endingPoint);
-	}
-
-	private void moveToStartingPoint() {
-		goingToPoint.setLocation(startingPoint);
-	}
-
 	@Override
 	public void error(final String errorMessage){
 		Printer.writeln(errorMessage);
-		this.message = errorMessage;
+		message = errorMessage;
 		setVisible(true);
 		calculateStartAndEndingPositions(errorMessage);
-		moveToEndingPoint();
+		goingToPoint.move(startingPoint, endingPoint);
+	}
 
+	public int getErrorBoxMargin() {
+		return BOX_MARGIN;
 	}
 }

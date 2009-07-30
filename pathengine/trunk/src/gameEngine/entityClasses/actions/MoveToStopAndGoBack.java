@@ -13,14 +13,16 @@ public class MoveToStopAndGoBack implements EntityAction{
 	private EntityActionListener entityActionListener;
 	
 	public MoveToStopAndGoBack(final Point startingPoint,final Point endingPointPoint,final int timeStopped,final int speed, final Entity entity) {
+		this.startingPoint = startingPoint;
 		this.timeToStayStopped = timeStopped;
 		entity.setPosition(startingPoint);
 		moveToAndStop = new MoveToAndStop(startingPoint,speed,SNAP_RADIUS,entity);
 	}
 	
-	public void move(final Point startingPoint, final Point endingPointPoint){
+	public void move(final Point startingPoint, final Point endingPoint){
 		this.startingPoint = startingPoint;
-		moveToAndStop.setLocation(endingPointPoint);
+		entityActionListener.actionPerformed();
+		moveToAndStop.setLocation(endingPoint);
 	}
 	
 	@Override

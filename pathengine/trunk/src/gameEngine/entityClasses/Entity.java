@@ -53,12 +53,6 @@ public class Entity implements GameElement {
 		this.sprite = SpriteStore.get().getSprite(sprite);
 	}
 
-	protected void afterStep(final long delta) {
-	}
-
-	protected void beforeStep(final long delta) {
-	}
-
 	/**
 	 * Check if this entity collided with another.
 	 * 
@@ -81,9 +75,7 @@ public class Entity implements GameElement {
 
 	@Override
 	public final void doStep(final long delta) {
-		beforeStep(delta);
 		doMove(delta);
-		afterStep(delta);
 	}
 
 	/**
