@@ -6,6 +6,11 @@ import gameLogic.Game;
 import gui.GameDefinitions;
 import gui.gameEntities.piecesBoard.BoardPlayInputDecoder;
 import gui.gameEntities.piecesBoard.PiecesBoard;
+
+import java.awt.Dimension;
+
+import javax.swing.ImageIcon;
+
 import ai.AIPlayer;
 
 public class BoardGamePanel extends JGamePanel{
@@ -31,9 +36,12 @@ public class BoardGamePanel extends JGamePanel{
 			game.addTurnListener(new AiControl(new AIPlayer(), false));
 		}
 		final NextStageButton nextStageButton = new NextStageButton(processMouseEventForBoard);
+		nextStageButton.setSize(new Dimension(58,63));
+		nextStageButton.setIcon(new ImageIcon("sprites/whiteWeak.pngs"));
 		nextStageButton.setLocation(gameDefinitions.getButtomNextStagePosition());
 
 		final RestartButton restartButton = new RestartButton(processMouseEventForBoard);
+		restartButton.setSize(new Dimension(48,43));
 		restartButton.setLocation(gameDefinitions.getButtomRestartPosition());
 
 		final ErrorMessage errorMessageShower = new ErrorMessage(this);
@@ -52,11 +60,15 @@ public class BoardGamePanel extends JGamePanel{
 			addGameElement(new Avatar(gameDefinitions.getAvatarBottomPosition(), false, gameDefinitions.getAvatarHumanPlaying(), gameDefinitions.getAvatarHumanWaiting()));
 		}
 
-		final PuttingPiecesDisplay topPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getTopPuttingPreviewPosition(), gameDefinitions.getPieceTop(), gameDefinitions.getPieceStrongTop(),true,gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
-		game.addPhaseChangeListener(topPuttingPiecesDisplay);
+		final PuttingPiecesDisplay topPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getTopPuttingPreviewPosition(), gameDefinitions.getPieceTop(), gameDefinitions.getPieceStrongTop(),true,gameDefinitions.getBoardPosition(),gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
+		if(!isTopAi){
+			game.addPhaseChangeListener(topPuttingPiecesDisplay);
+		}
 
-		final PuttingPiecesDisplay bottomPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getBottomPuttingPreviewPosition(), gameDefinitions.getPieceBottom(), gameDefinitions.getPieceStrongBottom(),false,gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
-		game.addPhaseChangeListener(bottomPuttingPiecesDisplay);
+		final PuttingPiecesDisplay bottomPuttingPiecesDisplay = new PuttingPiecesDisplay(this, gameDefinitions.getBottomPuttingPreviewPosition(), gameDefinitions.getPieceBottom(), gameDefinitions.getPieceStrongBottom(),false,gameDefinitions.getBoardPosition(),gameDefinitions.getBoardSize(),gameDefinitions.getGridWidth());
+		if(!isBottomAi){
+			game.addPhaseChangeListener(bottomPuttingPiecesDisplay);
+		}
 
 		add(nextStageButton);
 		add(restartButton);

@@ -33,7 +33,7 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	
 	
 	public JGamePanel() {
-//		continuousGameLoop();
+		setLayout(null);
 	}
 
 	public JGamePanel(final Color backgroundColor) {

@@ -38,7 +38,7 @@ public class GameDefinitions {
 	}
 
 	public Point getBoardPosition() {
-		return new Point(28, 68);
+		return new Point(77, 51);
 	}
 
 	public int getBoardSize() {
@@ -46,11 +46,11 @@ public class GameDefinitions {
 	}
 
 	public double getBoardX() {
-		return 77;
+		return getBoardPosition().getX();
 	}
 
 	public double getBoardY() {
-		return 51;
+		return getBoardPosition().getY();
 	}
 
 	public Point getBottomPuttingPreviewPosition() {
@@ -58,11 +58,11 @@ public class GameDefinitions {
 	}
 
 	public java.awt.Point getButtomNextStagePosition() {
-		return new java.awt.Point(0, 0);
+		return new java.awt.Point(7, 202);
 	}
 
 	public java.awt.Point getButtomRestartPosition() {
-		return new java.awt.Point(0, 20);
+		return new java.awt.Point(16, 396);
 	}
 
 	public String getGameName() {

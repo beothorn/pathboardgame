@@ -7,7 +7,6 @@ import utils.Printer;
 
 public class Main{
 
-	//TODO: clicando bastante dá pra atrapalhar ai
 	//TODO: escrever help e colocar botão no jogo :)
 	//TODO: listar ias para escolher
 

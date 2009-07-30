@@ -24,8 +24,12 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 	private final boolean isTop;
 	private final int boardSize;
 	private final int gridWidth;
+	private boolean weakVisible = false;
+	private boolean strongVisible = false;
+	private final Point boardPosition;
 
-	public PuttingPiecesDisplay(final JGamePanel gamePanel,final Point position, final String weakPieceSprite, final String strongPieceSprite,final boolean isTop,final int boardSize, final int gridWidth) {
+	public PuttingPiecesDisplay(final JGamePanel gamePanel,final Point position, final String weakPieceSprite, final String strongPieceSprite,final boolean isTop,final Point boardPosition,final int boardSize, final int gridWidth) {
+		this.boardPosition = boardPosition;
 		this.boardSize = boardSize;
 		this.gridWidth = gridWidth;
 		this.isTop = isTop;
@@ -35,13 +39,13 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 		entityPieceWeak = new Entity();
 		entityPieceWeak.setPosition(position);
 		entityPieceWeak.setSprite(weakPieceSprite);
-		entityPieceWeak.setVisible(false);
+		setWeakInvisible();
 		gamePanel.addGameElement(entityPieceWeak);
 
 		entityPieceStrong = new Entity();
 		entityPieceStrong.setPosition(position);
 		entityPieceStrong.setSprite(strongPieceSprite);
-		entityPieceStrong.setVisible(false);
+		setStrongInvisible();
 		gamePanel.addGameElement(entityPieceStrong);
 	}
 
@@ -58,45 +62,89 @@ public class PuttingPiecesDisplay implements MouseMotionListener,PhaseChangeList
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 		final int mouseX = e.getX();
-		if(mouseX < x||mouseX>x+boardSize){
+		final int mouseY = e.getY();
+
+		if(mouseX < boardPosition.getX()){
+			setAllInvisible();
 			return;
 		}
+		if(mouseX >= boardPosition.getX()+boardSize){
+			setAllInvisible();
+			return;
+		}
+		if(mouseY < boardPosition.getY()){
+			setAllInvisible();
+			return;
+		}
+		if(mouseY >= boardPosition.getY()+boardSize){
+			setAllInvisible();
+			return;
+		}
+
+
 		final int wichSquare = (mouseX-x)/gridWidth;
 		final int pieceX = wichSquare*gridWidth+x;
+		entityPieceWeak.setVisible(weakVisible);
+		entityPieceStrong.setVisible(strongVisible);
 		entityPieceWeak.setPosition(pieceX,y);
 		entityPieceStrong.setPosition(pieceX,y);
 	}
 
 	@Override
 	public void onGameEnded(final GameStateGameEnded gameStateGameEnded) {
-		entityPieceWeak.setVisible(false);
-		entityPieceStrong.setVisible(false);
+		setWeakInvisible();
+		setStrongInvisible();
 	}
 
 	@Override
 	public void onMovingStrongs(final GameStateMovingStrongs gameStateMovingStrongs) {
-		entityPieceWeak.setVisible(false);
-		entityPieceStrong.setVisible(false);
+		setWeakInvisible();
+		setStrongInvisible();
 	}
 
 	@Override
 	public void onPuttingStrongs(final GameStatePuttingStrongs gameStatePuttingStrongs) {
-		entityPieceWeak.setVisible(false);
+		setWeakInvisible();
 		if(gameStatePuttingStrongs.isTopPlayerTurn() && isTop || gameStatePuttingStrongs.isBottomPlayerTurn() && !isTop) {
-			entityPieceStrong.setVisible(true);
+			setStrongVisible();
 		}else{
-			entityPieceStrong.setVisible(false);
+			setStrongInvisible();
 		}
 	}
 
 	@Override
 	public void onPuttingWeaks(final GameStatePuttingWeaks gameStatePuttingWeaks) {
-		entityPieceStrong.setVisible(false);
+		setStrongInvisible();
 		if(gameStatePuttingWeaks.isTopPlayerTurn() && isTop || gameStatePuttingWeaks.isBottomPlayerTurn() && !isTop) {
-			entityPieceWeak.setVisible(true);
+			setWeakVisible();
 		} else {
-			entityPieceWeak.setVisible(false);
+			setWeakInvisible();
 		}
+	}
+
+	private void setAllInvisible() {
+		entityPieceWeak.setVisible(false);
+		entityPieceStrong.setVisible(false);
+	}
+
+	private void setStrongInvisible() {
+		strongVisible = false;
+		entityPieceStrong.setVisible(strongVisible);
+	}
+
+	private void setStrongVisible() {
+		strongVisible = true;
+		entityPieceStrong.setVisible(strongVisible);
+	}
+
+	private void setWeakInvisible() {
+		weakVisible = false;
+		entityPieceWeak.setVisible(weakVisible);
+	}
+
+	private void setWeakVisible() {
+		weakVisible = true;
+		entityPieceWeak.setVisible(weakVisible);
 	}
 
 }
