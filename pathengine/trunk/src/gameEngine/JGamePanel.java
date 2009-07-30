@@ -1,7 +1,6 @@
 package gameEngine;
 
 import gameEngine.entityClasses.actions.EntityAction;
-import gameEngine.entityClasses.actions.EntityActionListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,12 +8,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
 
-public class JGamePanel extends JPanel implements ImageObserver,EntityActionListener,GameElementChangedListener{
+public class JGamePanel extends JPanel implements ImageObserver,GameElementChangedListener{
 
 	/**
 	 * 
@@ -26,7 +28,8 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	private Color color = Color.GRAY;
 	private final GameDrawer drawer = new StaticFrameDrawer();
 	private final List<GameElement> elements = new ArrayList<GameElement>();
-	private final List<EntityAction> stepActions = new ArrayList<EntityAction>();
+	private final List<EntityAction> nonUniqueStepActions = new ArrayList<EntityAction>();
+	private final Set<EntityAction> uniqueStepActions = new LinkedHashSet<EntityAction>();
 	private boolean continuousGameLoop = false;
 	private boolean alreadyOnLoop = false;
 	private boolean actionAddedOnMidLoop = false;
@@ -52,9 +55,13 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	}
 
 	public boolean addStepAction(final EntityAction action){
-		//TODO: get rid of listeners, make actions immutable
-		action.addActionListener(this);
-		return stepActions.add(action);
+		actionAdded();
+		return nonUniqueStepActions.add(action);
+	}
+	
+	public boolean addUniqueStepAction(final EntityAction action){
+		actionAdded();
+		return uniqueStepActions.add(action);
 	}
 
 	public void clearElements(){
@@ -68,26 +75,37 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 
 
 	private void doStep(final long delta) {
+		final ArrayList<GameElement> toRemove = new ArrayList<GameElement>();
 		for (int i=0;i<elements.size();i++) {
-			final GameElement ge = elements.get(i);
-			if(ge.markedToBeDestroyed()) {
-				elements.remove(ge);
+			final GameElement gameElement = elements.get(i);
+			if(gameElement.markedToBeDestroyed()) {
+				toRemove.add(gameElement);
 			} else {
-				ge.doStep(delta);
+				gameElement.doStep(delta);
 			}
+		}
+		for (final GameElement gameElement : toRemove) {
+			elements.remove(gameElement);
 		}
 	}
 
-
-	private void doStepActions(final long delta) {
-		for (int i=0;i<stepActions.size();i++) {
-			final EntityAction sa = stepActions.get(i);
-			if(sa.markedToBeDestroyed()) {
-				stepActions.remove(sa);
+	private void doActionsFor(final Collection<EntityAction> actions,final long delta) {
+		final ArrayList<EntityAction> toRemove = new ArrayList<EntityAction>();
+		for (final EntityAction entityAction : actions) {
+			if(entityAction.actionEnded()) {
+				toRemove.add(entityAction);
 			} else {
-				sa.doAction(delta);
+				entityAction.doAction(delta);
 			}
 		}
+		for (final EntityAction entityAction : toRemove) {
+			actions.remove(entityAction);
+		}		
+	}
+	
+	private void doStepActions(final long delta) {
+		doActionsFor(nonUniqueStepActions, delta);
+		doActionsFor(uniqueStepActions, delta);
 	}
 
 	private void drawElements(final Graphics2D g) {
@@ -131,8 +149,8 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 			}
 
 			private boolean actionsStillProcessing() {
-				for(int i = 0;i < stepActions.size(); i++){
-					if(stepActions.get(i).isPerformingAction()) return true;
+				for(int i = 0;i < nonUniqueStepActions.size(); i++){
+					if(!nonUniqueStepActions.get(i).actionEnded()) return true;
 				}
 				return false;
 			}
@@ -150,7 +168,7 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	}
 
 	public boolean removeStepAction(final EntityAction action){
-		return stepActions.remove(action);
+		return nonUniqueStepActions.remove(action);
 	}
 
 	private void render(final Graphics2D g) {
@@ -191,17 +209,16 @@ public class JGamePanel extends JPanel implements ImageObserver,EntityActionList
 	@Override
 	public String toString() {
 		String toStr = "Elements count: "+elements.size();
-		if(stepActions.size() > 0){
+		if(nonUniqueStepActions.size() > 0){
 			toStr += "\nOn Step Actions:\n";
-			for (final EntityAction ea : stepActions) {
+			for (final EntityAction ea : nonUniqueStepActions) {
 				toStr += ea.toString();
 			}
 		}
 		return toStr;
 	}
 
-	@Override
-	public void actionPerformed() {
+	private void actionAdded() {
 		changeTrigger();
 	}
 

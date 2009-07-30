@@ -145,8 +145,9 @@ public class Entity implements GameElement {
 		}
 	}
 
-	public void setMarkedToBeDestroyed(final boolean markedToBeDestroyed) {
-		this.markedToBeDestroyed = markedToBeDestroyed;
+	public void markToBeDestroyed() {
+		gameElementChanged();
+		this.markedToBeDestroyed = true;
 	}
 
 	public void setPosition(final double x, final double y) {

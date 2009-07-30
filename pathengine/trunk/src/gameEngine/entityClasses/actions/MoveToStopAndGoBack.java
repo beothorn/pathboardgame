@@ -6,28 +6,20 @@ import gameEngine.gameMath.Point;
 public class MoveToStopAndGoBack implements EntityAction{
 
 	private final static int SNAP_RADIUS = 5;
-	private Point startingPoint;
-	private final MoveToAndStop moveToAndStop; 
+	private final Point startingPoint;
+	private MoveToAndStop moveToAndStop; 
 	private int timeShown = 0;
 	private final int timeToStayStopped;
-	private EntityActionListener entityActionListener;
+	private final int speed;
+	private final Entity entity;
 	
 	public MoveToStopAndGoBack(final Point startingPoint,final Point endingPointPoint,final int timeStopped,final int speed, final Entity entity) {
 		this.startingPoint = startingPoint;
 		this.timeToStayStopped = timeStopped;
+		this.speed = speed;
+		this.entity = entity;
 		entity.setPosition(startingPoint);
 		moveToAndStop = new MoveToAndStop(startingPoint,speed,SNAP_RADIUS,entity);
-	}
-	
-	public void move(final Point startingPoint, final Point endingPoint){
-		this.startingPoint = startingPoint;
-		entityActionListener.actionPerformed();
-		moveToAndStop.setLocation(endingPoint);
-	}
-	
-	@Override
-	public void addActionListener(final EntityActionListener entityActionListener) {
-		this.entityActionListener = entityActionListener;
 	}
 
 	@Override
@@ -48,17 +40,11 @@ public class MoveToStopAndGoBack implements EntityAction{
 	}
 
 	private void moveToStartingPoint() {
-		moveToAndStop.setLocation(startingPoint);
+		moveToAndStop = new MoveToAndStop(startingPoint,speed,SNAP_RADIUS,entity);
 	}
 
 	@Override
-	public boolean isPerformingAction() {
+	public boolean actionEnded() {
 		return !(moveToAndStop.isSnapped() && moveToAndStop.getLocation().equals(startingPoint));
 	}
-
-	@Override
-	public boolean markedToBeDestroyed() {
-		return false;
-	}
-
 }

@@ -49,12 +49,7 @@ public class MoveTowards implements EntityAction {
 		return Eval.equals(e.getPosition().distance(destination),0);
 	}
 
-	@Override
-	public boolean markedToBeDestroyed() {
-		return false;
-	}
-
-	public void setLocation(final Point point) {
+	private void setLocation(final Point point) {
 		destination.setLocation(point.getX(), point.getY());
 		timePassed = 0;
 		final double distance = point.distance(entityToMove.getPosition());
@@ -67,14 +62,7 @@ public class MoveTowards implements EntityAction {
 	}
 
 	@Override
-	public void addActionListener(EntityActionListener entityActionListener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isPerformingAction() {
-		// TODO Auto-generated method stub
+	public boolean actionEnded() {
 		return false;
 	}
 

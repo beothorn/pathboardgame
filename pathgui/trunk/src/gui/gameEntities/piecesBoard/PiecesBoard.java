@@ -64,7 +64,7 @@ public class PiecesBoard implements StateVisitor{
 		final ArrayList<EntityPiece> piecesCopy = cloneEntityPieces();
 		for (final EntityPiece entityPiece : piecesCopy) {
 			if(!correspondToALogicPiece(entityPiece)) {
-				entityPiece.setMarkedToBeDestroyed(true);
+				entityPiece.markToBeDestroyed();
 				entityPieces.remove(entityPiece);
 			}
 		}

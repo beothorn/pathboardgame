@@ -10,25 +10,13 @@ import java.util.List;
 public class SnapToPoint implements EntityAction {
 
 	private final Entity entityToSnap;
-	private boolean killOnSnap;
 	private boolean onPoint;
 	private final Point point;
 	private final double radius;
-	private boolean shouldBeKilled = false;
 	private List<SnapToPointListener> snapListeners;
-
-	public SnapToPoint(final double x,final double y, final double radius, final boolean killOnSnap, final Entity entity) {
-		this(x,y,radius,entity);
-		setKillOnSnap(killOnSnap);
-	}
 
 	public SnapToPoint(final double x,final double y,final double radius, final Entity entity) {
 		this(new Point(x,y),radius,entity);
-	}
-
-	public SnapToPoint(final Point p, final double radius, final boolean killOnSnap, final Entity entity) {
-		this(p,radius,entity);
-		setKillOnSnap(killOnSnap);
 	}
 
 	public SnapToPoint(final Point p, final double radius, final Entity entity) {
@@ -36,7 +24,6 @@ public class SnapToPoint implements EntityAction {
 		point = p.copy();
 		this.radius = radius;
 		setOnPoint(false);
-		setKillOnSnap(false);
 	}
 
 	public boolean addSnapListener(final SnapToPointListener spL) {
@@ -51,7 +38,7 @@ public class SnapToPoint implements EntityAction {
 			return;
 		}
 		for (final SnapToPointListener spL : snapListeners) {
-			spL.snappedToPoint(point);
+			spL.snappedToPoint();
 		}
 	}
 
@@ -68,9 +55,6 @@ public class SnapToPoint implements EntityAction {
 			entityToSnap.setSpeed(0);
 			setOnPoint(true);
 			callSnapListeners();
-			if(isKillOnSnap()) {
-				shouldBeKilled = true;
-			}
 		}else{
 			setOnPoint(false);
 		}
@@ -80,17 +64,8 @@ public class SnapToPoint implements EntityAction {
 		return point;
 	}
 
-	public boolean isKillOnSnap() {
-		return killOnSnap;
-	}
-
 	public boolean isOnPoint() {
 		return onPoint;
-	}
-
-	@Override
-	public boolean markedToBeDestroyed() {
-		return shouldBeKilled;
 	}
 
 	public boolean removeSnapListener(final SnapToPointListener spL) {
@@ -98,14 +73,6 @@ public class SnapToPoint implements EntityAction {
 			return false;
 		}
 		return snapListeners.remove(spL);
-	}
-
-	public void setKillOnSnap(final boolean killOnSnap) {
-		this.killOnSnap = killOnSnap;
-	}
-
-	public void setLocation(final Point point) {
-		this.point.setLocation(point.getX(), point.getY());
 	}
 
 	private void setOnPoint(final boolean onPoint) {
@@ -118,12 +85,7 @@ public class SnapToPoint implements EntityAction {
 	}
 
 	@Override
-	public void addActionListener(final EntityActionListener entityActionListener) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean isPerformingAction() {
+	public boolean actionEnded() {
 		return false;
 	}
 

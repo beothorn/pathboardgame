@@ -14,7 +14,6 @@ public class EntityPiece implements GameElement{
 
 	private Entity entity;
 	private Piece logicPiece;
-	private boolean markedToBeDestroyed = false;
 	private final MoveToAndStop moveToAndStop;
 	private static final int snappingRadius = 10;
 	private static final int speed = 250;
@@ -61,13 +60,13 @@ public class EntityPiece implements GameElement{
 		return moveToAndStop;
 	}
 
-	public boolean isMarkedToBeDestroyed() {
-		return markedToBeDestroyed;
-	}
-
 	@Override
 	public boolean markedToBeDestroyed() {
-		return markedToBeDestroyed;
+		return getEntity().markedToBeDestroyed();
+	}
+
+	public void markToBeDestroyed() {
+		getEntity().markToBeDestroyed();
 	}
 
 	public boolean ownsPiece(final Piece p){
@@ -76,10 +75,6 @@ public class EntityPiece implements GameElement{
 
 	public void setEntity(final Entity entity) {
 		this.entity = entity;
-	}
-
-	public void setMarkedToBeDestroyed(final boolean markedToBeDestroyed) {
-		this.markedToBeDestroyed = markedToBeDestroyed;
 	}
 
 	public void setPiece(final Piece p){
