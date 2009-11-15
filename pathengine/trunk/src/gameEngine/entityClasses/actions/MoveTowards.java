@@ -66,4 +66,16 @@ public class MoveTowards implements EntityAction {
 		return false;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof MoveToAndStop))
+			return false;
+		final MoveTowards other = (MoveTowards)obj;
+		return entityToMove.equals(other.entityToMove);
+	}
+	
+	@Override
+	public int hashCode() {
+		return entityToMove.hashCode();
+	}
 }

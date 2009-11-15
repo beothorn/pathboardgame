@@ -22,7 +22,6 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 	private  Point endingPoint;
 
 	private final JGamePanel gamePanel;
-	private final MoveToStopAndGoBack goingToPoint;
 
 	private String message = "";
 
@@ -32,8 +31,7 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 		super(0, 0);
 		gamePanel = gF;
 		message = "404";
-		goingToPoint = new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this);
-		gF.addStepAction(goingToPoint);
+		gamePanel.addUniqueStepAction(new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this));
 	}
 
 	private void calculateStartAndEndingPositions(final String message) {
@@ -71,7 +69,7 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 		message = errorMessage;
 		setVisible(true);
 		calculateStartAndEndingPositions(errorMessage);
-		goingToPoint.move(startingPoint, endingPoint);
+		gamePanel.addUniqueStepAction(new MoveToStopAndGoBack(startingPoint, endingPoint, SHOW_MESSAGE_MILISECONDS, SPEED, this));
 	}
 
 	public int getErrorBoxMargin() {

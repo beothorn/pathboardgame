@@ -33,6 +33,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	private boolean continuousGameLoop = false;
 	private boolean alreadyOnLoop = false;
 	private boolean actionAddedOnMidLoop = false;
+	private static final boolean DEBUG = true;
 	
 	
 	public JGamePanel() {
@@ -61,6 +62,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	
 	public boolean addUniqueStepAction(final EntityAction action){
 		actionAdded();
+		uniqueStepActions.remove(action);
 		return uniqueStepActions.add(action);
 	}
 
@@ -76,8 +78,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 
 	private void doStep(final long delta) {
 		final ArrayList<GameElement> toRemove = new ArrayList<GameElement>();
-		for (int i=0;i<elements.size();i++) {
-			final GameElement gameElement = elements.get(i);
+		for (GameElement gameElement : elements){
 			if(gameElement.markedToBeDestroyed()) {
 				toRemove.add(gameElement);
 			} else {
@@ -113,6 +114,20 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	}
 
 	private void stepGame(final long delta) {
+		if(DEBUG){
+			System.out.println("delta: "+delta);
+			for (GameElement gameElement : elements) {
+				System.out.println(gameElement);
+			}
+			System.out.println("uniqueStepActions:");
+			for (final EntityAction entityAction : uniqueStepActions) {
+				System.out.println("\t"+entityAction);
+			}
+			System.out.println("nonUniqueStepActions:");
+			for (final EntityAction entityAction : nonUniqueStepActions) {
+				System.out.println("\t"+entityAction);
+			}
+		}
 		doStepActions(delta);
 		doCollisions();
 		doStep(delta);
@@ -149,8 +164,11 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 			}
 
 			private boolean actionsStillProcessing() {
-				for(int i = 0;i < nonUniqueStepActions.size(); i++){
-					if(!nonUniqueStepActions.get(i).actionEnded()) return true;
+				for (EntityAction action : nonUniqueStepActions) {
+					if(!action.actionEnded()) return true;
+				}
+				for (EntityAction action : uniqueStepActions) {
+					if(!action.actionEnded()) return true;
 				}
 				return false;
 			}

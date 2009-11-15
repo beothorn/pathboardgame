@@ -112,10 +112,8 @@ public class PiecesBoard implements StateVisitor{
 	}
 
 	private EntityPiece newPieceOwning(final Piece logicPiece) {
-		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece,gameDefinitions);
+		final EntityPiece newPiece = EntityPieceFactory.entityPieceOwningThis(logicPiece,gameDefinitions,panel);
 		entityPieces.add(newPiece);
-		panel.addGameElement(newPiece);
-		panel.addStepAction(newPiece.getStepAction());
 		return newPiece;
 	}
 

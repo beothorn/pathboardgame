@@ -44,8 +44,7 @@ public class ActionsTests {
 		snapingPointOnRange.doAction(oneSecondDelta);
 		Assert.assertTrue("Entity didn't snapped to a point: "+entity.getPosition(), entity.getPosition().equals(snapToThisPoint));
 
-		final boolean killOnSnap = true;
-		final SnapToPoint snapingPointOnRangeKillOnSnap = new SnapToPoint(snapToThisPoint,radius,killOnSnap, entity);
+		final SnapToPoint snapingPointOnRangeKillOnSnap = new SnapToPoint(snapToThisPoint,radius, entity);
 
 		snapingPointOnRangeKillOnSnap.doAction(oneSecondDelta);
 		Assert.assertTrue("Entity didn't snapped to a point: "+entity.getPosition(), entity.getPosition().equals(snapToThisPoint));

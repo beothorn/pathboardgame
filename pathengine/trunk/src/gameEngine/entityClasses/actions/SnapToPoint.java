@@ -88,5 +88,18 @@ public class SnapToPoint implements EntityAction {
 	public boolean actionEnded() {
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof MoveToAndStop))
+			return false;
+		final SnapToPoint other = (SnapToPoint)obj;
+		return entityToSnap.equals(other.entityToSnap);
+	}
+	
+	@Override
+	public int hashCode() {
+		return entityToSnap.hashCode();
+	}
 
 }

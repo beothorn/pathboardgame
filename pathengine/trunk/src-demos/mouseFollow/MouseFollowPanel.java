@@ -18,17 +18,21 @@ import javax.swing.JButton;
 class MouseFollower extends Entity implements MouseMotionListener{
 
 	private boolean isSquare = false;
+	private final JGamePanel gf;
 
-	private final MoveToAndStop action;
 
 	public MouseFollower(final JGamePanel gf) {
-		final int pixPerSec = 500;
-		final int snappingRadius = 2;
-		final boolean killOnSnap = false;
-		action = new MoveToAndStop(new Point(),pixPerSec,snappingRadius,killOnSnap, this);
-		gf.addStepAction(action);
+		this.gf = gf;
+		final Point destination = new Point();
+		moveTo(destination);
 		gf.addMouseMotionListener(this);
 		gf.addGameElement(this);
+	}
+
+	private void moveTo(final Point destination) {
+		final int pixPerSec = 500;
+		final int snappingRadius = 2;
+		this.gf.addUniqueStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this));
 	}
 
 	public void changeShape(){
@@ -54,7 +58,7 @@ class MouseFollower extends Entity implements MouseMotionListener{
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		action.setLocation(e.getX(), e.getY());
+		moveTo(new Point(e.getX(), e.getY()));
 	}
 }
 

@@ -8,8 +8,10 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	private final MoveTowards moveTowards;
 	private final SnapToPoint pointToSnap;
 	private boolean snapped = false;
+	private final Entity entity;
 
 	public MoveToAndStop(final Point destination,final double speed, final double snappingRadius, final Entity entity) {
+		this.entity = entity;
 		final Point clone = destination.copy();
 		moveTowards = new MoveTowards(clone,speed,entity);
 		pointToSnap = new SnapToPoint(clone,snappingRadius,entity);
@@ -50,6 +52,19 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	
 	@Override
 	public boolean actionEnded() {
-		return !snapped;
+		return snapped;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof MoveToAndStop))
+			return false;
+		final MoveToAndStop other = (MoveToAndStop)obj;
+		return entity.equals(other.entity);
+	}
+	
+	@Override
+	public int hashCode() {
+		return entity.hashCode();
 	}
 }

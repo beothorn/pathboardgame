@@ -208,4 +208,9 @@ public class Entity implements GameElement {
 	public void addGameElementChangedListener(final GameElementChangedListener gameElementChangedListener) {
 		this.gameElementChangedListener = gameElementChangedListener;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+" position: "+position;
+	}
 }

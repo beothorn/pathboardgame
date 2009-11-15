@@ -1,8 +1,8 @@
 package gui.gameEntities.piecesBoard;
 import gameEngine.GameElement;
 import gameEngine.GameElementChangedListener;
+import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
-import gameEngine.entityClasses.actions.EntityAction;
 import gameEngine.entityClasses.actions.MoveToAndStop;
 import gameEngine.gameMath.Point;
 import gameLogic.board.piece.Piece;
@@ -12,29 +12,30 @@ import java.awt.Graphics;
 
 public class EntityPiece implements GameElement{
 
-	private Entity entity;
+	private final Entity entity;
 	private Piece logicPiece;
-	private final MoveToAndStop moveToAndStop;
 	private static final int snappingRadius = 10;
 	private static final int speed = 250;
 	private final String normalSprite;
 	private final String movedSprite;
 	private final String playingSprite;
+	private final JGamePanel gamePanel;
 
 
-	public EntityPiece(final Piece p, final String sprite){
-		this(p,sprite,sprite,sprite);
+	public EntityPiece(final Piece p, final String sprite, final JGamePanel gF){
+		this(p,sprite,sprite,sprite,gF);
 	}
 
-	public EntityPiece(final Piece p, final String normalSprite, final String movedSprite, final String playingSprite) {
+	public EntityPiece(final Piece p, final String normalSprite, final String movedSprite, final String playingSprite, final JGamePanel gF) {
 		this.normalSprite = normalSprite;
+		entity = new Entity(0, 0);
 		this.movedSprite = movedSprite;
 		this.playingSprite = playingSprite;
+		gamePanel = gF;
+		gamePanel.addGameElement(entity);
 		setPiece(p);
-		setEntity(new Entity(0, 0));
 		entity.setSprite(normalSprite);
-		final boolean killOnSnap = false;
-		moveToAndStop = new MoveToAndStop(new Point(),speed, snappingRadius,killOnSnap,getEntity());
+		gamePanel.addUniqueStepAction(new MoveToAndStop(new Point(),speed, snappingRadius,getEntity()));
 	}
 
 	@Override
@@ -56,10 +57,6 @@ public class EntityPiece implements GameElement{
 		return entity;
 	}
 
-	public EntityAction getStepAction(){
-		return moveToAndStop;
-	}
-
 	@Override
 	public boolean markedToBeDestroyed() {
 		return getEntity().markedToBeDestroyed();
@@ -73,16 +70,12 @@ public class EntityPiece implements GameElement{
 		return logicPiece == p;
 	}
 
-	public void setEntity(final Entity entity) {
-		this.entity = entity;
-	}
-
 	public void setPiece(final Piece p){
 		logicPiece = p;
 	}
 
 	public void setPointToGo(final Point point){
-		moveToAndStop.setLocation(point);
+		gamePanel.addUniqueStepAction(new MoveToAndStop(point,speed, snappingRadius,getEntity()));;
 	}
 
 	public void setPosition(final Point p){
