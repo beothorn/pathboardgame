@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,14 +31,14 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	private final List<GameElement> elements = new ArrayList<GameElement>();
 	private final List<EntityAction> nonUniqueStepActions = new ArrayList<EntityAction>();
 	private final Set<EntityAction> uniqueStepActions = new LinkedHashSet<EntityAction>();
-	private boolean continuousGameLoop = false;
-	private boolean alreadyOnLoop = false;
-	private boolean actionAddedOnMidLoop = false;
-	private static final boolean DEBUG = true;
+	private final GameLoop gameLoop;
+	
+	private static final boolean DEBUG = false;
 	
 	
 	public JGamePanel() {
 		setLayout(null);
+		gameLoop = new GameLoop(this);
 	}
 
 	public JGamePanel(final Color backgroundColor) {
@@ -62,6 +63,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	
 	public boolean addUniqueStepAction(final EntityAction action){
 		actionAdded();
+		//Erro de java.util.ConcurrentModificationException por causa dessa linha
 		uniqueStepActions.remove(action);
 		return uniqueStepActions.add(action);
 	}
@@ -91,17 +93,16 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	}
 
 	private void doActionsFor(final Collection<EntityAction> actions,final long delta) {
-		final ArrayList<EntityAction> toRemove = new ArrayList<EntityAction>();
-		for (final EntityAction entityAction : actions) {
+		final Iterator<EntityAction> actionsIterator = actions.iterator();
+		
+		while(actionsIterator.hasNext()){
+			final EntityAction entityAction = actionsIterator.next();
 			if(entityAction.actionEnded()) {
-				toRemove.add(entityAction);
+				actions.remove(entityAction);
 			} else {
 				entityAction.doAction(delta);
 			}
-		}
-		for (final EntityAction entityAction : toRemove) {
-			actions.remove(entityAction);
-		}		
+		}	
 	}
 	
 	private void doStepActions(final long delta) {
@@ -113,7 +114,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		drawer.drawElements(g,elements);
 	}
 
-	private void stepGame(final long delta) {
+	public void stepGame(final long delta) {
 		if(DEBUG){
 			System.out.println("delta: "+delta);
 			for (GameElement gameElement : elements) {
@@ -134,46 +135,24 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		repaint();
 	}
 	
-	public void continuousGameLoop() {
-		continuousGameLoop = true;
-		gameLoop();
+	public boolean actionsStillProcessing() {
+		final Iterator<EntityAction> nonUniqueStepActionIterator = nonUniqueStepActions.iterator();
+		while(nonUniqueStepActionIterator.hasNext()){
+			final EntityAction action = nonUniqueStepActionIterator.next();
+			if(!action.actionEnded()) return true;
+		}
+		
+		final Iterator<EntityAction> uniqueStepActionIterator = uniqueStepActions.iterator();
+		while(uniqueStepActionIterator.hasNext()){
+			final EntityAction action = uniqueStepActionIterator.next();
+			if(!action.actionEnded()) return true;
+		}
+		
+		return false;
 	}
 	
 	private void gameLoop(){
-		if(alreadyOnLoop)
-			return;
-		alreadyOnLoop = true;
-		new Thread(){
-			@Override
-			public void run() {
-				super.run();
-				long lastLoopTime = System.currentTimeMillis();
-				boolean processAgain = false;
-				while (continuousGameLoop || processAgain || actionAddedOnMidLoop) {
-					actionAddedOnMidLoop = false;
-					final long delta = System.currentTimeMillis() - lastLoopTime;
-					lastLoopTime = System.currentTimeMillis();
-					stepGame(delta);
-					try { Thread.sleep(10); } catch (final Exception e) {}
-					processAgain = false;
-					if(actionsStillProcessing()){
-						processAgain = true;
-					}
-				}
-				alreadyOnLoop = false;
-			}
-
-			private boolean actionsStillProcessing() {
-				for (EntityAction action : nonUniqueStepActions) {
-					if(!action.actionEnded()) return true;
-				}
-				for (EntityAction action : uniqueStepActions) {
-					if(!action.actionEnded()) return true;
-				}
-				return false;
-			}
-
-		}.start();
+		gameLoop.loop();
 	}
 
 	public ArrayList<GameElement> getElements(){
@@ -241,7 +220,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	}
 
 	private void changeTrigger() {
-		actionAddedOnMidLoop = true;
+		gameLoop.actionAddedOnMidLoop();
 		gameLoop();
 	}
 
