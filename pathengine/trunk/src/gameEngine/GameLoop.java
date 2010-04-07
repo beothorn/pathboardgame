@@ -4,7 +4,6 @@ package gameEngine;
 
 public class GameLoop{
 	private final Thread gameLoop;
-	private boolean actionAddedOnMidLoop = false;
 	private boolean pause = false;
 	
 	public GameLoop(final JGamePanel gamePanel){
@@ -14,18 +13,11 @@ public class GameLoop{
 				super.run();
 				while(true){
 					long lastLoopTime = System.currentTimeMillis();
-					boolean someActionStillProcessing = false;
-					while (someActionStillProcessing || actionAddedOnMidLoop) {
-						actionAddedOnMidLoop = false;
+					do{
 						final long delta = System.currentTimeMillis() - lastLoopTime;
 						lastLoopTime = System.currentTimeMillis();
 						gamePanel.stepGame(delta);
-						if(gamePanel.actionsStillProcessing()){
-							someActionStillProcessing = true;
-						}else{
-							someActionStillProcessing = false;							
-						}
-					}
+					}while (gamePanel.actionsStillProcessing());
 					
 					synchronized (gameLoop) {
 						pause = true;
@@ -52,9 +44,4 @@ public class GameLoop{
 	        }
 	    }
 	}
-
-	public void actionAddedOnMidLoop() {
-		this.actionAddedOnMidLoop = true;
-	}
-
 }

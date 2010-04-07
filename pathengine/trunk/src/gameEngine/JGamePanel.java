@@ -29,8 +29,16 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	private Color color = Color.GRAY;
 	private final GameDrawer drawer = new StaticFrameDrawer();
 	private final List<GameElement> elements = new ArrayList<GameElement>();
+	private final List<GameElement> elementsToAdd = new ArrayList<GameElement>();
+	private final List<GameElement> elementsToRemove = new ArrayList<GameElement>();
+	
 	private final List<EntityAction> nonUniqueStepActions = new ArrayList<EntityAction>();
 	private final Set<EntityAction> uniqueStepActions = new LinkedHashSet<EntityAction>();
+	
+	private final List<EntityAction> nonUniqueStepActionsToAdd = new ArrayList<EntityAction>();
+	private final List<EntityAction> nonUniqueStepActionsToRemove = new ArrayList<EntityAction>();
+	private final Set<EntityAction> uniqueStepActionsToAdd = new LinkedHashSet<EntityAction>();
+	private final Set<EntityAction> uniqueStepActionsToRemove = new LinkedHashSet<EntityAction>();
 	private final GameLoop gameLoop;
 	
 	private static final boolean DEBUG = false;
@@ -53,43 +61,48 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 
 	public void addGameElement(final GameElement element){
 		element.addGameElementChangedListener(this);
-		elements.add(element);
+		elementsToAdd.add(element);
 	}
 
-	public boolean addStepAction(final EntityAction action){
-		actionAdded();
-		return nonUniqueStepActions.add(action);
+	public void addStepAction(final EntityAction action){
+		nonUniqueStepActionsToAdd.add(action);
+		changeTrigger();
 	}
 	
-	public boolean addUniqueStepAction(final EntityAction action){
-		actionAdded();
-		//Erro de java.util.ConcurrentModificationException por causa dessa linha
-		uniqueStepActions.remove(action);
-		return uniqueStepActions.add(action);
+	public void addUniqueStepAction(final EntityAction action){
+		uniqueStepActionsToRemove.add(action);
+		uniqueStepActionsToAdd.add(action);
+		changeTrigger();
 	}
 
 	public void clearElements(){
 		elements.clear();
 	}
 
-
 	private void doCollisions() {
 		// TODO Will be implemented when needed
 	}
 
-
 	private void doStep(final long delta) {
-		final ArrayList<GameElement> toRemove = new ArrayList<GameElement>();
 		for (GameElement gameElement : elements){
 			if(gameElement.markedToBeDestroyed()) {
-				toRemove.add(gameElement);
+				elementsToRemove.add(gameElement);
 			} else {
 				gameElement.doStep(delta);
 			}
 		}
-		for (final GameElement gameElement : toRemove) {
+	}
+
+	private void updateElements() {
+		for (final GameElement gameElement : elementsToRemove) {
 			elements.remove(gameElement);
 		}
+		elementsToRemove.clear();
+		
+		for (final GameElement gameElement : elementsToAdd){
+			elements.add(gameElement);
+		}
+		elementsToAdd.clear();
 	}
 
 	private void doActionsFor(final Collection<EntityAction> actions,final long delta) {
@@ -97,11 +110,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		
 		while(actionsIterator.hasNext()){
 			final EntityAction entityAction = actionsIterator.next();
-			if(entityAction.actionEnded()) {
-				actions.remove(entityAction);
-			} else {
-				entityAction.doAction(delta);
-			}
+			entityAction.doAction(delta);
 		}	
 	}
 	
@@ -129,28 +138,59 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 				System.out.println("\t"+entityAction);
 			}
 		}
+		updateActions();
 		doStepActions(delta);
 		doCollisions();
+		updateElements();
 		doStep(delta);
 		repaint();
 	}
 	
 	public boolean actionsStillProcessing() {
-		final Iterator<EntityAction> nonUniqueStepActionIterator = nonUniqueStepActions.iterator();
-		while(nonUniqueStepActionIterator.hasNext()){
-			final EntityAction action = nonUniqueStepActionIterator.next();
-			if(!action.actionEnded()) return true;
-		}
-		
-		final Iterator<EntityAction> uniqueStepActionIterator = uniqueStepActions.iterator();
-		while(uniqueStepActionIterator.hasNext()){
-			final EntityAction action = uniqueStepActionIterator.next();
-			if(!action.actionEnded()) return true;
-		}
-		
-		return false;
+		return (nonUniqueStepActions.size()>0) || (uniqueStepActions.size()>0);
 	}
 	
+	private void updateActions() {
+		removeEndedActions();
+		doActionsTransactions();
+	}
+
+	private void doActionsTransactions() {
+		for(EntityAction entityAction : nonUniqueStepActionsToRemove){
+			nonUniqueStepActions.remove(entityAction);
+		}
+		nonUniqueStepActionsToRemove.clear();
+		
+		for(EntityAction entityAction : nonUniqueStepActionsToAdd){			
+			nonUniqueStepActions.add(entityAction);
+		}
+		nonUniqueStepActionsToAdd.clear();
+		
+		for(EntityAction entityAction : uniqueStepActionsToRemove){			
+			uniqueStepActions.remove(entityAction);
+		}
+		uniqueStepActionsToRemove.clear();
+		
+		for(EntityAction entityAction : uniqueStepActionsToAdd){
+			//actions must implement equals, TODO: Fix it
+			uniqueStepActions.remove(entityAction);
+			uniqueStepActions.add(entityAction);			
+		}
+		uniqueStepActionsToAdd.clear();
+	}
+
+	private void removeEndedActions() {
+		for(EntityAction entityAction : nonUniqueStepActions){			
+			if(entityAction.actionEnded())
+				nonUniqueStepActionsToRemove.add(entityAction);
+		}
+		
+		for(EntityAction entityAction : uniqueStepActions){
+			if(entityAction.actionEnded())
+				uniqueStepActionsToRemove.add(entityAction);			
+		}
+	}
+
 	private void gameLoop(){
 		gameLoop.loop();
 	}
@@ -215,12 +255,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		return toStr;
 	}
 
-	private void actionAdded() {
-		changeTrigger();
-	}
-
 	private void changeTrigger() {
-		gameLoop.actionAddedOnMidLoop();
 		gameLoop();
 	}
 
