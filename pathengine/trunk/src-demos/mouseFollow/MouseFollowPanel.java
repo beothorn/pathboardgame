@@ -3,6 +3,7 @@ package mouseFollow;
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.MoveToAndStop;
+import gameEngine.entityClasses.actions.MutableEntityAction;
 import gameEngine.gameMath.Point;
 
 import java.awt.BorderLayout;
@@ -19,20 +20,22 @@ class MouseFollower extends Entity implements MouseMotionListener{
 
 	private boolean isSquare = false;
 	private final JGamePanel gf;
+	private MutableEntityAction mutableEntityAction;
+	private static final int pixPerSec = 500;
+	private static final int snappingRadius = 2;
 
 
 	public MouseFollower(final JGamePanel gf) {
 		this.gf = gf;
 		final Point destination = new Point();
-		moveTo(destination);
+		mutableEntityAction = new MutableEntityAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this),gf);
 		gf.addMouseMotionListener(this);
 		gf.addGameElement(this);
+		this.gf.addStepAction(mutableEntityAction);
 	}
 
 	private void moveTo(final Point destination) {
-		final int pixPerSec = 500;
-		final int snappingRadius = 2;
-		this.gf.addUniqueStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this));
+		mutableEntityAction.setEntityAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this));
 	}
 
 	public void changeShape(){

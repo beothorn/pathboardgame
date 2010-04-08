@@ -55,7 +55,7 @@ public class InvalidPlayException extends Exception {
 	}
 
 	public static InvalidPlayException cantSkipPuttingStrongs(final int numberOfStrongPiecesToPut) {
-		return new InvalidPlayException("Can't skip the putting strongs turn. You need to put mmore "+numberOfStrongPiecesToPut+" strong pieces.");
+		return new InvalidPlayException("Can't skip the putting strongs turn. You need to put more "+numberOfStrongPiecesToPut+" strong pieces.");
 	}
 
 	public static InvalidPlayException gameIsLocked() {

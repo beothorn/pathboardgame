@@ -4,6 +4,7 @@ import gameEngine.GameElement;
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
 import gameEngine.entityClasses.actions.MoveToStopAndGoBack;
+import gameEngine.entityClasses.actions.MutableEntityAction;
 import gameEngine.gameMath.Point;
 import gui.gameEntities.piecesBoard.ErrorListener;
 
@@ -26,12 +27,13 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 	private String message = "";
 
 	private Point startingPoint = new Point(-100,-100);
+	private final MutableEntityAction mutableEntityAction;
 
 	public ErrorMessage(final JGamePanel gF) {
 		super(0, 0);
 		gamePanel = gF;
 		message = "404";
-		gamePanel.addUniqueStepAction(new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this));
+		mutableEntityAction = new MutableEntityAction(new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this),gF);
 	}
 
 	private void calculateStartAndEndingPositions(final String message) {
@@ -69,7 +71,7 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 		message = errorMessage;
 		setVisible(true);
 		calculateStartAndEndingPositions(errorMessage);
-		gamePanel.addUniqueStepAction(new MoveToStopAndGoBack(startingPoint, endingPoint, SHOW_MESSAGE_MILISECONDS, SPEED, this));
+		mutableEntityAction.setEntityAction(new MoveToStopAndGoBack(startingPoint, endingPoint, SHOW_MESSAGE_MILISECONDS, SPEED, this));
 	}
 
 	public int getErrorBoxMargin() {

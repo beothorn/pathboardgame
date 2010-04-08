@@ -67,4 +67,9 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	public int hashCode() {
 		return entity.hashCode();
 	}
+
+	@Override
+	public boolean canBeDeleted() {
+		return actionEnded();
+	}
 }

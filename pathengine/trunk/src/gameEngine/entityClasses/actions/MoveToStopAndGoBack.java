@@ -47,4 +47,9 @@ public class MoveToStopAndGoBack implements EntityAction{
 	public boolean actionEnded() {
 		return !(moveToAndStop.isSnapped() && moveToAndStop.getLocation().equals(startingPoint));
 	}
+	
+	@Override
+	public boolean canBeDeleted() {
+		return actionEnded();
+	}
 }

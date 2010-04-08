@@ -36,12 +36,12 @@ public class GameLoop{
 	}
 	
 	
-	public synchronized void loop(){
+	public void unPause(){
 		synchronized (gameLoop) {
 	        if(pause){
 	        	pause = false;
 	        	gameLoop.notify();
 	        }
-	    }
+		}
 	}
 }

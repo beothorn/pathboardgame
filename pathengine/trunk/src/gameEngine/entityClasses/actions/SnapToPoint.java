@@ -101,5 +101,10 @@ public class SnapToPoint implements EntityAction {
 	public int hashCode() {
 		return entityToSnap.hashCode();
 	}
+	
+	@Override
+	public boolean canBeDeleted() {
+		return actionEnded();
+	}
 
 }

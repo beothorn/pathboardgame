@@ -78,4 +78,9 @@ public class MoveTowards implements EntityAction {
 	public int hashCode() {
 		return entityToMove.hashCode();
 	}
+	
+	@Override
+	public boolean canBeDeleted() {
+		return actionEnded();
+	}
 }
