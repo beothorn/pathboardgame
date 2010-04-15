@@ -2,8 +2,8 @@ package mouseFollow;
 
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
-import gameEngine.entityClasses.actions.MoveToAndStop;
-import gameEngine.entityClasses.actions.MutableEntityAction;
+import gameEngine.entityClasses.onStepActions.MoveToAndStop;
+import gameEngine.entityClasses.onStepActions.MutableOnStepAction;
 import gameEngine.gameMath.Point;
 
 import java.awt.BorderLayout;
@@ -20,7 +20,7 @@ class MouseFollower extends Entity implements MouseMotionListener{
 
 	private boolean isSquare = false;
 	private final JGamePanel gf;
-	private MutableEntityAction mutableEntityAction;
+	private MutableOnStepAction mutableEntityAction;
 	private static final int pixPerSec = 500;
 	private static final int snappingRadius = 2;
 
@@ -28,14 +28,14 @@ class MouseFollower extends Entity implements MouseMotionListener{
 	public MouseFollower(final JGamePanel gf) {
 		this.gf = gf;
 		final Point destination = new Point();
-		mutableEntityAction = new MutableEntityAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this),gf);
+		mutableEntityAction = new MutableOnStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this),gf);
 		gf.addMouseMotionListener(this);
 		gf.addGameElement(this);
 		this.gf.addStepAction(mutableEntityAction);
 	}
 
 	private void moveTo(final Point destination) {
-		mutableEntityAction.setEntityAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this));
+		mutableEntityAction.setOnStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this));
 	}
 
 	public void changeShape(){

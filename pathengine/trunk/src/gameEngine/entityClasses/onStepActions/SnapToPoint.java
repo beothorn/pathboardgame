@@ -1,4 +1,4 @@
-package gameEngine.entityClasses.actions;
+package gameEngine.entityClasses.onStepActions;
 
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Eval;
@@ -7,7 +7,7 @@ import gameEngine.gameMath.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SnapToPoint implements EntityAction {
+public class SnapToPoint implements OnStepAction {
 
 	private final Entity entityToSnap;
 	private boolean onPoint;
@@ -48,7 +48,7 @@ public class SnapToPoint implements EntityAction {
 	}
 
 	@Override
-	public void doAction(final long delta) {
+	public void step(final long delta) {
 		final double distance = entityToSnap.getPosition().distance(point);
 		if(Eval.lessOrEqualsTo(distance,radius)){
 			entityToSnap.setPosition(point);
@@ -87,14 +87,6 @@ public class SnapToPoint implements EntityAction {
 	@Override
 	public boolean actionEnded() {
 		return false;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof MoveToAndStop))
-			return false;
-		final SnapToPoint other = (SnapToPoint)obj;
-		return entityToSnap.equals(other.entityToSnap);
 	}
 	
 	@Override

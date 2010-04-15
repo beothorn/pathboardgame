@@ -1,4 +1,4 @@
-package gameEngine.entityClasses.actions;
+package gameEngine.entityClasses.onStepActions;
 
 
 public interface SnapToPointListener {

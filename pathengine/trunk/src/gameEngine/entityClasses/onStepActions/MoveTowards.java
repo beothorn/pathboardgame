@@ -1,11 +1,11 @@
-package gameEngine.entityClasses.actions;
+package gameEngine.entityClasses.onStepActions;
 
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Eval;
 import gameEngine.gameMath.Point;
 
 
-public class MoveTowards implements EntityAction {
+public class MoveTowards implements OnStepAction {
 
 	private final Point destination;
 	private final Entity entityToMove;
@@ -30,7 +30,7 @@ public class MoveTowards implements EntityAction {
 	}
 
 	@Override
-	public void doAction(final long delta) {
+	public void step(final long delta) {
 		timePassed += delta;
 
 		if(isOnPoint(entityToMove)){
@@ -64,14 +64,6 @@ public class MoveTowards implements EntityAction {
 	@Override
 	public boolean actionEnded() {
 		return false;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof MoveToAndStop))
-			return false;
-		final MoveTowards other = (MoveTowards)obj;
-		return entityToMove.equals(other.entityToMove);
 	}
 	
 	@Override

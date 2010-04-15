@@ -184,13 +184,6 @@ public class Entity implements GameElement {
 			gameElementChangedListener.gameElementChanged();
 	}
 
-	/**
-	 * Notification that this entity collided with another.
-	 * 
-	 * @param other The entity with which this entity collided.
-	 */
-	//	public abstract void collidedWith(Entity other);
-
 	public void setVisible(final boolean isVisible) {
 		this.isVisible = isVisible;
 		gameElementChanged();

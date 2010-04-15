@@ -1,9 +1,9 @@
-package gameEngine.entityClasses.actions;
+package gameEngine.entityClasses.onStepActions;
 
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Point;
 
-public class MoveToAndStop implements EntityAction, SnapToPointListener {
+public class MoveToAndStop implements OnStepAction, SnapToPointListener {
 
 	private final MoveTowards moveTowards;
 	private final SnapToPoint pointToSnap;
@@ -24,12 +24,12 @@ public class MoveToAndStop implements EntityAction, SnapToPointListener {
 	}
 
 	@Override
-	public void doAction(final long delta) {
+	public void step(final long delta) {
 		if(isSnapped()){
 			return;
 		}
-		moveTowards.doAction(delta);
-		pointToSnap.doAction(delta);
+		moveTowards.step(delta);
+		pointToSnap.step(delta);
 	}
 
 	public boolean isSnapped() {

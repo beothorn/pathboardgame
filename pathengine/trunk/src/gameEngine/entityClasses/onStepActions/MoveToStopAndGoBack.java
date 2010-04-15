@@ -1,9 +1,9 @@
-package gameEngine.entityClasses.actions;
+package gameEngine.entityClasses.onStepActions;
 
 import gameEngine.entityClasses.Entity;
 import gameEngine.gameMath.Point;
 
-public class MoveToStopAndGoBack implements EntityAction{
+public class MoveToStopAndGoBack implements OnStepAction{
 
 	private final static int SNAP_RADIUS = 5;
 	private final Point startingPoint;
@@ -28,8 +28,8 @@ public class MoveToStopAndGoBack implements EntityAction{
 	}
 
 	@Override
-	public void doAction(final long delta) {
-		moveToAndStop.doAction(delta);
+	public void step(final long delta) {
+		moveToAndStop.step(delta);
 		if(moveToAndStop.isSnapped()){
 			timeShown += delta;
 		}

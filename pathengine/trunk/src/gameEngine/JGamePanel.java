@@ -1,6 +1,6 @@
 package gameEngine;
 
-import gameEngine.entityClasses.actions.EntityAction;
+import gameEngine.entityClasses.onStepActions.OnStepAction;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,10 +23,10 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	private int backgroundLayout;
 	private Sprite backgroundSprite;
 	private Color color = Color.GRAY;
-	private final GameDrawer drawer = new StaticFrameDrawer();
+	private final GameDrawer drawer = new StaticCameraDrawer();
 	private final List<GameElement> elements = new ArrayList<GameElement>();
 	
-	private final List<EntityAction> stepActions = new ArrayList<EntityAction>();
+	private final List<OnStepAction> stepActions = new ArrayList<OnStepAction>();
 	
 	private final GameLoop gameLoop;
 	
@@ -53,7 +53,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		elements.add(element);
 	}
 
-	public synchronized void addStepAction(final EntityAction action){
+	public synchronized void addStepAction(final OnStepAction action){
 		stepActions.add(action);
 		changeTrigger();
 	}
@@ -75,8 +75,8 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	}
 
 	private synchronized void doStepActions(final long delta) {
-		for(EntityAction entityAction : stepActions){			
-			entityAction.doAction(delta);
+		for(OnStepAction entityAction : stepActions){			
+			entityAction.step(delta);
 		}	
 	}
 
@@ -91,7 +91,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 				System.out.println(gameElement);
 			}
 			System.out.println("StepActions:");
-			for (final EntityAction entityAction : stepActions) {
+			for (final OnStepAction entityAction : stepActions) {
 				System.out.println("\t"+entityAction);
 			}
 		}
@@ -103,7 +103,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	}
 	
 	public synchronized boolean actionsStillProcessing() {
-		for(EntityAction entityAction : stepActions){			
+		for(OnStepAction entityAction : stepActions){			
 			if(!entityAction.actionEnded())
 				return true;
 		}
@@ -118,8 +118,8 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 			}
 		}
 		
-		final ArrayList<EntityAction> stepActionsToRemove = new ArrayList<EntityAction>(stepActions);
-		for(EntityAction entityAction : stepActionsToRemove){			
+		final ArrayList<OnStepAction> stepActionsToRemove = new ArrayList<OnStepAction>(stepActions);
+		for(OnStepAction entityAction : stepActionsToRemove){			
 			if(entityAction.canBeDeleted())
 				stepActions.remove(entityAction);
 		}
@@ -138,7 +138,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		render((Graphics2D) g);
 	}
 
-	public synchronized boolean removeStepAction(final EntityAction action){
+	public synchronized boolean removeStepAction(final OnStepAction action){
 		return stepActions.remove(action);
 	}
 
@@ -182,7 +182,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		String toStr = "Elements count: "+elements.size();
 		if(stepActions.size() > 0){
 			toStr += "\nOn Step Actions:\n";
-			for (final EntityAction ea : stepActions) {
+			for (final OnStepAction ea : stepActions) {
 				toStr += ea.toString();
 			}
 		}
