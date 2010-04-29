@@ -3,11 +3,11 @@ package gameEngine;
 
 
 public class GameLoop{
-	private final Thread gameLoop;
+	private final Thread gameLoopingThread;
 	private boolean pause = false;
 	
 	public GameLoop(final JGamePanel gamePanel){
-		gameLoop = new Thread(){
+		gameLoopingThread = new Thread(){
 			@Override
 			public void run() {
 				super.run();
@@ -19,7 +19,7 @@ public class GameLoop{
 						gamePanel.stepGame(delta);
 					}while (gamePanel.actionsStillProcessing());
 					
-					synchronized (gameLoop) {
+					synchronized (gameLoopingThread) {
 						pause = true;
 						while (pause) {
 							try {
@@ -32,15 +32,15 @@ public class GameLoop{
 				}
 			}
 		};
-		gameLoop.start();
+		gameLoopingThread.start();
 	}
 	
 	
 	public void unPause(){
-		synchronized (gameLoop) {
+		synchronized (gameLoopingThread) {
 	        if(pause){
 	        	pause = false;
-	        	gameLoop.notify();
+	        	gameLoopingThread.notify();
 	        }
 		}
 	}

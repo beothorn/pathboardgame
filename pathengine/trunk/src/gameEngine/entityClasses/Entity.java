@@ -206,4 +206,9 @@ public class Entity implements GameElement {
 	public String toString() {
 		return super.toString()+" position: "+position;
 	}
+
+	public void goToRelativePosition(double deltaX, double deltaY) {
+		position.incrementX(deltaX);
+		position.incrementY(deltaY);
+	}
 }

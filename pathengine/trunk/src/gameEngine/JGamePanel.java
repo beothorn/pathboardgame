@@ -1,6 +1,9 @@
 package gameEngine;
 
+import gameEngine.entityClasses.onDragActions.MoveToMousePositionOnDrag;
+import gameEngine.entityClasses.onDragActions.OnDragAction;
 import gameEngine.entityClasses.onStepActions.OnStepAction;
+import gameEngine.gameMath.Point;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +16,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 
-public class JGamePanel extends JPanel implements ImageObserver,GameElementChangedListener{
+public class JGamePanel extends JPanel implements ImageObserver, GameElementChangedListener{
 
 	/**
 	 * 
@@ -27,6 +30,7 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	private final List<GameElement> elements = new ArrayList<GameElement>();
 	
 	private final List<OnStepAction> stepActions = new ArrayList<OnStepAction>();
+	private final List<OnDragAction> dragActions = new ArrayList<OnDragAction>();
 	
 	private final GameLoop gameLoop;
 	
@@ -35,6 +39,9 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	
 	public JGamePanel() {
 		setLayout(null);
+		MouseGameAdapter mouseGameAdapter = new MouseGameAdapter(this);
+		addMouseListener(mouseGameAdapter);
+		addMouseMotionListener(mouseGameAdapter);
 		gameLoop = new GameLoop(this);
 	}
 
@@ -107,6 +114,12 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 			if(!entityAction.actionEnded())
 				return true;
 		}
+		
+		for(OnDragAction entityAction : dragActions){			
+			if(!entityAction.actionEnded())
+				return true;
+		}
+		
 		return false;
 	}
 
@@ -120,6 +133,12 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 		
 		final ArrayList<OnStepAction> stepActionsToRemove = new ArrayList<OnStepAction>(stepActions);
 		for(OnStepAction entityAction : stepActionsToRemove){			
+			if(entityAction.canBeDeleted())
+				stepActions.remove(entityAction);
+		}
+
+		final ArrayList<OnDragAction> dragActionsToRemove = new ArrayList<OnDragAction>(dragActions);
+		for(OnDragAction entityAction : dragActionsToRemove){			
 			if(entityAction.canBeDeleted())
 				stepActions.remove(entityAction);
 		}
@@ -197,4 +216,18 @@ public class JGamePanel extends JPanel implements ImageObserver,GameElementChang
 	public void gameElementChanged() {
 		changeTrigger();
 	}
+
+	public void notifyDrag(Point deltaPoint) {
+		for (OnDragAction dragAction : dragActions){
+			dragAction.onDrag(deltaPoint);
+		}
+	}
+
+	public void mousePressedAt(Point point) {
+	}
+	
+	public synchronized void addOnDragAction(MoveToMousePositionOnDrag drag){
+		dragActions.add(drag);
+	}
+
 }

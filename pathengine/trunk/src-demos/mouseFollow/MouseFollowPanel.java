@@ -19,19 +19,19 @@ import javax.swing.JButton;
 class MouseFollower extends Entity implements MouseMotionListener{
 
 	private boolean isSquare = false;
-	private final JGamePanel gf;
-	private MutableOnStepAction mutableEntityAction;
+	private final JGamePanel gamePanel;
+	private final MutableOnStepAction mutableEntityAction;
 	private static final int pixPerSec = 500;
 	private static final int snappingRadius = 2;
 
 
-	public MouseFollower(final JGamePanel gf) {
-		this.gf = gf;
+	public MouseFollower(final JGamePanel gamePanel) {
+		this.gamePanel = gamePanel;
 		final Point destination = new Point();
-		mutableEntityAction = new MutableOnStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this),gf);
-		gf.addMouseMotionListener(this);
-		gf.addGameElement(this);
-		this.gf.addStepAction(mutableEntityAction);
+		mutableEntityAction = new MutableOnStepAction(new MoveToAndStop(destination,pixPerSec,snappingRadius, this),gamePanel);
+		gamePanel.addMouseMotionListener(this);
+		gamePanel.addGameElement(this);
+		this.gamePanel.addStepAction(mutableEntityAction);
 	}
 
 	private void moveTo(final Point destination) {

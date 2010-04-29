@@ -72,4 +72,16 @@ public class Point {
 		return "("+x+","+y+")";
 	}
 
+	public void incrementX(final double deltaX) {
+		x += deltaX;
+	}
+	
+	public void incrementY(final double deltaY) {
+		y += deltaY;
+	}
+
+	public Point substract(Point otherPoint) {
+		return new Point(x - otherPoint.getX(), y - otherPoint.getY());
+	}
+
 }
