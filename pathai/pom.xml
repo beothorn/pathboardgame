@@ -1,0 +1,13 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>beothron.path</groupId>
+    <artifactId>pathboardgame</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>beothron.path</groupId>
+  <artifactId>pathai</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</project>

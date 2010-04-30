@@ -1,0 +1,16 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>beothron.path</groupId>
+  <artifactId>pathboardgame</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+
+  <modules>
+    <module>pathai</module>
+    <module>pathaibattle</module>
+    <module>pathboardgamelogic</module>
+    <module>pathengine</module>
+    <module>pathgui</module>
+  </modules>
+
+</project>
