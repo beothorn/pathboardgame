@@ -3,8 +3,8 @@ import gameEngine.GameElement;
 import gameEngine.GameElementChangedListener;
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
-import gameEngine.entityClasses.actions.MoveToAndStop;
-import gameEngine.entityClasses.actions.MutableEntityAction;
+import gameEngine.entityClasses.onStepActions.MoveToAndStop;
+import gameEngine.entityClasses.onStepActions.MutableOnStepAction;
 import gameEngine.gameMath.Point;
 import gameLogic.board.piece.Piece;
 
@@ -21,7 +21,7 @@ public class EntityPiece implements GameElement{
 	private final String movedSprite;
 	private final String playingSprite;
 	private final JGamePanel gamePanel;
-	private final MutableEntityAction mutableEntityAction;
+	private final MutableOnStepAction mutableEntityAction;
 
 
 	public EntityPiece(final Piece p, final String sprite, final JGamePanel gF){
@@ -37,7 +37,7 @@ public class EntityPiece implements GameElement{
 		gamePanel.addGameElement(entity);
 		setPiece(p);
 		entity.setSprite(normalSprite);
-		mutableEntityAction = new MutableEntityAction(new MoveToAndStop(new Point(),speed, snappingRadius,getEntity()), gF);
+		mutableEntityAction = new MutableOnStepAction(new MoveToAndStop(new Point(),speed, snappingRadius,getEntity()), gF);
 		gamePanel.addStepAction(mutableEntityAction);
 	}
 
@@ -79,7 +79,7 @@ public class EntityPiece implements GameElement{
 	}
 
 	public void setPointToGo(final Point point){
-		mutableEntityAction.setEntityAction(new MoveToAndStop(point,speed, snappingRadius,getEntity()));
+		mutableEntityAction.setOnStepAction(new MoveToAndStop(point,speed, snappingRadius,getEntity()));
 	}
 
 	public void setPosition(final Point p){

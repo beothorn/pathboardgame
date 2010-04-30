@@ -3,8 +3,8 @@ package gui.gameEntities;
 import gameEngine.GameElement;
 import gameEngine.JGamePanel;
 import gameEngine.entityClasses.Entity;
-import gameEngine.entityClasses.actions.MoveToStopAndGoBack;
-import gameEngine.entityClasses.actions.MutableEntityAction;
+import gameEngine.entityClasses.onStepActions.MoveToStopAndGoBack;
+import gameEngine.entityClasses.onStepActions.MutableOnStepAction;
 import gameEngine.gameMath.Point;
 import gui.gameEntities.piecesBoard.ErrorListener;
 
@@ -27,13 +27,13 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 	private String message = "";
 
 	private Point startingPoint = new Point(-100,-100);
-	private final MutableEntityAction mutableEntityAction;
+	private final MutableOnStepAction mutableEntityAction;
 
 	public ErrorMessage(final JGamePanel gF) {
 		super(0, 0);
 		gamePanel = gF;
 		message = "404";
-		mutableEntityAction = new MutableEntityAction(new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this),gF);
+		mutableEntityAction = new MutableOnStepAction(new MoveToStopAndGoBack(startingPoint, new Point(), SHOW_MESSAGE_MILISECONDS, SPEED, this),gF);
 	}
 
 	private void calculateStartAndEndingPositions(final String message) {
@@ -71,7 +71,7 @@ public class ErrorMessage extends Entity implements GameElement, ErrorListener{
 		message = errorMessage;
 		setVisible(true);
 		calculateStartAndEndingPositions(errorMessage);
-		mutableEntityAction.setEntityAction(new MoveToStopAndGoBack(startingPoint, endingPoint, SHOW_MESSAGE_MILISECONDS, SPEED, this));
+		mutableEntityAction.setOnStepAction(new MoveToStopAndGoBack(startingPoint, endingPoint, SHOW_MESSAGE_MILISECONDS, SPEED, this));
 	}
 
 	public int getErrorBoxMargin() {
