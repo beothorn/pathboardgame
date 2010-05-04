@@ -2,14 +2,34 @@
 
 <body>
 
-<applet
-  code="main.MainGameApplet"
-  archive="pathgui.jar"
-  width="300" height="100"
->
-Applet Didn't Load
-</applet>
 
-<\body>
+<!--[if !IE]> Firefox and others will use outer object -->
+  <object classid="java:main.MainGameApplet.class" 
+          type="application/x-java-applet"
+          archive="http://sites.google.com/site/lucass/home/projects/path/pathgui-1.0-SNAPSHOT-jar-with-dependencies.jar" 
+          height="505" width="500" >
+    <!-- Konqueror browser needs the following param -->
+    <param name="archive" value="http://sites.google.com/site/lucass/home/projects/path/pathgui-1.0-SNAPSHOT-jar-with-dependencies.jar" />
+  <!--<![endif]-->
+    <!-- MSIE (Microsoft Internet Explorer) will use inner object --> 
+    <object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" 
+            codebase="http://java.sun.com/update/1.5.0/jinstall-1_5_0-windows-i586.cab"
+            height="505" width="500" > 
+      <param name="code" value="main.MainGameApplet" />
+      <param name="archive" value="http://sites.google.com/site/lucass/home/projects/path/pathgui-1.0-SNAPSHOT-jar-with-dependencies.jar" />
+      <strong>
+        This browser does not have a Java Plug-in.
+        <br />
+        <a href="http://java.sun.com/products/plugin/downloads/index.html">
+          Get the latest Java Plug-in here.
+        </a>
+      </strong>
+    </object> 
+  <!--[if !IE]> close outer object -->
+  </object>
+  <!--<![endif]-->
 
-<\html>
+
+</body>
+
+</html>
